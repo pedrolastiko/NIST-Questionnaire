@@ -23,12 +23,13 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
   </head>
   <body class="bg-neutral-50">
     <div id="root"></div>
-    <script type="text/babel" data-presets="env,react">
+    <script>
       const { useEffect, useMemo, useState } = React;
+      const html = window.htm.bind(React.createElement);
       const {
         BarChart,
         Bar,
@@ -207,21 +208,21 @@
       function AngleTick(props) {
         const { x, y, payload, textAnchor } = props;
         const color = functionColor(payload?.value);
-        return (
-          <text x={x} y={y} textAnchor={textAnchor || "middle"} fill={color} fontSize={11}>
-            {payload?.value}
+        return html`
+          <text x=${x} y=${y} textAnchor=${textAnchor || "middle"} fill=${color} fontSize=${11}>
+            ${payload?.value}
           </text>
-        );
+        `;
       }
 
       // ----------------------------- UI helpers BEFORE usage -----------------------------
       function Card({ title, children }) {
-        return (
-          <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-            {title && <div className="font-medium mb-3">{title}</div>}
-            {children}
+        return html`
+          <div class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+            ${title && html`<div class="font-medium mb-3">${title}</div>`}
+            ${children}
           </div>
-        );
+        `;
       }
 
       function TextField({
@@ -231,61 +232,62 @@
         type = "text",
         placeholder,
       }) {
-        return (
-          <label className="grid gap-1 w-full">
-            <span className="text-sm text-neutral-600">{label}</span>
+        return html`
+          <label class="grid gap-1 w-full">
+            <span class="text-sm text-neutral-600">${label}</span>
             <input
-              type={type}
-              className="px-3 py-2 rounded-xl border border-neutral-300 w-full"
-              value={value}
-              placeholder={placeholder}
-              onChange={(e) => onChange(e.target.value)}
+              type=${type}
+              class="px-3 py-2 rounded-xl border border-neutral-300 w-full"
+              value=${value ?? ""}
+              placeholder=${placeholder ?? ""}
+              onChange=${(e) => onChange(e.target.value)}
             />
           </label>
-        );
+        `;
       }
 
       function Select({ label, value, onChange, options }) {
-        return (
-          <label className="grid gap-1">
-            <span className="text-sm text-neutral-600">{label}</span>
+        return html`
+          <label class="grid gap-1">
+            <span class="text-sm text-neutral-600">${label}</span>
             <select
-              className="px-3 py-2 rounded-xl border border-neutral-300"
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
+              class="px-3 py-2 rounded-xl border border-neutral-300"
+              value=${value}
+              onChange=${(e) => onChange(e.target.value)}
             >
-              {options.map((o) => (
-                <option key={o} value={o}>
-                  {o}
-                </option>
-              ))}
+              ${options.map(
+                (o) => html`<option key=${o} value=${o}>${o}</option>`
+              )}
             </select>
           </label>
-        );
+        `;
       }
 
       function ProgressPill({ label, done, total, onClick }) {
         const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-        return (
+        return html`
           <button
-            onClick={onClick}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-200 bg-white shadow-sm"
+            onClick=${onClick}
+            class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-200 bg-white shadow-sm"
           >
-            <span className="text-xs font-medium">{label}</span>
-            <span className="text-xs text-neutral-500">
-              {done}/{total} · {pct}%
+            <span class="text-xs font-medium">${label}</span>
+            <span class="text-xs text-neutral-500">
+              ${done}/${total} · ${pct}%
             </span>
           </button>
-        );
+        `;
       }
 
       function SectionHeader({ title, subtitle }) {
-        return (
-          <div className="mb-3">
-            <div className="text-lg font-semibold">{title}</div>
-            {subtitle && <div className="text-sm text-neutral-600">{subtitle}</div>}
+        return html`
+          <div class="mb-3">
+            <div class="text-lg font-semibold">${title}</div>
+            ${
+              subtitle &&
+              html`<div class="text-sm text-neutral-600">${subtitle}</div>`
+            }
           </div>
-        );
+        `;
       }
 
       // Self-tests (run after helpers exist)
@@ -431,85 +433,76 @@
           function: "IDENTIFY",
           category: "Supply Chain",
           text: {
-            fr: "Les risques liés à vos fournisseurs et à la chaîne d’approvisionnement sont-ils évalués, suivis et intégrés à votre gestion des risques ?",
-            en: "Are supplier and supply chain risks evaluated, monitored, and integrated into your overall risk management?",
+            fr: "La gestion des risques fournisseurs couvre-t-elle l’ensemble du cycle de vie (due diligence, contractualisation, suivi de performance, plans de remédiation) ?",
+            en: "Does supplier risk management cover the entire lifecycle (due diligence, contracting, performance monitoring, remediation plans)?",
           },
         },
         {
-          id: "PR-AC.01",
-          function: "PROTECT",
-          category: "Access Control",
-          text: {
-            fr: "Les accès sont-ils gérés selon le moindre privilège, avec revues périodiques et traçabilité des changements ?",
-            en: "Are accesses managed according to least privilege with periodic reviews and change traceability?",
-          },
-        },
-        {
-          id: "PR-DS.02",
+          id: "PR-DS.04",
           function: "PROTECT",
           category: "Data Security",
           text: {
-            fr: "Les données sensibles sont-elles correctement identifiées et protégées (chiffrement, DLP, masquage) ?",
-            en: "Are sensitive data properly identified and protected (encryption, DLP, masking)?",
+            fr: "Les données sensibles sont-elles identifiées, classifiées et protégées (chiffrement, DLP, masquage, gouvernance d’accès) ?",
+            en: "Are sensitive data identified, classified, and protected (encryption, DLP, masking, access governance)?",
           },
         },
         {
-          id: "DE-MO.01",
+          id: "PR-PT.03",
+          function: "PROTECT",
+          category: "Protective Technology",
+          text: {
+            fr: "Les configurations de sécurité (bastion, durcissement, patching) sont-elles gérées et auditées régulièrement sur tous les environnements ?",
+            en: "Are security configurations (hardening, patching, baseline) managed and audited regularly across all environments?",
+          },
+        },
+        {
+          id: "DE.AE-01",
           function: "DETECT",
-          category: "Monitoring & Anomalies",
+          category: "Anomalies & Events",
           text: {
-            fr: "Disposez-vous de capacités efficaces de détection d’anomalies (SIEM, UEBA, corrélation) et ces alertes sont-elles analysées activement ?",
-            en: "Do you have effective anomaly detection capabilities (SIEM, UEBA, correlation), and are these alerts actively analyzed?",
+            fr: "Les capacités de détection couvrent-elles les environnements critiques (SIEM, EDR/XDR, UEBA) avec des cas d’usage alignés aux risques ?",
+            en: "Do detection capabilities cover critical environments (SIEM, EDR/XDR, UEBA) with use cases aligned to risks?",
           },
         },
         {
-          id: "RS-IR.01",
+          id: "RS.RP-01",
           function: "RESPOND",
-          category: "Incident Response",
+          category: "Response Planning",
           text: {
-            fr: "Testez-vous régulièrement vos procédures de réponse (table-top, purple team, simulations) et ces tests mènent-ils à des améliorations concrètes ?",
-            en: "Do you regularly test your incident response procedures (table-top, purple team, simulations), and do these tests lead to concrete improvements?",
+            fr: "Disposez-vous de plans de réponse aux incidents testés (table-top, simulations) couvrant les scénarios critiques (ransomware, fuite de données, compromission fournisseur) ?",
+            en: "Do you have tested incident response plans (table-top, simulations) covering critical scenarios (ransomware, data breach, supplier compromise)?",
           },
         },
         {
-          id: "RC-IM.01",
-          function: "RECOVER",
-          category: "Improvements & Continuity",
+          id: "RS.CO-02",
+          function: "RESPOND",
+          category: "Communications",
           text: {
-            fr: "Les plans de reprise (DRP/BCP) sont-ils testés, mesurés et améliorés avec des objectifs RTO/RPO clairs ?",
-            en: "Are recovery plans (DRP/BCP) tested, measured, and continually improved with clear RTO/RPO objectives?",
+            fr: "Les communications de crise cyber sont-elles préparées (messagerie, porte-paroles, obligations réglementaires, relations médias et partenaires) ?",
+            en: "Are cyber crisis communications prepared (messaging, spokespeople, regulatory obligations, media and partner relations)?",
+          },
+        },
+        {
+          id: "RC.IM-01",
+          function: "RECOVER",
+          category: "Improvements",
+          text: {
+            fr: "Les retours d’expérience post-incident alimentent-ils l’amélioration continue (revues, plans d’actions, priorisation budgétaire, partage avec les parties prenantes) ?",
+            en: "Do post-incident lessons feed continuous improvement (reviews, action plans, budget prioritization, stakeholder sharing)?",
           },
         },
       ];
 
-      const STORAGE_KEY = "nist-csf-20-questionnaire";
-      const LANG_KEY = "nist-csf-20-lang";
+      const STORAGE_KEY = "nist-csf-20-app";
 
       function NistCsfQuestionnaire() {
-        const [lang, setLang] = useState(() => {
-          try {
-            if (typeof window === "undefined") return "fr";
-            return window.localStorage.getItem(LANG_KEY) || "fr";
-          } catch (e) {
-            return "fr";
-          }
-        });
-        useEffect(() => {
-          try {
-            if (typeof window !== "undefined") {
-              window.localStorage.setItem(LANG_KEY, lang);
-            }
-          } catch (e) {}
-        }, [lang]);
-        const t = (key) => (I18N[lang] && I18N[lang][key]) || key;
-
+        const [lang, setLang] = useState("fr");
         const [meta, setMeta] = useState({
           project: "",
           assessor: "",
           organization: "",
-          assessmentDate: new Date().toISOString().slice(0, 10),
+          assessmentDate: "",
         });
-
         const [answers, setAnswers] = useState(() => {
           try {
             if (typeof window === "undefined") return {};
@@ -705,283 +698,252 @@
           evt.target.value = "";
         }
 
-        const FlagToggle = () => (
-          <button
-            title={t("globalToggleHint")}
-            onClick={() => setLang((p) => (p === "fr" ? "en" : "fr"))}
-            className="text-xl md:text-2xl px-2 py-1 rounded-lg hover:bg-neutral-100"
-            aria-label={t("globalLang")}
-          >
-            {lang === "fr" ? "🇬🇧" : "🇫🇷"}
-          </button>
-        );
+        const FlagToggle = () =>
+          html`
+            <button
+              title=${t("globalToggleHint")}
+              onClick=${() => setLang((p) => (p === "fr" ? "en" : "fr"))}
+              class="text-xl md:text-2xl px-2 py-1 rounded-lg hover:bg-neutral-100"
+              aria-label=${t("globalLang")}
+            >
+              ${lang === "fr" ? "🇬🇧" : "🇫🇷"}
+            </button>
+          `;
 
-        return (
-          <div className="min-h-screen bg-neutral-50 text-neutral-900">
-            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-neutral-200">
-              <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-                <h1 className="text-xl md:text-2xl font-semibold">{t("appTitle")}</h1>
-                <div className="flex items-center gap-2">
-                  <FlagToggle />
-                  <button
-                    onClick={exportCSV}
-                    className="px-3 py-2 rounded-xl border hover:bg-neutral-100"
-                  >
-                    {t("exportCSV")}
+        function t(key) {
+          return I18N[lang][key] ?? key;
+        }
+
+        return html`
+          <div class="min-h-screen bg-neutral-50 text-neutral-900">
+            <div class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-neutral-200">
+              <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                <h1 class="text-xl md:text-2xl font-semibold">${t("appTitle")}</h1>
+                <div class="flex items-center gap-2">
+                  <${FlagToggle} />
+                  <button onClick=${exportCSV} class="px-3 py-2 rounded-xl border hover:bg-neutral-100">
+                    ${t("exportCSV")}
                   </button>
-                  <button
-                    onClick={exportJSON}
-                    className="px-3 py-2 rounded-xl border hover:bg-neutral-100"
-                  >
-                    {t("exportJSON")}
+                  <button onClick=${exportJSON} class="px-3 py-2 rounded-xl border hover:bg-neutral-100">
+                    ${t("exportJSON")}
                   </button>
-                  <label className="px-3 py-2 rounded-xl border hover:bg-neutral-100 cursor-pointer">
-                    {t("importJSON")}
+                  <label class="px-3 py-2 rounded-xl border hover:bg-neutral-100 cursor-pointer">
+                    ${t("importJSON")}
                     <input
                       type="file"
                       accept="application/json"
-                      onChange={importJSON}
-                      className="hidden"
+                      onChange=${importJSON}
+                      class="hidden"
                     />
                   </label>
                 </div>
               </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 pt-4 pb-2 grid grid-cols-1 lg:grid-cols-12 gap-4">
-              <div className="lg:col-span-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm flex flex-col items-center justify-center">
-                <div className="text-sm text-neutral-500">{t("maturityScore")}</div>
-                <div className="text-5xl font-semibold mt-1">{overallMaturity.toFixed(1)}</div>
-                <div className="text-xs text-neutral-500 mt-2">{t("maturityAvgHint")}</div>
+            <div class="max-w-6xl mx-auto px-4 pt-4 pb-2 grid grid-cols-1 lg:grid-cols-12 gap-4">
+              <div class="lg:col-span-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm flex flex-col items-center justify-center">
+                <div class="text-sm text-neutral-500">${t("maturityScore")}</div>
+                <div class="text-5xl font-semibold mt-1">${overallMaturity.toFixed(1)}</div>
+                <div class="text-xs text-neutral-500 mt-2">${t("maturityAvgHint")}</div>
               </div>
-              <div className="lg:col-span-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-                <div className="font-medium mb-2">{t("maturityByFn")}</div>
-                <div className="h-40">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={functionScores} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="fn" tick={{ fontSize: 12 }} />
-                      <YAxis domain={[0, 5]} tick={{ fontSize: 12 }} />
-                      <Tooltip formatter={(v) => Number(v).toFixed(2)} />
-                      <Legend verticalAlign="bottom" height={24} />
-                      <Bar
+              <div class="lg:col-span-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+                <div class="font-medium mb-2">${t("maturityByFn")}</div>
+                <div class="h-40">
+                  <${ResponsiveContainer} width="100%" height="100%">
+                    <${BarChart} data=${functionScores} margin=${{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                      <${CartesianGrid} strokeDasharray="3 3" />
+                      <${XAxis} dataKey="fn" tick=${{ fontSize: 12 }} />
+                      <${YAxis} domain=${[0, 5]} tick=${{ fontSize: 12 }} />
+                      <${Tooltip} formatter=${(v) => Number(v).toFixed(2)} />
+                      <${Legend} verticalAlign="bottom" height=${24} />
+                      <${Bar}
                         dataKey="score"
-                        name={lang === "fr" ? "Actuel" : "Current"}
-                        radius={[6, 6, 0, 0]}
+                        name=${lang === "fr" ? "Actuel" : "Current"}
+                        radius=${[6, 6, 0, 0]}
                       >
-                        {functionScores.map((row) => (
-                          <Cell key={`${row.fn}-act`} fill={functionColor(row.fn)} />
-                        ))}
-                      </Bar>
-                      {functionScores.map((row) => (
-                        <ReferenceLine
-                          key={`${row.fn}-target-line`}
-                          segment={[
-                            { x: row.fn, y: row.score },
-                            { x: row.fn, y: row.target },
-                          ]}
-                          stroke={functionColor(row.fn)}
-                          strokeDasharray="1 8"
-                          strokeWidth={12}
-                          ifOverflow="extendDomain"
-                        />
-                      ))}
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-200 bg-white">
-                    <span
-                      className="inline-block w-3 h-1 rounded-full"
-                      style={{ borderTop: "2px dashed #64748B", width: 24 }}
-                    />
-                    <span>{t("targetLegend")}</span>
-                  </span>
-                  {functions.map((fn) => (
-                    <span
-                      key={fn}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-200 bg-white"
-                    >
-                      <span
-                        className="inline-block w-2.5 h-2.5 rounded-full"
-                        style={{ backgroundColor: functionColor(fn) }}
-                      />
-                      {fn}
-                    </span>
-                  ))}
+                        ${functionScores.map(
+                          (row) =>
+                            html`<${Cell} key=${`${row.fn}-act`} fill=${functionColor(row.fn)} />`
+                        )}
+                      <//>
+                      ${functionScores.map(
+                        (row) =>
+                          html`<${ReferenceLine}
+                            key=${`${row.fn}-target-line`}
+                            x=${row.fn}
+                            y=${row.target}
+                            strokeDasharray="4 3"
+                            stroke=${functionColor(row.fn)}
+                          />`
+                      )}
+                    <//>
+                  <//>
                 </div>
               </div>
-              <div className="lg:col-span-5 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-                <div className="font-medium mb-2">{t("radarTitle")}</div>
-                <div className="h-40">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RChart cx="50%" cy="50%" outerRadius="80%" data={functionScores}>
-                      <PolarGrid />
-                      <PolarAngleAxis dataKey="fn" tick={<AngleTick />} />
-                      <PolarRadiusAxis domain={[0, 5]} tick={{ fontSize: 10 }} />
-                      <RadarShape
-                        name={lang === "fr" ? "Actuel" : "Current"}
+              <div class="lg:col-span-5 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+                <div class="font-medium mb-2">${t("radarTitle")}</div>
+                <div class="h-40">
+                  <${ResponsiveContainer} width="100%" height="100%">
+                    <${RChart} data=${functionScores} outerRadius="80%">
+                      <${PolarGrid} />
+                      <${PolarAngleAxis} dataKey="fn" tick=${html`<${AngleTick} />`} />
+                      <${PolarRadiusAxis} angle=${30} domain=${[0, 5]} />
+                      <${RadarShape}
+                        name=${lang === "fr" ? "Actuel" : "Current"}
                         dataKey="score"
-                        stroke="#111827"
-                        fill="#111827"
-                        fillOpacity={0.15}
+                        stroke="#2563EB"
+                        fill="#3B82F6"
+                        fillOpacity=${0.4}
                       />
-                      <RadarShape
-                        name={lang === "fr" ? "Cible" : "Target"}
+                      <${RadarShape}
+                        name=${t("targetLegend")}
                         dataKey="target"
-                        stroke="#64748B"
-                        fill="#64748B"
-                        fillOpacity={0.08}
+                        strokeDasharray="4 3"
+                        stroke="#F97316"
+                        fill="#FBBF24"
+                        fillOpacity=${0.2}
                       />
-                      <Legend />
-                    </RChart>
-                  </ResponsiveContainer>
+                      <${Legend} verticalAlign="top" height=${24} />
+                    <//>
+                  <//>
                 </div>
               </div>
-              <div className="lg:col-span-12 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-                <div className="font-medium mb-2">{t("catTitle")}</div>
-                <div className="grid gap-2">
-                  {categoryScores.slice(0, 12).map((row) => {
+              <div class="lg:col-span-12 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+                <div class="font-medium mb-2">${t("catTitle")}</div>
+                <div class="grid gap-2">
+                  ${categoryScores.slice(0, 12).map((row) => {
                     const color = categoryColor(row.category);
-                    return (
-                      <div
-                        key={row.category}
-                        className="grid grid-cols-12 items-center gap-3"
-                      >
-                        <div
-                          className="col-span-9 truncate text-sm flex items-center gap-2"
-                          title={row.category}
-                        >
-                          <span
-                            className="inline-block w-2.5 h-2.5 rounded-full"
-                            style={{ backgroundColor: color }}
-                          />
-                          <span>{row.category}</span>
+                    return html`
+                      <div class="grid grid-cols-12 items-center gap-3" key=${row.category}>
+                        <div class="col-span-9 truncate text-sm flex items-center gap-2" title=${row.category}>
+                          <span class="inline-block w-2.5 h-2.5 rounded-full" style=${{ backgroundColor: color }}></span>
+                          <span>${row.category}</span>
                         </div>
-                        <div className="col-span-2 h-2 rounded-full bg-neutral-200">
+                        <div class="col-span-2 h-2 rounded-full bg-neutral-200">
                           <div
-                            className="h-2 rounded-full"
-                            style={{ width: `${(row.score / 5) * 100}%`, backgroundColor: color }}
-                          />
+                            class="h-2 rounded-full"
+                            style=${{ width: `${(row.score / 5) * 100}%`, backgroundColor: color }}
+                          ></div>
                         </div>
-                        <div className="col-span-1 text-right text-sm tabular-nums">
-                          {row.score.toFixed(2)}
+                        <div class="col-span-1 text-right text-sm tabular-nums">
+                          ${row.score.toFixed(2)}
                         </div>
                       </div>
-                    );
+                    `;
                   })}
-                  {!categoryScores.length && (
-                    <div className="text-sm text-neutral-500">{t("noDataYet")}</div>
-                  )}
+                  ${
+                    !categoryScores.length &&
+                    html`<div class="text-sm text-neutral-500">${t("noDataYet")}</div>`
+                  }
                 </div>
               </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 py-4 grid md:grid-cols-2 gap-4">
-              <Card title={t("meta")}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <TextField
-                    label={t("project")}
-                    value={meta.project}
-                    onChange={(v) => setMeta({ ...meta, project: v })}
+            <div class="max-w-6xl mx-auto px-4 py-4 grid md:grid-cols-2 gap-4">
+              <${Card} title=${t("meta")}>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <${TextField}
+                    label=${t("project")}
+                    value=${meta.project}
+                    onChange=${(v) => setMeta({ ...meta, project: v })}
                   />
-                  <TextField
-                    label={t("assessor")}
-                    value={meta.assessor}
-                    onChange={(v) => setMeta({ ...meta, assessor: v })}
+                  <${TextField}
+                    label=${t("assessor")}
+                    value=${meta.assessor}
+                    onChange=${(v) => setMeta({ ...meta, assessor: v })}
                   />
-                  <TextField
-                    label={t("org")}
-                    value={meta.organization}
-                    onChange={(v) => setMeta({ ...meta, organization: v })}
+                  <${TextField}
+                    label=${t("org")}
+                    value=${meta.organization}
+                    onChange=${(v) => setMeta({ ...meta, organization: v })}
                   />
-                  <TextField
-                    label={t("date")}
+                  <${TextField}
+                    label=${t("date")}
                     type="date"
-                    value={meta.assessmentDate}
-                    onChange={(v) => setMeta({ ...meta, assessmentDate: v })}
+                    value=${meta.assessmentDate}
+                    onChange=${(v) => setMeta({ ...meta, assessmentDate: v })}
                   />
                 </div>
-              </Card>
-              <Card title={t("quickFilter")}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <Select
-                    label={t("fnLabel")}
-                    value={filter.function}
-                    onChange={(v) => setFilter({ ...filter, function: v })}
-                    options={["ALL", ...functions]}
+              <//>
+              <${Card} title=${t("quickFilter")}>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <${Select}
+                    label=${t("fnLabel")}
+                    value=${filter.function}
+                    onChange=${(v) => setFilter({ ...filter, function: v })}
+                    options=${["ALL", ...functions]}
                   />
-                  <Select
-                    label={t("catLabel")}
-                    value={filter.category}
-                    onChange={(v) => setFilter({ ...filter, category: v })}
-                    options={categories}
+                  <${Select}
+                    label=${t("catLabel")}
+                    value=${filter.category}
+                    onChange=${(v) => setFilter({ ...filter, category: v })}
+                    options=${categories}
                   />
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {functions.map((fn) => (
-                    <ProgressPill
-                      key={fn}
-                      label={fn}
-                      done={progressByFunction[fn]?.answered || 0}
-                      total={progressByFunction[fn]?.total || 0}
-                      onClick={() => setFilter({ ...filter, function: fn })}
-                    />
-                  ))}
-                  <ProgressPill
+                <div class="mt-3 flex flex-wrap gap-2">
+                  ${functions.map(
+                    (fn) => html`<${ProgressPill}
+                      key=${fn}
+                      label=${fn}
+                      done=${progressByFunction[fn]?.answered || 0}
+                      total=${progressByFunction[fn]?.total || 0}
+                      onClick=${() => setFilter({ ...filter, function: fn })}
+                    />`
+                  )}
+                  <${ProgressPill}
                     label="GLOBAL"
-                    done={overall.answered}
-                    total={overall.total}
-                    onClick={() => setFilter({ ...filter, function: "ALL" })}
+                    done=${overall.answered}
+                    total=${overall.total}
+                    onClick=${() => setFilter({ ...filter, function: "ALL" })}
                   />
                 </div>
-              </Card>
+              <//>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 pt-0 pb-2">
-              <TextField
-                label={t("search")}
-                placeholder={t("searchPh")}
-                value={filter.search}
-                onChange={(v) => setFilter({ ...filter, search: v })}
+            <div class="max-w-6xl mx-auto px-4 pt-0 pb-2">
+              <${TextField}
+                label=${t("search")}
+                placeholder=${t("searchPh")}
+                value=${filter.search}
+                onChange=${(v) => setFilter({ ...filter, search: v })}
               />
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 pb-2">
-              <Card title={t("targets")}>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                  {functions.map((fn) => (
-                    <label key={fn} className="text-sm text-neutral-700">
-                      <span className="block text-xs text-neutral-500 mb-1">{fn}</span>
+            <div class="max-w-6xl mx-auto px-4 pb-2">
+              <${Card} title=${t("targets")}>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                  ${functions.map(
+                    (fn) => html`<label key=${fn} class="text-sm text-neutral-700">
+                      <span class="block text-xs text-neutral-500 mb-1">${fn}</span>
                       <input
                         type="number"
-                        min={0}
-                        max={5}
-                        step={0.1}
-                        value={targets[fn]}
-                        onChange={(e) =>
+                        min=${0}
+                        max=${5}
+                        step=${0.1}
+                        value=${targets[fn]}
+                        onChange=${(e) =>
                           setTargets({
                             ...targets,
                             [fn]: Math.max(0, Math.min(5, Number(e.target.value))),
                           })
                         }
-                        className="w-full px-3 py-2 rounded-xl border border-neutral-300"
+                        class="w-full px-3 py-2 rounded-xl border border-neutral-300"
                       />
-                    </label>
-                  ))}
+                    </label>`
+                  )}
                 </div>
-              </Card>
+              <//>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 pb-10">
-              <SectionHeader
-                title={t("questions")}
-                subtitle={`${t("display")}: ${filteredControls.length} / ${controls.length}`}
+            <div class="max-w-6xl mx-auto px-4 pb-10">
+              <${SectionHeader}
+                title=${t("questions")}
+                subtitle=${`${t("display")}: ${filteredControls.length} / ${controls.length}`}
               />
 
-              <div className="mb-4 overflow-x-auto">
-                <div className="inline-flex gap-2 py-1">
-                  {["ALL", ...functions].map((key) => {
+              <div class="mb-4 overflow-x-auto">
+                <div class="inline-flex gap-2 py-1">
+                  ${["ALL", ...functions].map((key) => {
                     const isAll = key === "ALL";
                     const active = filter.function === (isAll ? "ALL" : key);
                     const baseColor = isAll ? "#6B7280" : functionColor(key);
@@ -990,75 +952,73 @@
                         ? "Toutes les fonctions"
                         : "All functions"
                       : getFunctionLabel(key, lang);
-                    return (
+                    return html`
                       <button
-                        key={key}
-                        onClick={() =>
+                        key=${key}
+                        onClick=${() =>
                           setFilter({
                             ...filter,
                             function: isAll ? "ALL" : key,
                           })
                         }
-                        className="px-4 py-2 rounded-xl text-sm font-medium border whitespace-nowrap transition-colors"
-                        style={{
+                        class="px-4 py-2 rounded-xl text-sm font-medium border whitespace-nowrap transition-colors"
+                        style=${{
                           backgroundColor: active ? baseColor : "transparent",
                           color: active ? "#FFFFFF" : baseColor,
                           borderColor: baseColor,
                         }}
                       >
-                        {label}
+                        ${label}
                       </button>
-                    );
+                    `;
                   })}
                 </div>
               </div>
 
-              <div className="grid gap-4">
-                {filteredControls.map((q) => {
+              <div class="grid gap-4">
+                ${filteredControls.map((q) => {
                   const a = answers[q.id] || {};
                   const color = categoryColor(q.category);
                   const qText = getQuestionText(q);
                   const hasDetails = Boolean(detailsById[q.id]);
                   const d = detailsById[q.id]?.[lang];
-                  return (
+                  return html`
                     <div
-                      key={q.id}
-                      className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"
-                      style={{ borderLeftWidth: 6, borderLeftColor: color }}
+                      key=${q.id}
+                      class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"
+                      style=${{ borderLeftWidth: 6, borderLeftColor: color }}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="text-xs uppercase tracking-wide text-neutral-500 flex items-center gap-2">
-                            <span
-                              className="inline-block w-2.5 h-2.5 rounded-full"
-                              style={{ backgroundColor: color }}
-                            />
-                            {q.function} · {q.category}
+                      <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                          <div class="text-xs uppercase tracking-wide text-neutral-500 flex items-center gap-2">
+                            <span class="inline-block w-2.5 h-2.5 rounded-full" style=${{ backgroundColor: color }}></span>
+                            ${q.function} · ${q.category}
                           </div>
-                          <div className="mt-0.5 font-medium break-words">
-                            {q.id} — {qText}
+                          <div class="mt-0.5 font-medium break-words">
+                            ${q.id} — ${qText}
                           </div>
                         </div>
-                        <div className="shrink-0 flex items-center gap-2">
-                          {hasDetails && (
-                            <button
-                              onClick={() =>
+                        <div class="shrink-0 flex items-center gap-2">
+                          ${
+                            hasDetails &&
+                            html`<button
+                              onClick=${() =>
                                 setOpenInfo((prev) => ({
                                   ...prev,
                                   [q.id]: !prev[q.id],
                                 }))
                               }
-                              className="w-7 h-7 rounded-full border border-neutral-300 text-neutral-600 hover:bg-neutral-100 flex items-center justify-center"
-                              title={t("moreInfo")}
-                              aria-label={t("moreInfo")}
+                              class="w-7 h-7 rounded-full border border-neutral-300 text-neutral-600 hover:bg-neutral-100 flex items-center justify-center"
+                              title=${t("moreInfo")}
+                              aria-label=${t("moreInfo")}
                             >
                               i
-                            </button>
-                          )}
+                            </button>`
+                          }
                           <select
-                            className="px-3 py-2 rounded-xl border border-neutral-300 bg-white"
-                            value={a.score ?? ""}
-                            onChange={(e) =>
+                            class="px-3 py-2 rounded-xl border border-neutral-300 bg-white"
+                            value=${a.score ?? ""}
+                            onChange=${(e) =>
                               updateAnswer(q.id, {
                                 score:
                                   e.target.value === ""
@@ -1067,91 +1027,83 @@
                               })
                             }
                           >
-                            <option value="">{t("cmmiPlaceholder")}</option>
-                            {CMMI_SCALE.map((opt) => (
-                              <option key={opt.value} value={opt.value}>
-                                {opt.label}
-                              </option>
-                            ))}
+                            <option value="">${t("cmmiPlaceholder")}</option>
+                            ${CMMI_SCALE.map(
+                              (opt) => html`<option key=${opt.value} value=${opt.value}>
+                                ${opt.label}
+                              </option>`
+                            )}
                           </select>
                         </div>
                       </div>
 
-                      {hasDetails && openInfo[q.id] && d && (
-                        <div className="mt-3 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
-                          <div className="grid md:grid-cols-2 gap-3">
-                            <div className="md:col-span-2">
-                              <div className="text-sm font-medium mb-1">
-                                {t("descFull")}
-                              </div>
-                              <p className="text-sm text-neutral-700">{d.desc}</p>
+                      ${
+                        hasDetails &&
+                        openInfo[q.id] &&
+                        d &&
+                        html`<div class="mt-3 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
+                          <div class="grid md:grid-cols-2 gap-3">
+                            <div class="md:col-span-2">
+                              <div class="text-sm font-medium mb-1">${t("descFull")}</div>
+                              <p class="text-sm text-neutral-700">${d.desc}</p>
                             </div>
                             <div>
-                              <div className="text-sm font-medium mb-1">
-                                {t("people")}
-                              </div>
-                              <ul className="list-disc pl-5 text-sm text-neutral-700">
-                                {d.people.map((it, idx) => (
-                                  <li key={idx}>{it}</li>
-                                ))}
+                              <div class="text-sm font-medium mb-1">${t("people")}</div>
+                              <ul class="list-disc pl-5 text-sm text-neutral-700">
+                                ${d.people.map((it, idx) => html`<li key=${idx}>${it}</li>`)}
                               </ul>
                             </div>
                             <div>
-                              <div className="text-sm font-medium mb-1">
-                                {t("process")}
-                              </div>
-                              <ul className="list-disc pl-5 text-sm text-neutral-700">
-                                {d.process.map((it, idx) => (
-                                  <li key={idx}>{it}</li>
-                                ))}
+                              <div class="text-sm font-medium mb-1">${t("process")}</div>
+                              <ul class="list-disc pl-5 text-sm text-neutral-700">
+                                ${d.process.map((it, idx) => html`<li key=${idx}>${it}</li>`)}
                               </ul>
                             </div>
-                            <div className="md:col-span-2">
-                              <div className="text-sm font-medium mb-1">
-                                {t("technology")}
-                              </div>
-                              <div className="flex flex-wrap gap-2">
-                                {d.tech.map((it, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="px-2 py-1 rounded-full border border-neutral-300 bg-white text-xs"
-                                  >
-                                    {it}
-                                  </span>
-                                ))}
+                            <div class="md:col-span-2">
+                              <div class="text-sm font-medium mb-1">${t("technology")}</div>
+                              <div class="flex flex-wrap gap-2">
+                                ${d.tech.map(
+                                  (it, idx) =>
+                                    html`<span
+                                      key=${idx}
+                                      class="px-2 py-1 rounded-full border border-neutral-300 bg-white text-xs"
+                                    >
+                                      ${it}
+                                    </span>`
+                                )}
                               </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        </div>`
+                      }
 
-                      <div className="mt-3">
+                      <div class="mt-3">
                         <textarea
-                          className="w-full min-h-[88px] rounded-xl border border-neutral-300 p-3"
-                          placeholder={t("commentsPh")}
-                          value={a.comment || ""}
-                          onChange={(e) =>
+                          class="w-full min-h-[88px] rounded-xl border border-neutral-300 p-3"
+                          placeholder=${t("commentsPh")}
+                          value=${a.comment || ""}
+                          onChange=${(e) =>
                             updateAnswer(q.id, { comment: e.target.value })
                           }
-                        />
+                        ></textarea>
                       </div>
                     </div>
-                  );
+                  `;
                 })}
               </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 pb-16 text-sm text-neutral-600">
-              <p className="mb-1">{t("tips1")}</p>
-              <p className="mb-1">{t("tips2")}</p>
-              <p>{t("tips3")}</p>
+            <div class="max-w-6xl mx-auto px-4 pb-16 text-sm text-neutral-600">
+              <p class="mb-1">${t("tips1")}</p>
+              <p class="mb-1">${t("tips2")}</p>
+              <p>${t("tips3")}</p>
             </div>
           </div>
-        );
+        `;
       }
 
       const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(<NistCsfQuestionnaire />);
+      root.render(html`<${NistCsfQuestionnaire} />`);
     </script>
   </body>
 </html>

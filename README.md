@@ -38,3 +38,14 @@ Although the app requires no build tooling, the repository includes helper workf
 ## License
 
 This project is provided as-is without an explicit license. Please add a license if you intend to redistribute the code.
+
+## Troubleshooting GitHub Pages
+
+If the GitHub Action completes successfully but the public site is still unavailable, double-check the following configuration points:
+
+1. **Pages configuration** – In the repository, open **Settings → Pages** and confirm that **GitHub Actions** is selected as the source and that the published branch/environment matches the workflow output URL.
+2. **Workflow artifacts** – Open the latest successful run of `Deploy static site to GitHub Pages` and ensure the uploaded artifact contains the `index.html` file at the root (you can inspect the artifact from the run summary).
+3. **Cache propagation** – GitHub Pages can take a few minutes to serve a new deployment. Force-refresh the page (Ctrl/⌘+Shift+R) or open the site in a private window after a short wait.
+4. **Custom domain/DNS** – If a custom domain is configured, verify that DNS records point to GitHub Pages and that the domain appears under **Settings → Pages → Custom domain** without warnings.
+
+If the problem persists, consider re-running the workflow manually from the **Actions** tab or checking the browser console for runtime errors that may prevent the React application from mounting.
