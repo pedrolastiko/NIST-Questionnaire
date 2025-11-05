@@ -1,747 +1,1157 @@
-iimport React, { useEffect, useMemo, useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Radar as RadarShape,
-  RadarChart as RChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Legend,
-  Cell,
-  ReferenceLine,
-} from "recharts";
-
-/**
- * NIST CSF 2.0 – Web Questionnaire (React single-file component)
- *
- * FIX: Some builds complained "TextField is not defined" when only the JSX usage remained.
- * To make this rock-solid, we:
- *  - Define all UI helper components (TextField, Card, Select, etc.) BEFORE usage
- *  - Keep everything in a single module scope (no external import needed)
- *  - Add self-tests to ensure helpers exist at runtime
- *
- * Features
- * - CMMI dropdown per question + comment field
- * - Autosave (localStorage) with SSR guards
- * - Dashboard (overall, bar per Function with dotted target reaching the bar width, radar current vs target, top categories)
- * - Filters (Function/Category) + Full-width Search under Meta & Filter
- * - Targets editor (after Meta & Filter)
- * - Export JSON/CSV + Import JSON
- * - Global 🇫🇷/🇬🇧 toggle (UI + questions). First 5 questions bilingual; others set bilingual now
- */
-
-// ----------------------------- Utils -----------------------------
-function avg(values) {
-  const nums = (values || []).filter((v) => typeof v === "number" && !Number.isNaN(v));
-  if (!nums.length) return 0;
-  return nums.reduce((a, b) => a + b, 0) / nums.length;
-}
-
-function escapeCSV(v) {
-  const s = String(v ?? "");
-  if (s.includes(",") || s.includes("\n") || s.includes('"')) {
-    return '"' + s.replace(/"/g, '""') + '"';
-  }
-  return s;
-}
-
-const PALETTE = [
-  "#2563EB", // blue-600
-  "#EA580C", // orange-600
-  "#16A34A", // green-600
-  "#9333EA", // purple-600
-  "#DC2626", // red-600
-  "#0891B2", // cyan-600
-  "#CA8A04", // yellow-600
-  "#0D9488", // teal-600
-  "#7C3AED", // violet-600
-  "#BE185D", // pink-700
-  "#4F46E5", // indigo-600
-  "#065F46", // emerald-800
-];
-function hashString(str = "") {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) {
-    h = (h << 5) - h + str.charCodeAt(i);
-    h |= 0;
-  }
-  return Math.abs(h);
-}
-function categoryColor(name) {
-  if (!name) return "#111827";
-  const idx = hashString(name) % PALETTE.length;
-  return PALETTE[idx];
-}
-
-const FUNCTION_COLORS = {
-  GOVERN: "#1E3A8A",
-  IDENTIFY: "#2563EB",
-  PROTECT: "#059669",
-  DETECT: "#9333EA",
-  RESPOND: "#DC2626",
-  RECOVER: "#EA580C",
-};
-function functionColor(fn) {
-  return FUNCTION_COLORS[fn] || "#111827";
-}
-
-// ----------------------------- i18n -----------------------------
-const I18N = {
-  fr: {
-    appTitle: "NIST CSF 2.0 – Questionnaire d’évaluation",
-    exportCSV: "Export CSV",
-    exportJSON: "Export JSON",
-    importJSON: "Import JSON",
-    maturityScore: "Score de maturité",
-    maturityAvgHint: "Moyenne de toutes les questions notées",
-    maturityByFn: "Maturité par Function",
-    radarTitle: "Actuel vs Cible (par Function)",
-    catTitle: "Maturité par Catégorie (moyenne des questions renseignées)",
-    noDataYet: "Aucune donnée encore — commence à noter des questions pour alimenter le dashboard.",
-    targetLegend: "Cible (pointillés)",
-    meta: "Métadonnées",
-    project: "Projet",
-    assessor: "Évaluateur",
-    org: "Organisation",
-    date: "Date",
-    quickFilter: "Filtre rapide",
-    fnLabel: "Fonction",
-    catLabel: "Catégorie",
-    search: "Recherche",
-    searchPh: "ID, texte, catégorie...",
-    targets: "Cibles par Function",
-    questions: "Questions",
-    display: "Affichage",
-    cmmiPlaceholder: "Notation CMMI…",
-    commentsPh: "Commentaires, preuves, risques, actions…",
-    tips1: "💾 Sauvegarde automatique activée (navigateur localStorage).",
-    tips2: "📤 Utilisez Export JSON/CSV pour partager ou analyser vos résultats.",
-    tips3: "🖨️ Astuce impression: Ctrl/Cmd+P → Imprimer en PDF (format A4/Lettre).",
-    globalLang: "Langue",
-    globalToggleHint: "Basculer FR/EN pour tout le site",
-  },
-  en: {
-    appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
-    exportCSV: "Export CSV",
-    exportJSON: "Export JSON",
-    importJSON: "Import JSON",
-    maturityScore: "Maturity Score",
-    maturityAvgHint: "Average of all answered questions",
-    maturityByFn: "Maturity by Function",
-    radarTitle: "Current vs Target (by Function)",
-    catTitle: "Maturity by Category (average of answered questions)",
-    noDataYet: "No data yet — start rating questions to feed the dashboard.",
-    targetLegend: "Target (dotted)",
-    meta: "Metadata",
-    project: "Project",
-    assessor: "Assessor",
-    org: "Organization",
-    date: "Date",
-    quickFilter: "Quick Filter",
-    fnLabel: "Function",
-    catLabel: "Category",
-    search: "Search",
-    searchPh: "ID, text, category...",
-    targets: "Targets by Function",
-    questions: "Questions",
-    display: "Display",
-    cmmiPlaceholder: "CMMI rating…",
-    commentsPh: "Comments, evidence, risks, actions…",
-    tips1: "💾 Autosave enabled (browser localStorage).",
-    tips2: "📤 Use Export JSON/CSV to share or analyze your results.",
-    tips3: "🖨️ Print tip: Ctrl/Cmd+P → Print to PDF (A4/Letter).",
-    globalLang: "Language",
-    globalToggleHint: "Toggle FR/EN across the site",
-  },
-};
-
-function AngleTick(props) {
-  const { x, y, payload, textAnchor } = props;
-  const color = functionColor(payload?.value);
-  return (
-    <text x={x} y={y} textAnchor={textAnchor || "middle"} fill={color} fontSize={11}>
-      {payload?.value}
-    </text>
-  );
-}
-
-// ----------------------------- UI helpers BEFORE usage -----------------------------
-function Card({ title, children }) {
-  return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-      {title && <div className="font-medium mb-3">{title}</div>}
-      {children}
-    </div>
-  );
-}
-
-function TextField({ label, value, onChange, type = "text", placeholder }) {
-  return (
-    <label className="grid gap-1 w-full">
-      <span className="text-sm text-neutral-600">{label}</span>
-      <input
-        type={type}
-        className="px-3 py-2 rounded-xl border border-neutral-300 w-full"
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </label>
-  );
-}
-
-function Select({ label, value, onChange, options }) {
-  return (
-    <label className="grid gap-1">
-      <span className="text-sm text-neutral-600">{label}</span>
-      <select className="px-3 py-2 rounded-xl border border-neutral-300" value={value} onChange={(e) => onChange(e.target.value)}>
-        {options.map((o) => (
-          <option key={o} value={o}>{o}</option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
-function ProgressPill({ label, done, total, onClick }) {
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  return (
-    <button onClick={onClick} className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-200 bg-white shadow-sm">
-      <span className="text-xs font-medium">{label}</span>
-      <span className="text-xs text-neutral-500">{done}/{total} · {pct}%</span>
-    </button>
-  );
-}
-
-function SectionHeader({ title, subtitle }) {
-  return (
-    <div className="mb-3">
-      <div className="text-lg font-semibold">{title}</div>
-      {subtitle && <div className="text-sm text-neutral-600">{subtitle}</div>}
-    </div>
-  );
-}
-
-// Self-tests (run after helpers exist)
-function runSelfTests() {
-  try {
-    console.assert(avg([1, 2, 3]) === 2, "avg([1,2,3]) should be 2");
-    console.assert(avg([undefined, 3, null, 5]) === 4, "avg ignores non-numbers");
-    console.assert(avg([]) === 0, "avg([]) is 0");
-    console.assert(escapeCSV('a"b') === '"a""b"', "CSV quotes doubled");
-    console.assert(categoryColor("Asset") === categoryColor("Asset"), "color stable");
-    console.assert(typeof TextField === "function", "TextField helper must exist");
-    console.assert(typeof Card === "function", "Card helper must exist");
-  } catch (e) {
-    console.warn("Self-tests failed:", e);
-  }
-}
-if (typeof window !== "undefined") runSelfTests();
-
-// ----------------------------- Data -----------------------------
-const CMMI_SCALE = [
-  { value: 0, label: "0 – Incomplet / Non amorcé" },
-  { value: 1, label: "1 – Initial / Ad hoc" },
-  { value: 2, label: "2 – Géré" },
-  { value: 3, label: "3 – Défini" },
-  { value: 4, label: "4 – Quantitativement géré" },
-  { value: 5, label: "5 – Optimisé" },
-];
-
-// First 5 bilingual, others now bilingual as well
-const controls = [
-  // GOVERN
-  {
-    id: "GOV-RM.01",
-    function: "GOVERN",
-    category: "Risk Management Strategy",
-    text: {
-      fr: "Votre organisation dispose-t-elle d’une stratégie claire de gestion des risques cyber, alignée sur les objectifs d’affaires et connue des principales parties prenantes ?",
-      en: "Does your organization have a clear cyber risk management strategy aligned with business objectives and known by key stakeholders?",
-    },
-  },
-  {
-    id: "GOV-PO.02",
-    function: "GOVERN",
-    category: "Policy & Oversight",
-    text: {
-      fr: "Les rôles et responsabilités en cybersécurité sont-ils bien définis, compris et suivis (comité, RACI, indicateurs) ?",
-      en: "Are cybersecurity roles and responsibilities well defined, understood, and monitored (e.g., committee, RACI, KPIs)?",
-    },
-  },
-  // IDENTIFY
-  {
-    id: "ID-AM.01",
-    function: "IDENTIFY",
-    category: "Asset Management",
-    text: {
-      fr: "Disposez-vous d’un inventaire complet et à jour de vos actifs (IT, OT, SaaS, Cloud) avec propriétaires, criticité et dépendances ?",
-      en: "Do you maintain a complete, up-to-date inventory of assets (IT, OT, SaaS, Cloud) with owners, criticality, and dependencies?",
-    },
-  },
-  {
-    id: "ID-SC.02",
-    function: "IDENTIFY",
-    category: "Supply Chain",
-    text: {
-      fr: "Les risques liés à vos fournisseurs et à la chaîne d’approvisionnement sont-ils évalués, suivis et intégrés à votre gestion des risques ?",
-      en: "Are supplier and supply chain risks evaluated, monitored, and integrated into your overall risk management?",
-    },
-  },
-  // PROTECT
-  {
-    id: "PR-AC.01",
-    function: "PROTECT",
-    category: "Access Control",
-    text: {
-      fr: "Les accès sont-ils gérés selon le moindre privilège, avec revues périodiques et traçabilité des changements ?",
-      en: "Are accesses managed according to least privilege with periodic reviews and change traceability?",
-    },
-  },
-  {
-    id: "PR-DS.02",
-    function: "PROTECT",
-    category: "Data Security",
-    text: {
-      fr: "Les données sensibles sont-elles correctement identifiées et protégées (chiffrement, DLP, masquage) ?",
-      en: "Are sensitive data properly identified and protected (encryption, DLP, masking)?",
-    },
-  },
-  // DETECT
-  {
-    id: "DE-MO.01",
-    function: "DETECT",
-    category: "Monitoring & Anomalies",
-    text: {
-      fr: "Disposez-vous de capacités efficaces de détection d’anomalies (SIEM, UEBA, corrélation) et ces alertes sont-elles analysées activement ?",
-      en: "Do you have effective anomaly detection capabilities (SIEM, UEBA, correlation), and are these alerts actively analyzed?",
-    },
-  },
-  // RESPOND
-  {
-    id: "RS-IR.01",
-    function: "RESPOND",
-    category: "Incident Response",
-    text: {
-      fr: "Testez-vous régulièrement vos procédures de réponse (table-top, purple team, simulations) et ces tests mènent-ils à des améliorations concrètes ?",
-      en: "Do you regularly test your incident response procedures (table-top, purple team, simulations), and do these tests lead to concrete improvements?",
-    },
-  },
-  // RECOVER
-  {
-    id: "RC-IM.01",
-    function: "RECOVER",
-    category: "Improvements & Continuity",
-    text: {
-      fr: "Les plans de reprise (DRP/BCP) sont-ils testés, mesurés et améliorés avec des objectifs RTO/RPO clairs ?",
-      en: "Are recovery plans (DRP/BCP) tested, measured, and continually improved with clear RTO/RPO objectives?",
-    },
-  },
-];
-
-const STORAGE_KEY = "nist-csf-20-questionnaire";
-const LANG_KEY = "nist-csf-20-lang";
-
-// ----------------------------- App -----------------------------
-export default function NistCsfQuestionnaire() {
-  // Language
-  const [lang, setLang] = useState(() => {
-    try {
-      if (typeof window === "undefined") return "fr";
-      return window.localStorage.getItem(LANG_KEY) || "fr";
-    } catch {
-      return "fr";
-    }
-  });
-  useEffect(() => {
-    try {
-      if (typeof window !== "undefined") window.localStorage.setItem(LANG_KEY, lang);
-    } catch {}
-  }, [lang]);
-  const t = (key) => (I18N[lang] && I18N[lang][key]) || key;
-
-  // Meta
-  const [meta, setMeta] = useState({
-    project: "",
-    assessor: "",
-    organization: "",
-    assessmentDate: new Date().toISOString().slice(0, 10),
-  });
-
-  // Answers
-  const [answers, setAnswers] = useState(() => {
-    try {
-      if (typeof window === "undefined") return {};
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved).answers || {} : {};
-    } catch {
-      return {};
-    }
-  });
-
-  // Filters
-  const [filter, setFilter] = useState({ function: "ALL", category: "ALL", search: "" });
-
-  // Targets
-  const [targets, setTargets] = useState({
-    GOVERN: 4,
-    IDENTIFY: 4,
-    PROTECT: 4,
-    DETECT: 4,
-    RESPOND: 4,
-    RECOVER: 4,
-  });
-
-  const functions = useMemo(() => ["GOVERN", "IDENTIFY", "PROTECT", "DETECT", "RESPOND", "RECOVER"], []);
-  const categories = useMemo(() => {
-    const s = new Set(controls.map((c) => c.category));
-    return ["ALL", ...Array.from(s).sort()];
-  }, []);
-
-  // Autosave
-  useEffect(() => {
-    try {
-      if (typeof window === "undefined") return;
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ meta, answers, version: 1 }));
-    } catch {}
-  }, [answers, meta]);
-
-  // Filtered controls
-  const filteredControls = useMemo(() => {
-    return controls.filter((c) => {
-      const fOk = filter.function === "ALL" || c.function === filter.function;
-      const catOk = filter.category === "ALL" || c.category === filter.category;
-      const q = filter.search.trim().toLowerCase();
-      const text = typeof c.text === "string" ? c.text : (c.text?.[lang] || c.text?.fr || c.text?.en || "");
-      const sOk = !q || c.id.toLowerCase().includes(q) || text.toLowerCase().includes(q) || c.category.toLowerCase().includes(q) || c.function.toLowerCase().includes(q);
-      return fOk && catOk && sOk;
-    });
-  }, [filter, lang]);
-
-  function updateAnswer(id, patch) {
-    setAnswers((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
-  }
-
-  // Dashboard metrics
-  const progressByFunction = useMemo(() => {
-    const map = {};
-    for (const fn of functions) {
-      const items = controls.filter((c) => c.function === fn);
-      const answered = items.filter((i) => answers[i.id]?.score !== undefined).length;
-      map[fn] = { total: items.length, answered };
-    }
-    return map;
-  }, [answers]);
-
-  const functionScores = useMemo(() => {
-    return functions.map((fn) => {
-      const items = controls.filter((c) => c.function === fn);
-      const vals = items.map((i) => answers[i.id]?.score).filter((v) => v !== undefined);
-      return { fn, score: Number(avg(vals).toFixed(2)), target: targets[fn] };
-    });
-  }, [answers, targets]);
-
-  const categoryScores = useMemo(() => {
-    const byCat = new Map();
-    for (const c of controls) {
-      const s = answers[c.id]?.score;
-      if (typeof s !== "number") continue;
-      if (!byCat.has(c.category)) byCat.set(c.category, []);
-      byCat.get(c.category).push(s);
-    }
-    const rows = Array.from(byCat.entries()).map(([category, arr]) => ({ category, score: Number(avg(arr).toFixed(2)) }));
-    rows.sort((a, b) => b.score - a.score);
-    return rows;
-  }, [answers]);
-
-  const overallMaturity = useMemo(() => {
-    const vals = controls.map((c) => answers[c.id]?.score).filter((v) => v !== undefined);
-    return Number(avg(vals).toFixed(2));
-  }, [answers]);
-
-  const overall = useMemo(() => {
-    const total = controls.length;
-    const answered = controls.filter((i) => answers[i.id]?.score !== undefined).length;
-    return { total, answered };
-  }, [answers]);
-
-  // Exports / Import
-  function exportJSON() {
-    const data = { meta, answers, controls };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `nist-csf20-assessment-${meta.organization || "org"}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-  function getQuestionText(c) {
-    if (typeof c.text === "string") return c.text;
-    return c.text?.[lang] || c.text?.fr || c.text?.en || "";
-  }
-  function exportCSV() {
-    const header = ["Function", "Category", "ID", "Question", "Score", "Comment", "Project", "Assessor", "Organization", "AssessmentDate", "Language"];
-    const rows = controls.map((c) => {
-      const a = answers[c.id] || {};
-      return [c.function, c.category, c.id, escapeCSV(getQuestionText(c)), a.score ?? "", escapeCSV(a.comment || ""), escapeCSV(meta.project || ""), escapeCSV(meta.assessor || ""), escapeCSV(meta.organization || ""), meta.assessmentDate || "", lang];
-    });
-    const csv = [header, ...rows].map((r) => r.join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `nist-csf20-assessment-${meta.organization || "org"}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-  function importJSON(evt) {
-    const file = evt.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(String(reader.result));
-        if (data.meta) setMeta(data.meta);
-        if (data.answers) setAnswers(data.answers);
-        alert(lang === "fr" ? "Import réussi." : "Import successful.");
-      } catch (e) {
-        alert(lang === "fr" ? "Fichier invalide." : "Invalid file.");
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NIST CSF 2.0 – Questionnaire</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
       }
-    };
-    reader.readAsText(file);
-    evt.target.value = "";
-  }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="bg-neutral-50">
+    <div id="root"></div>
+    <script type="text/babel" data-presets="env,react">
+      const { useEffect, useMemo, useState } = React;
+      const {
+        BarChart,
+        Bar,
+        XAxis,
+        YAxis,
+        CartesianGrid,
+        Tooltip,
+        ResponsiveContainer,
+        Radar: RadarShape,
+        RadarChart: RChart,
+        PolarGrid,
+        PolarAngleAxis,
+        PolarRadiusAxis,
+        Legend,
+        Cell,
+        ReferenceLine,
+      } = Recharts;
 
-  // Flag
-  const FlagToggle = () => (
-    <button
-      title={t("globalToggleHint")}
-      onClick={() => setLang((p) => (p === "fr" ? "en" : "fr"))}
-      className="text-xl md:text-2xl px-2 py-1 rounded-lg hover:bg-neutral-100"
-      aria-label={t("globalLang")}
-    >
-      {lang === "fr" ? "🇫🇷" : "🇬🇧"}
-    </button>
-  );
+      /**
+       * NIST CSF 2.0 – Web Questionnaire (React single-file component)
+       */
 
-  return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
-      {/* Header */}
-      <div className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-neutral-200">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <h1 className="text-xl md:text-2xl font-semibold">{t("appTitle")}</h1>
-          <div className="flex items-center gap-2">
-            <FlagToggle />
-            <button onClick={exportCSV} className="px-3 py-2 rounded-xl border hover:bg-neutral-100">{t("exportCSV")}</button>
-            <button onClick={exportJSON} className="px-3 py-2 rounded-xl border hover:bg-neutral-100">{t("exportJSON")}</button>
-            <label className="px-3 py-2 rounded-xl border hover:bg-neutral-100 cursor-pointer">
-              {t("importJSON")}
-              <input type="file" accept="application/json" onChange={importJSON} className="hidden" />
-            </label>
+      // ----------------------------- Utils -----------------------------
+      function avg(values) {
+        const nums = (values || []).filter(
+          (v) => typeof v === "number" && !Number.isNaN(v)
+        );
+        if (!nums.length) return 0;
+        return nums.reduce((a, b) => a + b, 0) / nums.length;
+      }
+
+      function escapeCSV(v) {
+        const s = String(v ?? "");
+        if (s.includes(",") || s.includes("\n") || s.includes("\"")) {
+          return "\"" + s.replace(/\"/g, "\"\"") + "\"";
+        }
+        return s;
+      }
+
+      const PALETTE = [
+        "#2563EB", // blue-600
+        "#EA580C", // orange-600
+        "#16A34A", // green-600
+        "#9333EA", // purple-600
+        "#DC2626", // red-600
+        "#0891B2", // cyan-600
+        "#CA8A04", // yellow-600
+        "#0D9488", // teal-600
+        "#7C3AED", // violet-600
+        "#BE185D", // pink-700
+        "#4F46E5", // indigo-600
+        "#065F46", // emerald-800
+      ];
+      function hashString(str = "") {
+        let h = 0;
+        for (let i = 0; i < str.length; i++) {
+          h = (h << 5) - h + str.charCodeAt(i);
+          h |= 0;
+        }
+        return Math.abs(h);
+      }
+      function categoryColor(name) {
+        if (!name) return "#111827";
+        const idx = hashString(name) % PALETTE.length;
+        return PALETTE[idx];
+      }
+
+      const FUNCTION_COLORS = {
+        GOVERN: "#1E3A8A",
+        IDENTIFY: "#2563EB",
+        PROTECT: "#059669",
+        DETECT: "#9333EA",
+        RESPOND: "#DC2626",
+        RECOVER: "#EA580C",
+      };
+      function functionColor(fn) {
+        return FUNCTION_COLORS[fn] || "#111827";
+      }
+
+      // Labels for ribbon & UI
+      const FUNCTION_LABELS = {
+        GOVERN: { fr: "Gouverner", en: "Govern" },
+        IDENTIFY: { fr: "Identifier", en: "Identify" },
+        PROTECT: { fr: "Protéger", en: "Protect" },
+        DETECT: { fr: "Détecter", en: "Detect" },
+        RESPOND: { fr: "Répondre", en: "Respond" },
+        RECOVER: { fr: "Rétablir", en: "Recover" },
+      };
+
+      // ----------------------------- i18n -----------------------------
+      const I18N = {
+        fr: {
+          appTitle: "NIST CSF 2.0 – Questionnaire d’évaluation",
+          exportCSV: "Export CSV",
+          exportJSON: "Export JSON",
+          importJSON: "Import JSON",
+          maturityScore: "Score de maturité",
+          maturityAvgHint: "Moyenne de toutes les questions notées",
+          maturityByFn: "Maturité par Function",
+          radarTitle: "Actuel vs Cible (par Function)",
+          catTitle:
+            "Maturité par Catégorie (moyenne des questions renseignées)",
+          noDataYet:
+            "Aucune donnée encore — commence à noter des questions pour alimenter le dashboard.",
+          targetLegend: "Cible (pointillés)",
+          meta: "Métadonnées",
+          project: "Projet",
+          assessor: "Évaluateur",
+          org: "Organisation",
+          date: "Date",
+          quickFilter: "Filtre rapide",
+          fnLabel: "Fonction",
+          catLabel: "Catégorie",
+          search: "Recherche",
+          searchPh: "ID, texte, catégorie...",
+          targets: "Cibles par Function",
+          questions: "Questions",
+          display: "Affichage",
+          cmmiPlaceholder: "Notation CMMI…",
+          commentsPh: "Commentaires, preuves, risques, actions…",
+          tips1: "💾 Sauvegarde automatique activée (navigateur localStorage).",
+          tips2:
+            "📤 Utilisez Export JSON/CSV pour partager ou analyser vos résultats.",
+          tips3:
+            "🖨️ Astuce impression: Ctrl/Cmd+P → Imprimer en PDF (format A4/Lettre).",
+          globalLang: "Langue",
+          globalToggleHint: "Basculer FR/EN pour tout le site",
+          moreInfo: "Plus d’info",
+          descFull: "Description complète",
+          people: "People (rôles responsables)",
+          process: "Processus attendus",
+          technology: "Technologie (exemples)",
+        },
+        en: {
+          appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
+          exportCSV: "Export CSV",
+          exportJSON: "Export JSON",
+          importJSON: "Import JSON",
+          maturityScore: "Maturity Score",
+          maturityAvgHint: "Average of all answered questions",
+          maturityByFn: "Maturity by Function",
+          radarTitle: "Current vs Target (by Function)",
+          catTitle:
+            "Maturity by Category (average of answered questions)",
+          noDataYet:
+            "No data yet — start rating questions to feed the dashboard.",
+          targetLegend: "Target (dotted)",
+          meta: "Metadata",
+          project: "Project",
+          assessor: "Assessor",
+          org: "Organization",
+          date: "Date",
+          quickFilter: "Quick Filter",
+          fnLabel: "Function",
+          catLabel: "Category",
+          search: "Search",
+          searchPh: "ID, text, category...",
+          targets: "Targets by Function",
+          questions: "Questions",
+          display: "Display",
+          cmmiPlaceholder: "CMMI rating…",
+          commentsPh: "Comments, evidence, risks, actions…",
+          tips1: "💾 Autosave enabled (browser localStorage).",
+          tips2: "📤 Use Export JSON/CSV to share or analyze your results.",
+          tips3: "🖨️ Print tip: Ctrl/Cmd+P → Print to PDF (A4/Letter).",
+          globalLang: "Language",
+          globalToggleHint: "Toggle FR/EN across the site",
+          moreInfo: "More info",
+          descFull: "Full description",
+          people: "People (responsible roles)",
+          process: "Expected processes",
+          technology: "Technology (examples)",
+        },
+      };
+
+      function AngleTick(props) {
+        const { x, y, payload, textAnchor } = props;
+        const color = functionColor(payload?.value);
+        return (
+          <text x={x} y={y} textAnchor={textAnchor || "middle"} fill={color} fontSize={11}>
+            {payload?.value}
+          </text>
+        );
+      }
+
+      // ----------------------------- UI helpers BEFORE usage -----------------------------
+      function Card({ title, children }) {
+        return (
+          <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+            {title && <div className="font-medium mb-3">{title}</div>}
+            {children}
           </div>
-        </div>
-      </div>
+        );
+      }
 
-      {/* DASHBOARD */}
-      <div className="max-w-6xl mx-auto px-4 pt-4 pb-2 grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* Overall maturity tile */}
-        <div className="lg:col-span-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm flex flex-col items-center justify-center">
-          <div className="text-sm text-neutral-500">{t("maturityScore")}</div>
-          <div className="text-5xl font-semibold mt-1">{overallMaturity.toFixed(1)}</div>
-          <div className="text-xs text-neutral-500 mt-2">{t("maturityAvgHint")}</div>
-        </div>
-        {/* Function bar chart with dotted targets spanning bar width */}
-        <div className="lg:col-span-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-          <div className="font-medium mb-2">{t("maturityByFn")}</div>
-          <div className="h-40">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={functionScores} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="fn" tick={{ fontSize: 12 }} />
-                <YAxis domain={[0, 5]} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(v) => Number(v).toFixed(2)} />
-                <Legend verticalAlign="bottom" height={24} />
-                <Bar dataKey="score" name={lang === "fr" ? "Actuel" : "Current"} radius={[6, 6, 0, 0]}>
-                  {functionScores.map((row) => (
-                    <Cell key={row.fn + "-act"} fill={functionColor(row.fn)} />
-                  ))}
-                </Bar>
-                {functionScores.map((row) => (
-                  <ReferenceLine
-                    key={row.fn + "-target-line"}
-                    segment={[
-                      { x: row.fn, y: row.score },
-                      { x: row.fn, y: row.target },
-                    ]}
-                    stroke={functionColor(row.fn)}
-                    strokeDasharray="1 8"
-                    strokeWidth={12}
-                    ifOverflow="extendDomain"
-                  />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-2 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-200 bg-white">
-              <span className="inline-block w-3 h-1 rounded-full" style={{ borderTop: "2px dashed #64748B", width: 24 }} />
-              {t("targetLegend")}
+      function TextField({
+        label,
+        value,
+        onChange,
+        type = "text",
+        placeholder,
+      }) {
+        return (
+          <label className="grid gap-1 w-full">
+            <span className="text-sm text-neutral-600">{label}</span>
+            <input
+              type={type}
+              className="px-3 py-2 rounded-xl border border-neutral-300 w-full"
+              value={value}
+              placeholder={placeholder}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </label>
+        );
+      }
+
+      function Select({ label, value, onChange, options }) {
+        return (
+          <label className="grid gap-1">
+            <span className="text-sm text-neutral-600">{label}</span>
+            <select
+              className="px-3 py-2 rounded-xl border border-neutral-300"
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            >
+              {options.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+          </label>
+        );
+      }
+
+      function ProgressPill({ label, done, total, onClick }) {
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        return (
+          <button
+            onClick={onClick}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-200 bg-white shadow-sm"
+          >
+            <span className="text-xs font-medium">{label}</span>
+            <span className="text-xs text-neutral-500">
+              {done}/{total} · {pct}%
             </span>
-            {functions.map((fn) => (
-              <span key={fn} className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-200 bg-white">
-                <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: functionColor(fn) }} />
-                {fn}
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* Radar current vs target */}
-        <div className="lg:col-span-5 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-          <div className="font-medium mb-2">{t("radarTitle")}</div>
-          <div className="h-40">
-            <ResponsiveContainer width="100%" height="100%">
-              <RChart cx="50%" cy="50%" outerRadius="80%" data={functionScores}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="fn" tick={<AngleTick />} />
-                <PolarRadiusAxis domain={[0, 5]} tick={{ fontSize: 10 }} />
-                <RadarShape name={lang === "fr" ? "Actuel" : "Current"} dataKey="score" stroke="#111827" fill="#111827" fillOpacity={0.15} />
-                <RadarShape name={lang === "fr" ? "Cible" : "Target"} dataKey="target" stroke="#64748B" fill="#64748B" fillOpacity={0.08} />
-                <Legend />
-              </RChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        {/* Categories list */}
-        <div className="lg:col-span-12 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-          <div className="font-medium mb-2">{t("catTitle")}</div>
-          <div className="grid gap-2">
-            {categoryScores.slice(0, 12).map((row) => {
-              const color = categoryColor(row.category);
-              return (
-                <div key={row.category} className="grid grid-cols-12 items-center gap-3">
-                  <div className="col-span-9 truncate text-sm flex items-center gap-2" title={row.category}>
-                    <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
-                    <span>{row.category}</span>
-                  </div>
-                  <div className="col-span-2 h-2 rounded-full bg-neutral-200">
-                    <div className="h-2 rounded-full" style={{ width: `${(row.score/5)*100}%`, backgroundColor: color }} />
-                  </div>
-                  <div className="col-span-1 text-right text-sm tabular-nums">{row.score.toFixed(2)}</div>
-                </div>
-              );
-            })}
-            {!categoryScores.length && (
-              <div className="text-sm text-neutral-500">{t("noDataYet")}</div>
-            )}
-          </div>
-        </div>
-      </div>
+          </button>
+        );
+      }
 
-      {/* Meta & Filters */}
-      <div className="max-w-6xl mx-auto px-4 py-4 grid md:grid-cols-2 gap-4">
-        <Card title={t("meta")}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <TextField label={t("project") } value={meta.project} onChange={(v) => setMeta({ ...meta, project: v })} />
-            <TextField label={t("assessor")} value={meta.assessor} onChange={(v) => setMeta({ ...meta, assessor: v })} />
-            <TextField label={t("org")} value={meta.organization} onChange={(v) => setMeta({ ...meta, organization: v })} />
-            <TextField label={t("date")} type="date" value={meta.assessmentDate} onChange={(v) => setMeta({ ...meta, assessmentDate: v })} />
+      function SectionHeader({ title, subtitle }) {
+        return (
+          <div className="mb-3">
+            <div className="text-lg font-semibold">{title}</div>
+            {subtitle && <div className="text-sm text-neutral-600">{subtitle}</div>}
           </div>
-        </Card>
-        <Card title={t("quickFilter")}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <Select label={t("fnLabel")} value={filter.function} onChange={(v) => setFilter({ ...filter, function: v })} options={["ALL", ...functions]} />
-            <Select label={t("catLabel")} value={filter.category} onChange={(v) => setFilter({ ...filter, category: v })} options={categories} />
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {functions.map((fn) => (
-              <ProgressPill key={fn} label={fn} done={progressByFunction[fn]?.answered || 0} total={progressByFunction[fn]?.total || 0} onClick={() => setFilter({ ...filter, function: fn })} />
-            ))}
-            <ProgressPill label="GLOBAL" done={overall.answered} total={overall.total} onClick={() => setFilter({ ...filter, function: "ALL" })} />
-          </div>
-        </Card>
-      </div>
+        );
+      }
 
-      {/* Full-width Search under the two cards */}
-      <div className="max-w-6xl mx-auto px-4 pt-0 pb-2">
-        <TextField
-          label={t("search")}
-          placeholder={t("searchPh")}
-          value={filter.search}
-          onChange={(v) => setFilter({ ...filter, search: v })}
-        />
-      </div>
+      // Self-tests (run after helpers exist)
+      function runSelfTests() {
+        try {
+          console.assert(avg([1, 2, 3]) === 2, "avg([1,2,3]) should be 2");
+          console.assert(
+            avg([undefined, 3, null, 5]) === 4,
+            "avg ignores non-numbers"
+          );
+          console.assert(avg([]) === 0, "avg([]) is 0");
+          console.assert(
+            escapeCSV('a"b') === '"a""b"',
+            "CSV quotes doubled"
+          );
+          console.assert(
+            categoryColor("Asset") === categoryColor("Asset"),
+            "color stable"
+          );
+          console.assert(
+            typeof TextField === "function",
+            "TextField helper must exist"
+          );
+          console.assert(
+            typeof Card === "function",
+            "Card helper must exist"
+          );
+          console.assert(
+            typeof I18N.fr.appTitle === "string" && typeof I18N.en.appTitle === "string",
+            "i18n sanity"
+          );
+        } catch (e) {
+          console.warn("Self-tests failed:", e);
+        }
+      }
+      if (typeof window !== "undefined") runSelfTests();
 
-      {/* Targets editor after Meta & Filters */}
-      <div className="max-w-6xl mx-auto px-4 pb-2">
-        <Card title={t("targets")}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-            {functions.map((fn) => (
-              <label key={fn} className="text-sm text-neutral-700">
-                <span className="block text-xs text-neutral-500 mb-1">{fn}</span>
-                <input
-                  type="number"
-                  min={0}
-                  max={5}
-                  step={0.1}
-                  value={targets[fn]}
-                  onChange={(e) => setTargets({ ...targets, [fn]: Math.max(0, Math.min(5, Number(e.target.value))) })}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-300"
-                />
-              </label>
-            ))}
-          </div>
-        </Card>
-      </div>
+      // ----------------------------- Data -----------------------------
+      const CMMI_SCALE = [
+        { value: 0, label: "0 – Incomplet / Non amorcé" },
+        { value: 1, label: "1 – Initial / Ad hoc" },
+        { value: 2, label: "2 – Géré" },
+        { value: 3, label: "3 – Défini" },
+        { value: 4, label: "4 – Quantitativement géré" },
+        { value: 5, label: "5 – Optimisé" },
+      ];
 
-      {/* Questions */}
-      <div className="max-w-6xl mx-auto px-4 pb-10">
-        <SectionHeader title={t("questions")} subtitle={`${t("display")}: ${filteredControls.length} / ${controls.length}`} />
-        <div className="grid gap-4">
-          {filteredControls.map((q) => {
-            const a = answers[q.id] || {};
-            const color = categoryColor(q.category);
-            const qText = getQuestionText(q);
-            return (
-              <div key={q.id} className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm" style={{ borderLeftWidth: 6, borderLeftColor: color }}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-neutral-500 flex items-center gap-2">
-                      <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
-                      {q.function} · {q.category}
-                    </div>
-                    <div className="mt-0.5 font-medium">{q.id} — {qText}</div>
-                  </div>
-                  <div className="shrink-0 flex items-center gap-2">
-                    <select className="px-3 py-2 rounded-xl border border-neutral-300 bg-white" value={a.score ?? ""} onChange={(e) => updateAnswer(q.id, { score: e.target.value === "" ? undefined : Number(e.target.value) })}>
-                      <option value="">{t("cmmiPlaceholder")}</option>
-                      {CMMI_SCALE.map((opt) => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="mt-3">
-                  <textarea className="w-full min-h-[88px] rounded-xl border border-neutral-300 p-3" placeholder={t("commentsPh")} value={a.comment || ""} onChange={(e) => updateAnswer(q.id, { comment: e.target.value })} />
+      function getFunctionLabel(fn, lang) {
+        const entry = FUNCTION_LABELS[fn];
+        if (!entry) return fn;
+        return lang === "fr" ? entry.fr : entry.en;
+      }
+
+      const detailsById = {
+        "GOV-RM.01": {
+          fr: {
+            desc: "La stratégie de gestion des risques cyber définit l’appétence au risque, les objectifs, le périmètre (IT/OT/Cloud/SaaS), les responsabilités et la gouvernance (comité, indicateurs, revues). Elle s’aligne sur les objectifs d’affaires et s’intègre au cadre ERM.",
+            people: [
+              "Comité de gouvernance (ex. Comité Risques)",
+              "CISO / RSSI",
+              "Propriétaires de risques (métier et IT)",
+              "CIO / CTO",
+              "Direction générale / Conseil d’administration",
+              "Audit Interne / Conformité",
+            ],
+            process: [
+              "Définition d’appétence/tolérance au risque (statements)",
+              "Méthodologie d’évaluation (ISO 31000 / NIST CSF-aligned)",
+              "Registre des risques et des plans de traitement",
+              "KRIs/KPIs et tableau de bord de suivi",
+              "Cycle de revue (trimestriel) et escalade",
+              "Gestion des exceptions et dérogations",
+              "Intégration chaîne d’approvisionnement (TPRM)",
+            ],
+            tech: [
+              "ServiceNow GRC / Risk",
+              "Archer / RSA GRC",
+              "OneTrust GRC",
+              "Atlassian Jira + Confluence (risks register)",
+              "MetricStream / LogicGate",
+            ],
+          },
+          en: {
+            desc: "The cyber risk management strategy defines risk appetite, objectives, scope (IT/OT/Cloud/SaaS), roles and governance (committee, metrics, reviews). It aligns with business goals and integrates with Enterprise Risk Management (ERM).",
+            people: [
+              "Risk Governance Committee",
+              "CISO",
+              "Risk Owners (business & IT)",
+              "CIO / CTO",
+              "Executive Leadership / Board",
+              "Internal Audit / Compliance",
+            ],
+            process: [
+              "Risk appetite/tolerance statements",
+              "Assessment methodology (ISO 31000 / NIST CSF-aligned)",
+              "Risk register and treatment plans",
+              "KRIs/KPIs and dashboard",
+              "Periodic review cycle (e.g., quarterly) and escalation",
+              "Exception/waiver management",
+              "Supply chain integration (TPRM)",
+            ],
+            tech: [
+              "ServiceNow GRC / Risk",
+              "Archer / RSA GRC",
+              "OneTrust GRC",
+              "Atlassian Jira + Confluence (risk register)",
+              "MetricStream / LogicGate",
+            ],
+          },
+        },
+      };
+
+      const controls = [
+        {
+          id: "GOV-RM.01",
+          function: "GOVERN",
+          category: "Risk Management Strategy",
+          text: {
+            fr: "Votre organisation dispose-t-elle d’une stratégie claire de gestion des risques cyber, alignée sur les objectifs d’affaires et connue des principales parties prenantes ?",
+            en: "Does your organization have a clear cyber risk management strategy aligned with business objectives and known by key stakeholders?",
+          },
+        },
+        {
+          id: "GOV-PO.02",
+          function: "GOVERN",
+          category: "Policy & Oversight",
+          text: {
+            fr: "Les rôles et responsabilités en cybersécurité sont-ils bien définis, compris et suivis (comité, RACI, indicateurs) ?",
+            en: "Are cybersecurity roles and responsibilities well defined, understood, and monitored (e.g., committee, RACI, KPIs)?",
+          },
+        },
+        {
+          id: "ID-AM.01",
+          function: "IDENTIFY",
+          category: "Asset Management",
+          text: {
+            fr: "Disposez-vous d’un inventaire complet et à jour de vos actifs (IT, OT, SaaS, Cloud) avec propriétaires, criticité et dépendances ?",
+            en: "Do you maintain a complete, up-to-date inventory of assets (IT, OT, SaaS, Cloud) with owners, criticality, and dependencies?",
+          },
+        },
+        {
+          id: "ID-SC.02",
+          function: "IDENTIFY",
+          category: "Supply Chain",
+          text: {
+            fr: "Les risques liés à vos fournisseurs et à la chaîne d’approvisionnement sont-ils évalués, suivis et intégrés à votre gestion des risques ?",
+            en: "Are supplier and supply chain risks evaluated, monitored, and integrated into your overall risk management?",
+          },
+        },
+        {
+          id: "PR-AC.01",
+          function: "PROTECT",
+          category: "Access Control",
+          text: {
+            fr: "Les accès sont-ils gérés selon le moindre privilège, avec revues périodiques et traçabilité des changements ?",
+            en: "Are accesses managed according to least privilege with periodic reviews and change traceability?",
+          },
+        },
+        {
+          id: "PR-DS.02",
+          function: "PROTECT",
+          category: "Data Security",
+          text: {
+            fr: "Les données sensibles sont-elles correctement identifiées et protégées (chiffrement, DLP, masquage) ?",
+            en: "Are sensitive data properly identified and protected (encryption, DLP, masking)?",
+          },
+        },
+        {
+          id: "DE-MO.01",
+          function: "DETECT",
+          category: "Monitoring & Anomalies",
+          text: {
+            fr: "Disposez-vous de capacités efficaces de détection d’anomalies (SIEM, UEBA, corrélation) et ces alertes sont-elles analysées activement ?",
+            en: "Do you have effective anomaly detection capabilities (SIEM, UEBA, correlation), and are these alerts actively analyzed?",
+          },
+        },
+        {
+          id: "RS-IR.01",
+          function: "RESPOND",
+          category: "Incident Response",
+          text: {
+            fr: "Testez-vous régulièrement vos procédures de réponse (table-top, purple team, simulations) et ces tests mènent-ils à des améliorations concrètes ?",
+            en: "Do you regularly test your incident response procedures (table-top, purple team, simulations), and do these tests lead to concrete improvements?",
+          },
+        },
+        {
+          id: "RC-IM.01",
+          function: "RECOVER",
+          category: "Improvements & Continuity",
+          text: {
+            fr: "Les plans de reprise (DRP/BCP) sont-ils testés, mesurés et améliorés avec des objectifs RTO/RPO clairs ?",
+            en: "Are recovery plans (DRP/BCP) tested, measured, and continually improved with clear RTO/RPO objectives?",
+          },
+        },
+      ];
+
+      const STORAGE_KEY = "nist-csf-20-questionnaire";
+      const LANG_KEY = "nist-csf-20-lang";
+
+      function NistCsfQuestionnaire() {
+        const [lang, setLang] = useState(() => {
+          try {
+            if (typeof window === "undefined") return "fr";
+            return window.localStorage.getItem(LANG_KEY) || "fr";
+          } catch (e) {
+            return "fr";
+          }
+        });
+        useEffect(() => {
+          try {
+            if (typeof window !== "undefined") {
+              window.localStorage.setItem(LANG_KEY, lang);
+            }
+          } catch (e) {}
+        }, [lang]);
+        const t = (key) => (I18N[lang] && I18N[lang][key]) || key;
+
+        const [meta, setMeta] = useState({
+          project: "",
+          assessor: "",
+          organization: "",
+          assessmentDate: new Date().toISOString().slice(0, 10),
+        });
+
+        const [answers, setAnswers] = useState(() => {
+          try {
+            if (typeof window === "undefined") return {};
+            const saved = window.localStorage.getItem(STORAGE_KEY);
+            return saved ? JSON.parse(saved).answers || {} : {};
+          } catch (e) {
+            return {};
+          }
+        });
+
+        const [openInfo, setOpenInfo] = useState({});
+
+        const [filter, setFilter] = useState({
+          function: "ALL",
+          category: "ALL",
+          search: "",
+        });
+
+        const [targets, setTargets] = useState({
+          GOVERN: 4,
+          IDENTIFY: 4,
+          PROTECT: 4,
+          DETECT: 4,
+          RESPOND: 4,
+          RECOVER: 4,
+        });
+
+        const functions = useMemo(
+          () => ["GOVERN", "IDENTIFY", "PROTECT", "DETECT", "RESPOND", "RECOVER"],
+          []
+        );
+        const categories = useMemo(() => {
+          const s = new Set(controls.map((c) => c.category));
+          return ["ALL", ...Array.from(s).sort()];
+        }, []);
+
+        useEffect(() => {
+          try {
+            if (typeof window === "undefined") return;
+            window.localStorage.setItem(
+              STORAGE_KEY,
+              JSON.stringify({ meta, answers, version: 1 })
+            );
+          } catch (e) {}
+        }, [answers, meta]);
+
+        const filteredControls = useMemo(() => {
+          return controls.filter((c) => {
+            const fOk = filter.function === "ALL" || c.function === filter.function;
+            const catOk = filter.category === "ALL" || c.category === filter.category;
+            const q = filter.search.trim().toLowerCase();
+            const text =
+              typeof c.text === "string"
+                ? c.text
+                : c.text?.[lang] || c.text?.fr || c.text?.en || "";
+            const sOk =
+              !q ||
+              c.id.toLowerCase().includes(q) ||
+              text.toLowerCase().includes(q) ||
+              c.category.toLowerCase().includes(q) ||
+              c.function.toLowerCase().includes(q);
+            return fOk && catOk && sOk;
+          });
+        }, [filter, lang]);
+
+        function updateAnswer(id, patch) {
+          setAnswers((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
+        }
+
+        const progressByFunction = useMemo(() => {
+          const map = {};
+          for (const fn of functions) {
+            const items = controls.filter((c) => c.function === fn);
+            const answered = items.filter((i) => answers[i.id]?.score !== undefined)
+              .length;
+            map[fn] = { total: items.length, answered };
+          }
+          return map;
+        }, [answers]);
+
+        const functionScores = useMemo(() => {
+          return functions.map((fn) => {
+            const items = controls.filter((c) => c.function === fn);
+            const vals = items
+              .map((i) => answers[i.id]?.score)
+              .filter((v) => v !== undefined);
+            return { fn, score: Number(avg(vals).toFixed(2)), target: targets[fn] };
+          });
+        }, [answers, targets]);
+
+        const categoryScores = useMemo(() => {
+          const byCat = new Map();
+          for (const c of controls) {
+            const s = answers[c.id]?.score;
+            if (typeof s !== "number") continue;
+            if (!byCat.has(c.category)) byCat.set(c.category, []);
+            byCat.get(c.category).push(s);
+          }
+          const rows = Array.from(byCat.entries()).map(([category, arr]) => ({
+            category,
+            score: Number(avg(arr).toFixed(2)),
+          }));
+          rows.sort((a, b) => b.score - a.score);
+          return rows;
+        }, [answers]);
+
+        const overallMaturity = useMemo(() => {
+          const vals = controls
+            .map((c) => answers[c.id]?.score)
+            .filter((v) => v !== undefined);
+          return Number(avg(vals).toFixed(2));
+        }, [answers]);
+
+        const overall = useMemo(() => {
+          const total = controls.length;
+          const answered = controls.filter((i) => answers[i.id]?.score !== undefined)
+            .length;
+          return { total, answered };
+        }, [answers]);
+
+        function exportJSON() {
+          const data = { meta, answers, controls };
+          const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `nist-csf20-assessment-${meta.organization || "org"}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+        function getQuestionText(c) {
+          if (typeof c.text === "string") return c.text;
+          return c.text?.[lang] || c.text?.fr || c.text?.en || "";
+        }
+        function exportCSV() {
+          const header = [
+            "Function",
+            "Category",
+            "ID",
+            "Question",
+            "Score",
+            "Comment",
+            "Project",
+            "Assessor",
+            "Organization",
+            "AssessmentDate",
+            "Language",
+          ];
+          const rows = controls.map((c) => {
+            const a = answers[c.id] || {};
+            return [
+              c.function,
+              c.category,
+              c.id,
+              escapeCSV(getQuestionText(c)),
+              a.score ?? "",
+              escapeCSV(a.comment || ""),
+              escapeCSV(meta.project || ""),
+              escapeCSV(meta.assessor || ""),
+              escapeCSV(meta.organization || ""),
+              meta.assessmentDate || "",
+              lang,
+            ];
+          });
+          const csv = [header, ...rows]
+            .map((r) => r.join(","))
+            .join("\n");
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `nist-csf20-assessment-${meta.organization || "org"}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+        function importJSON(evt) {
+          const file = evt.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const data = JSON.parse(String(reader.result));
+              if (data.meta) setMeta(data.meta);
+              if (data.answers) setAnswers(data.answers);
+              alert(lang === "fr" ? "Import réussi." : "Import successful.");
+            } catch (e) {
+              alert(lang === "fr" ? "Fichier invalide." : "Invalid file.");
+            }
+          };
+          reader.readAsText(file);
+          evt.target.value = "";
+        }
+
+        const FlagToggle = () => (
+          <button
+            title={t("globalToggleHint")}
+            onClick={() => setLang((p) => (p === "fr" ? "en" : "fr"))}
+            className="text-xl md:text-2xl px-2 py-1 rounded-lg hover:bg-neutral-100"
+            aria-label={t("globalLang")}
+          >
+            {lang === "fr" ? "🇬🇧" : "🇫🇷"}
+          </button>
+        );
+
+        return (
+          <div className="min-h-screen bg-neutral-50 text-neutral-900">
+            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-neutral-200">
+              <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                <h1 className="text-xl md:text-2xl font-semibold">{t("appTitle")}</h1>
+                <div className="flex items-center gap-2">
+                  <FlagToggle />
+                  <button
+                    onClick={exportCSV}
+                    className="px-3 py-2 rounded-xl border hover:bg-neutral-100"
+                  >
+                    {t("exportCSV")}
+                  </button>
+                  <button
+                    onClick={exportJSON}
+                    className="px-3 py-2 rounded-xl border hover:bg-neutral-100"
+                  >
+                    {t("exportJSON")}
+                  </button>
+                  <label className="px-3 py-2 rounded-xl border hover:bg-neutral-100 cursor-pointer">
+                    {t("importJSON")}
+                    <input
+                      type="file"
+                      accept="application/json"
+                      onChange={importJSON}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
               </div>
-            );
-          })}
-        </div>
-      </div>
+            </div>
 
-      {/* Footer tips */}
-      <div className="max-w-6xl mx-auto px-4 pb-16 text-sm text-neutral-600">
-        <p className="mb-1">{t("tips1")}</p>
-        <p className="mb-1">{t("tips2")}</p>
-        <p className="">{t("tips3")}</p>
-      </div>
-    </div>
-  );
-}
+            <div className="max-w-6xl mx-auto px-4 pt-4 pb-2 grid grid-cols-1 lg:grid-cols-12 gap-4">
+              <div className="lg:col-span-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm flex flex-col items-center justify-center">
+                <div className="text-sm text-neutral-500">{t("maturityScore")}</div>
+                <div className="text-5xl font-semibold mt-1">{overallMaturity.toFixed(1)}</div>
+                <div className="text-xs text-neutral-500 mt-2">{t("maturityAvgHint")}</div>
+              </div>
+              <div className="lg:col-span-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+                <div className="font-medium mb-2">{t("maturityByFn")}</div>
+                <div className="h-40">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={functionScores} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="fn" tick={{ fontSize: 12 }} />
+                      <YAxis domain={[0, 5]} tick={{ fontSize: 12 }} />
+                      <Tooltip formatter={(v) => Number(v).toFixed(2)} />
+                      <Legend verticalAlign="bottom" height={24} />
+                      <Bar
+                        dataKey="score"
+                        name={lang === "fr" ? "Actuel" : "Current"}
+                        radius={[6, 6, 0, 0]}
+                      >
+                        {functionScores.map((row) => (
+                          <Cell key={`${row.fn}-act`} fill={functionColor(row.fn)} />
+                        ))}
+                      </Bar>
+                      {functionScores.map((row) => (
+                        <ReferenceLine
+                          key={`${row.fn}-target-line`}
+                          segment={[
+                            { x: row.fn, y: row.score },
+                            { x: row.fn, y: row.target },
+                          ]}
+                          stroke={functionColor(row.fn)}
+                          strokeDasharray="1 8"
+                          strokeWidth={12}
+                          ifOverflow="extendDomain"
+                        />
+                      ))}
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-200 bg-white">
+                    <span
+                      className="inline-block w-3 h-1 rounded-full"
+                      style={{ borderTop: "2px dashed #64748B", width: 24 }}
+                    />
+                    <span>{t("targetLegend")}</span>
+                  </span>
+                  {functions.map((fn) => (
+                    <span
+                      key={fn}
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-200 bg-white"
+                    >
+                      <span
+                        className="inline-block w-2.5 h-2.5 rounded-full"
+                        style={{ backgroundColor: functionColor(fn) }}
+                      />
+                      {fn}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="lg:col-span-5 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+                <div className="font-medium mb-2">{t("radarTitle")}</div>
+                <div className="h-40">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RChart cx="50%" cy="50%" outerRadius="80%" data={functionScores}>
+                      <PolarGrid />
+                      <PolarAngleAxis dataKey="fn" tick={<AngleTick />} />
+                      <PolarRadiusAxis domain={[0, 5]} tick={{ fontSize: 10 }} />
+                      <RadarShape
+                        name={lang === "fr" ? "Actuel" : "Current"}
+                        dataKey="score"
+                        stroke="#111827"
+                        fill="#111827"
+                        fillOpacity={0.15}
+                      />
+                      <RadarShape
+                        name={lang === "fr" ? "Cible" : "Target"}
+                        dataKey="target"
+                        stroke="#64748B"
+                        fill="#64748B"
+                        fillOpacity={0.08}
+                      />
+                      <Legend />
+                    </RChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="lg:col-span-12 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+                <div className="font-medium mb-2">{t("catTitle")}</div>
+                <div className="grid gap-2">
+                  {categoryScores.slice(0, 12).map((row) => {
+                    const color = categoryColor(row.category);
+                    return (
+                      <div
+                        key={row.category}
+                        className="grid grid-cols-12 items-center gap-3"
+                      >
+                        <div
+                          className="col-span-9 truncate text-sm flex items-center gap-2"
+                          title={row.category}
+                        >
+                          <span
+                            className="inline-block w-2.5 h-2.5 rounded-full"
+                            style={{ backgroundColor: color }}
+                          />
+                          <span>{row.category}</span>
+                        </div>
+                        <div className="col-span-2 h-2 rounded-full bg-neutral-200">
+                          <div
+                            className="h-2 rounded-full"
+                            style={{ width: `${(row.score / 5) * 100}%`, backgroundColor: color }}
+                          />
+                        </div>
+                        <div className="col-span-1 text-right text-sm tabular-nums">
+                          {row.score.toFixed(2)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {!categoryScores.length && (
+                    <div className="text-sm text-neutral-500">{t("noDataYet")}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-6xl mx-auto px-4 py-4 grid md:grid-cols-2 gap-4">
+              <Card title={t("meta")}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <TextField
+                    label={t("project")}
+                    value={meta.project}
+                    onChange={(v) => setMeta({ ...meta, project: v })}
+                  />
+                  <TextField
+                    label={t("assessor")}
+                    value={meta.assessor}
+                    onChange={(v) => setMeta({ ...meta, assessor: v })}
+                  />
+                  <TextField
+                    label={t("org")}
+                    value={meta.organization}
+                    onChange={(v) => setMeta({ ...meta, organization: v })}
+                  />
+                  <TextField
+                    label={t("date")}
+                    type="date"
+                    value={meta.assessmentDate}
+                    onChange={(v) => setMeta({ ...meta, assessmentDate: v })}
+                  />
+                </div>
+              </Card>
+              <Card title={t("quickFilter")}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <Select
+                    label={t("fnLabel")}
+                    value={filter.function}
+                    onChange={(v) => setFilter({ ...filter, function: v })}
+                    options={["ALL", ...functions]}
+                  />
+                  <Select
+                    label={t("catLabel")}
+                    value={filter.category}
+                    onChange={(v) => setFilter({ ...filter, category: v })}
+                    options={categories}
+                  />
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {functions.map((fn) => (
+                    <ProgressPill
+                      key={fn}
+                      label={fn}
+                      done={progressByFunction[fn]?.answered || 0}
+                      total={progressByFunction[fn]?.total || 0}
+                      onClick={() => setFilter({ ...filter, function: fn })}
+                    />
+                  ))}
+                  <ProgressPill
+                    label="GLOBAL"
+                    done={overall.answered}
+                    total={overall.total}
+                    onClick={() => setFilter({ ...filter, function: "ALL" })}
+                  />
+                </div>
+              </Card>
+            </div>
+
+            <div className="max-w-6xl mx-auto px-4 pt-0 pb-2">
+              <TextField
+                label={t("search")}
+                placeholder={t("searchPh")}
+                value={filter.search}
+                onChange={(v) => setFilter({ ...filter, search: v })}
+              />
+            </div>
+
+            <div className="max-w-6xl mx-auto px-4 pb-2">
+              <Card title={t("targets")}>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                  {functions.map((fn) => (
+                    <label key={fn} className="text-sm text-neutral-700">
+                      <span className="block text-xs text-neutral-500 mb-1">{fn}</span>
+                      <input
+                        type="number"
+                        min={0}
+                        max={5}
+                        step={0.1}
+                        value={targets[fn]}
+                        onChange={(e) =>
+                          setTargets({
+                            ...targets,
+                            [fn]: Math.max(0, Math.min(5, Number(e.target.value))),
+                          })
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300"
+                      />
+                    </label>
+                  ))}
+                </div>
+              </Card>
+            </div>
+
+            <div className="max-w-6xl mx-auto px-4 pb-10">
+              <SectionHeader
+                title={t("questions")}
+                subtitle={`${t("display")}: ${filteredControls.length} / ${controls.length}`}
+              />
+
+              <div className="mb-4 overflow-x-auto">
+                <div className="inline-flex gap-2 py-1">
+                  {["ALL", ...functions].map((key) => {
+                    const isAll = key === "ALL";
+                    const active = filter.function === (isAll ? "ALL" : key);
+                    const baseColor = isAll ? "#6B7280" : functionColor(key);
+                    const label = isAll
+                      ? lang === "fr"
+                        ? "Toutes les fonctions"
+                        : "All functions"
+                      : getFunctionLabel(key, lang);
+                    return (
+                      <button
+                        key={key}
+                        onClick={() =>
+                          setFilter({
+                            ...filter,
+                            function: isAll ? "ALL" : key,
+                          })
+                        }
+                        className="px-4 py-2 rounded-xl text-sm font-medium border whitespace-nowrap transition-colors"
+                        style={{
+                          backgroundColor: active ? baseColor : "transparent",
+                          color: active ? "#FFFFFF" : baseColor,
+                          borderColor: baseColor,
+                        }}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                {filteredControls.map((q) => {
+                  const a = answers[q.id] || {};
+                  const color = categoryColor(q.category);
+                  const qText = getQuestionText(q);
+                  const hasDetails = Boolean(detailsById[q.id]);
+                  const d = detailsById[q.id]?.[lang];
+                  return (
+                    <div
+                      key={q.id}
+                      className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"
+                      style={{ borderLeftWidth: 6, borderLeftColor: color }}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="text-xs uppercase tracking-wide text-neutral-500 flex items-center gap-2">
+                            <span
+                              className="inline-block w-2.5 h-2.5 rounded-full"
+                              style={{ backgroundColor: color }}
+                            />
+                            {q.function} · {q.category}
+                          </div>
+                          <div className="mt-0.5 font-medium break-words">
+                            {q.id} — {qText}
+                          </div>
+                        </div>
+                        <div className="shrink-0 flex items-center gap-2">
+                          {hasDetails && (
+                            <button
+                              onClick={() =>
+                                setOpenInfo((prev) => ({
+                                  ...prev,
+                                  [q.id]: !prev[q.id],
+                                }))
+                              }
+                              className="w-7 h-7 rounded-full border border-neutral-300 text-neutral-600 hover:bg-neutral-100 flex items-center justify-center"
+                              title={t("moreInfo")}
+                              aria-label={t("moreInfo")}
+                            >
+                              i
+                            </button>
+                          )}
+                          <select
+                            className="px-3 py-2 rounded-xl border border-neutral-300 bg-white"
+                            value={a.score ?? ""}
+                            onChange={(e) =>
+                              updateAnswer(q.id, {
+                                score:
+                                  e.target.value === ""
+                                    ? undefined
+                                    : Number(e.target.value),
+                              })
+                            }
+                          >
+                            <option value="">{t("cmmiPlaceholder")}</option>
+                            {CMMI_SCALE.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      {hasDetails && openInfo[q.id] && d && (
+                        <div className="mt-3 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
+                          <div className="grid md:grid-cols-2 gap-3">
+                            <div className="md:col-span-2">
+                              <div className="text-sm font-medium mb-1">
+                                {t("descFull")}
+                              </div>
+                              <p className="text-sm text-neutral-700">{d.desc}</p>
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium mb-1">
+                                {t("people")}
+                              </div>
+                              <ul className="list-disc pl-5 text-sm text-neutral-700">
+                                {d.people.map((it, idx) => (
+                                  <li key={idx}>{it}</li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium mb-1">
+                                {t("process")}
+                              </div>
+                              <ul className="list-disc pl-5 text-sm text-neutral-700">
+                                {d.process.map((it, idx) => (
+                                  <li key={idx}>{it}</li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="md:col-span-2">
+                              <div className="text-sm font-medium mb-1">
+                                {t("technology")}
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                {d.tech.map((it, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="px-2 py-1 rounded-full border border-neutral-300 bg-white text-xs"
+                                  >
+                                    {it}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="mt-3">
+                        <textarea
+                          className="w-full min-h-[88px] rounded-xl border border-neutral-300 p-3"
+                          placeholder={t("commentsPh")}
+                          value={a.comment || ""}
+                          onChange={(e) =>
+                            updateAnswer(q.id, { comment: e.target.value })
+                          }
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="max-w-6xl mx-auto px-4 pb-16 text-sm text-neutral-600">
+              <p className="mb-1">{t("tips1")}</p>
+              <p className="mb-1">{t("tips2")}</p>
+              <p>{t("tips3")}</p>
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<NistCsfQuestionnaire />);
+    </script>
+  </body>
+</html>
