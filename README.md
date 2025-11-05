@@ -1,37 +1,40 @@
 # NIST CSF 2.0 Questionnaire
 
-This repository hosts a single-page React application that delivers an interactive bilingual (FR/EN) questionnaire for assessing cyber-security maturity against the NIST CSF 2.0 framework. The page is completely static: it is composed of an `index.html` file that pulls React, Recharts, Tailwind and Babel from public CDNs.
+This project delivers an interactive, bilingual (FR/EN) questionnaire that helps teams evaluate their cyber-security maturity against the NIST Cybersecurity Framework (CSF) 2.0. The application focuses on being simple to share and operate: it ships as a single static HTML file that can be opened locally or hosted on any static site provider.
 
-## Local preview
+## Key capabilities
 
-Because the application is a single HTML file, you can preview it without a build step:
+* **Dashboard overview** – real-time averages by Function and Category, radar and bar charts with target tracking, and progress pills for each CSF Function.
+* **Guided assessments** – pre-filled questions mapped to CSF Functions, with pilot guidance content (roles, processes, tooling) for the first control.
+* **Autosave and portability** – responses persist in the browser via `localStorage`, and can be exported/imported as JSON or CSV for collaboration and archiving.
+* **Bilingual experience** – toggle between French and English labels, prompts, and helper texts at any time during the assessment.
 
-1. Clone the repository locally.
-2. Open `index.html` directly in your browser, or serve the folder with any static HTTP server (e.g. `python -m http.server`).
+## Installation
 
-## Deploying to GitHub Pages
+Although the app requires no build tooling, the repository includes helper workflows for easy hosting.
 
-The repository includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that publishes the site to GitHub Pages. To deploy:
+### Local preview
 
-1. Push the repository to GitHub and make sure your default branch is `main` (or update the workflow trigger to match your branch name).
-2. In your GitHub repository, navigate to **Settings → Pages**.
-3. Under **Build and deployment**, choose **GitHub Actions** as the source. GitHub will automatically detect the included workflow.
-4. Push to `main` (or click **Run workflow** from the **Actions** tab) to trigger a deployment. The action checks out the repository, bundles the entire workspace as an artifact, and publishes it to GitHub Pages.
-5. After the workflow completes, the live site URL appears in the workflow summary and in **Settings → Pages**.
+1. Clone the repository.
+2. Open `index.html` directly in your browser, or serve the directory with any static HTTP server (for example `python -m http.server`).
 
-### Customizing the workflow
+### Deploying to GitHub Pages
 
-If you need to deploy a different folder (for example, if you later add a build step that outputs files into `dist/`), edit the `path` value in the `Upload artifact` step of `.github/workflows/deploy.yml`.
+1. Push the repository to GitHub and confirm that your default branch is `main` (or adjust the workflow trigger).
+2. In GitHub, open **Settings → Pages** and select **GitHub Actions** as the source. The included workflow (`.github/workflows/deploy.yml`) will be detected automatically.
+3. Push to `main` or trigger **Run workflow** from the **Actions** tab. The action uploads the static site and publishes it to GitHub Pages.
+4. Once the workflow finishes, the public URL appears in the workflow summary and under **Settings → Pages**.
 
-To change the trigger branch, modify the `on.push.branches` section in the same workflow file.
+#### Customising the workflow
 
-## Importing existing responses
+* To deploy a different output directory, edit the `path` in the “Upload artifact” step of `.github/workflows/deploy.yml`.
+* To change the trigger branch, update `on.push.branches` in the same workflow file.
 
-The application can import answers that were previously exported as JSON:
+## Working with saved assessments
 
-1. Open the deployed site.
-2. Click **Import JSON**, choose your saved JSON export, and confirm the browser prompt. The page refreshes with the imported metadata and answers.
+1. Open the application (locally or via GitHub Pages).
+2. Click **Import JSON**, select the previously exported assessment, and accept the confirmation prompt to load the stored metadata and answers.
 
 ## License
 
-This project is provided as-is without an explicit license. Please add a license file if you plan to share or reuse the code publicly.
+This project is provided as-is without an explicit license. Please add a license if you intend to redistribute the code.
