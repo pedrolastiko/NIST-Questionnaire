@@ -146,6 +146,15 @@
         },
       ];
 
+      const CATEGORY_GROUPS = FUNCTIONS.map((fn) => {
+        const categories = [
+          ...new Set(
+            QUESTIONS.filter((q) => q.fn === fn.id).map((q) => q.category)
+          ),
+        ];
+        return { ...fn, categories };
+      }).filter((group) => group.categories.length > 0);
+
       const FUNCTION_COLORS = {
         GOVERN: "#1E3A8A",
         IDENTIFY: "#2563EB",
