@@ -32,11 +32,72 @@
       src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
     ></script>
 
-    <!-- 🔧 Recharts UMD CORRIGÉ : version 2.10.0, bundle minifié -->
-    <script
-      crossorigin
-      src="https://unpkg.com/recharts@2.10.0/umd/Recharts.min.js"
-    ></script>
+    <!-- 🔧 Recharts UMD : charge via plusieurs CDN avec repli -->
+    <script>
+      (function loadRechartsWithFallback() {
+        const CDN_SOURCES = [
+          "https://cdn.jsdelivr.net/npm/recharts@2.10.0/umd/Recharts.min.js",
+          "https://unpkg.com/recharts@2.10.0/umd/Recharts.min.js",
+          "https://cdnjs.cloudflare.com/ajax/libs/recharts/2.10.0/Recharts.min.js",
+        ];
+
+        const callbacks = [];
+        let status = "idle"; // idle | loading | ready | failed
+
+        function notify(err) {
+          if (status === "ready") {
+            callbacks.splice(0).forEach((cb) => cb(null, window.Recharts));
+          } else if (status === "failed") {
+            const error =
+              err || new Error("Impossible de charger Recharts depuis les CDN disponibles.");
+            callbacks.splice(0).forEach((cb) => cb(error));
+          }
+        }
+
+        function attempt(index) {
+          if (index >= CDN_SOURCES.length) {
+            status = "failed";
+            notify();
+            return;
+          }
+
+          status = "loading";
+          const script = document.createElement("script");
+          script.src = CDN_SOURCES[index];
+          script.async = true;
+          script.crossOrigin = "anonymous";
+          script.onload = () => {
+            if (window.Recharts && typeof window.Recharts === "object") {
+              status = "ready";
+              notify();
+            } else {
+              script.remove();
+              attempt(index + 1);
+            }
+          };
+          script.onerror = () => {
+            script.remove();
+            attempt(index + 1);
+          };
+          document.head.appendChild(script);
+        }
+
+        window.onRechartsReady = function onRechartsReady(callback) {
+          if (typeof callback !== "function") return;
+          if (status === "ready") {
+            callback(null, window.Recharts);
+            return;
+          }
+          if (status === "failed") {
+            callback(new Error("Recharts n'a pas pu être chargé."));
+            return;
+          }
+          callbacks.push(callback);
+        };
+
+        attempt(0);
+      })();
+    </script>
 
     <!-- htm (JSX-like) -->
     <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
@@ -48,24 +109,44 @@
       const { useEffect, useMemo, useState } = React;
       const html = window.htm.bind(React.createElement);
 
-      // ✅ Recharts vient du bundle UMD, exposé en global
-      const {
-        BarChart,
-        Bar,
-        XAxis,
-        YAxis,
-        CartesianGrid,
-        Tooltip,
-        ResponsiveContainer,
-        Radar: RadarShape,
-        RadarChart: RChart,
-        PolarGrid,
-        PolarAngleAxis,
-        PolarRadiusAxis,
-        Legend,
-        Cell,
-        ReferenceLine,
-      } = Recharts;
+      function renderError(message) {
+        const root = document.getElementById("root");
+        if (!root) return;
+        root.innerHTML = `
+          <div class="max-w-3xl mx-auto mt-16 p-6 rounded-lg border border-red-200 bg-red-50 text-red-900">
+            <h1 class="text-xl font-semibold mb-2">Erreur de chargement</h1>
+            <p class="mb-3">${message}</p>
+            <p class="text-sm text-red-800">
+              Vérifiez votre connexion Internet ou autorisez l'accès aux CDN suivants :
+              <code>cdn.jsdelivr.net</code>, <code>unpkg.com</code>, <code>cdnjs.cloudflare.com</code>.
+            </p>
+          </div>
+        `;
+      }
+
+      function bootstrap(Recharts) {
+        if (!Recharts) {
+          renderError("Recharts n'est pas disponible – chargement interrompu.");
+          return;
+        }
+
+        const {
+          BarChart,
+          Bar,
+          XAxis,
+          YAxis,
+          CartesianGrid,
+          Tooltip,
+          ResponsiveContainer,
+          Radar: RadarShape,
+          RadarChart: RChart,
+          PolarGrid,
+          PolarAngleAxis,
+          PolarRadiusAxis,
+          Legend,
+          Cell,
+          ReferenceLine,
+        } = Recharts;
 
       /**
        * NIST CSF 2.0 – Web Questionnaire (React + htm, sans build)
@@ -243,8 +324,24 @@
       // (Garde exactement ton gros bloc JS que tu avais après AngleTick)
       // et à la fin :
 
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(html`<${NistCsfQuestionnaire} />`);
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(html`<${NistCsfQuestionnaire} />`);
+      }
+
+      if (typeof window.onRechartsReady === "function") {
+        window.onRechartsReady((err, lib) => {
+          if (err) {
+            console.error(err);
+            renderError(
+              "Impossible de charger Recharts depuis les CDN configurés. Veuillez réessayer plus tard."
+            );
+            return;
+          }
+          bootstrap(lib);
+        });
+      } else {
+        bootstrap(window.Recharts);
+      }
     </script>
   </body>
 </html>
