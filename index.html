@@ -67,6 +67,7 @@
         PolarAngleAxis,
         PolarRadiusAxis,
         Legend,
+        Cell,
       } = Recharts;
 
       // ------------------ Données de base ------------------
@@ -499,13 +500,22 @@
                                 value: avg(
                                   stats.byFn[fn.id].scores || []
                                 ),
+                                id: fn.id,
                               }))}
                             >
                               <${CartesianGrid} strokeDasharray="3 3" />
                               <${XAxis} dataKey="name" />
                               <${YAxis} domain=${[0, 5]} />
                               <${Tooltip} />
-                              <${Bar} dataKey="value" fill="#2563EB" />
+                              <${Bar} dataKey="value">
+                                ${FUNCTIONS.map(
+                                  (fn) =>
+                                    html`<${Cell}
+                                      key=${fn.id}
+                                      fill=${FUNCTION_COLORS[fn.id]}
+                                    />`
+                                )}
+                              <//>
                             <//>
                           <//>
                           <p className="mt-2 text-xs text-neutral-500">
@@ -586,7 +596,7 @@
                         return html`
                           <button
                             key=${fn.id}
-                            className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                            className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
                             style=${isActive ? activeStyles : inactiveStyles}
                             title=${fn[lang]}
                             onClick=${() =>
@@ -594,8 +604,7 @@
                                 prev === fn.id ? "ALL" : fn.id
                               )}
                           >
-                            <span className="font-semibold">${fn[lang]}</span>
-                            <span className="ml-1 text-[11px] uppercase">${fn.id}</span>
+                            ${(fn[lang] || fn.id).toUpperCase()}
                           </button>
                         `;
                       })}
