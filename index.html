@@ -91,6 +91,10 @@
           category: "GV.OC",
           fr: "La direction définit-elle des objectifs clairs pour la cybersécurité alignés sur la stratégie d’affaires ?",
           en: "Does management define clear cybersecurity objectives aligned with business strategy?",
+          detailFr:
+            "Cette question vérifie que le comité de direction formalise des orientations cybersécurité mesurables et suivies, alignées sur les objectifs globaux de l’organisation.",
+          detailEn:
+            "This control confirms leadership has documented, measurable cybersecurity objectives that stay aligned with broader business goals and receive regular oversight.",
         },
         {
           id: "GV-02",
@@ -98,6 +102,10 @@
           category: "GV.RM",
           fr: "Un cadre de gestion des risques cyber est-il approuvé et appliqué ?",
           en: "Is a cybersecurity risk management framework approved and applied?",
+          detailFr:
+            "Assurez-vous qu’un cadre de gestion des risques (ISO 27005, EBIOS, FAIR, etc.) est formellement adopté, communiqué et utilisé pour prioriser les actions.",
+          detailEn:
+            "Verify that a recognized risk management framework (ISO 27005, FAIR, EBIOS, etc.) is formally adopted, communicated, and used to prioritize mitigation efforts.",
         },
         {
           id: "ID-01",
@@ -105,6 +113,10 @@
           category: "ID.AM",
           fr: "Les actifs critiques (applications, données, infrastructures) sont-ils inventoriés et classifiés ?",
           en: "Are critical assets (applications, data, infrastructure) inventoried and classified?",
+          detailFr:
+            "Le contrôle vise à confirmer que tous les actifs critiques sont identifiés, catégorisés selon leur importance et mis à jour pour soutenir les analyses de risques.",
+          detailEn:
+            "This control ensures critical assets are identified, categorized by importance, and maintained in an up-to-date repository to support risk assessments.",
         },
         {
           id: "ID-02",
@@ -112,6 +124,10 @@
           category: "ID.RA",
           fr: "Des évaluations de risques cyber sont-elles réalisées régulièrement ?",
           en: "Are cyber risk assessments performed regularly?",
+          detailFr:
+            "Il s’agit de vérifier que des analyses de risques périodiques évaluent les menaces, vulnérabilités et impacts, et qu’elles débouchent sur des plans d’actions.",
+          detailEn:
+            "Confirms that periodic risk assessments evaluate threats, vulnerabilities, and impacts, leading to actionable mitigation or treatment plans.",
         },
         {
           id: "PR-01",
@@ -119,6 +135,10 @@
           category: "PR.AC",
           fr: "Les accès sont-ils gérés selon le principe du moindre privilège ?",
           en: "Are accesses managed according to the least privilege principle?",
+          detailFr:
+            "Vérifiez que les droits d’accès sont accordés en fonction des rôles, revus régulièrement et révoqués dès qu’ils ne sont plus nécessaires.",
+          detailEn:
+            "Ensure access rights are role-based, reviewed regularly, and revoked promptly when no longer required to enforce least privilege.",
         },
         {
           id: "PR-02",
@@ -126,6 +146,10 @@
           category: "PR.IP",
           fr: "Des procédures formelles existent-elles pour la gestion des changements ?",
           en: "Are formal procedures in place for change management?",
+          detailFr:
+            "La procédure de changement doit documenter les validations, tests, retours arrière et responsabilités afin de limiter les risques opérationnels.",
+          detailEn:
+            "Change processes should document approvals, testing, rollback plans, and ownership to limit operational and security risks.",
         },
         {
           id: "DE-01",
@@ -133,6 +157,10 @@
           category: "DE.CM",
           fr: "Un SOC ou une capacité de surveillance des journaux est-il en place ?",
           en: "Is a SOC or log monitoring capability in place?",
+          detailFr:
+            "Le contrôle valide l’existence d’une surveillance continue (SOC interne/externe) capable de détecter rapidement des comportements anormaux.",
+          detailEn:
+            "This item confirms continuous monitoring is in place—internal or outsourced SOC—to rapidly detect anomalous behaviors.",
         },
         {
           id: "RS-01",
@@ -140,6 +168,10 @@
           category: "RS.MI",
           fr: "Des plans de réponse aux incidents sont-ils définis et testés ?",
           en: "Are incident response plans defined and tested?",
+          detailFr:
+            "Les plans doivent couvrir les scénarios majeurs, préciser les rôles et inclure des exercices réguliers pour vérifier l’efficacité de la réponse.",
+          detailEn:
+            "Plans should cover major scenarios, clarify responsibilities, and include rehearsals or tabletop exercises to prove response effectiveness.",
         },
         {
           id: "RC-01",
@@ -147,6 +179,10 @@
           category: "RC.RP",
           fr: "Des plans de reprise des activités sont-ils documentés et testés ?",
           en: "Are business recovery plans documented and tested?",
+          detailFr:
+            "Ce contrôle garantit la présence de procédures de reprise documentées, testées et alignées sur les objectifs de continuité de l’organisation.",
+          detailEn:
+            "Ensures recovery procedures are documented, tested, and aligned with organizational continuity objectives and recovery timeframes.",
         },
       ];
 
@@ -204,6 +240,10 @@
           targetInfo: "Objectif moyen saisi (0–5).",
           exportCsv: "Exporter en CSV",
           exportPdf: "Exporter en PDF",
+          resetForm: "Réinitialiser",
+          confirmReset:
+            "Voulez-vous vraiment réinitialiser le questionnaire ? Toutes les réponses et métadonnées seront effacées.",
+          infoLabel: "Afficher les détails du contrôle",
         },
         en: {
           appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
@@ -236,6 +276,10 @@
           targetInfo: "Average target set (0–5).",
           exportCsv: "Export to CSV",
           exportPdf: "Export to PDF",
+          resetForm: "Reset",
+          confirmReset:
+            "Do you really want to reset the questionnaire? All answers and metadata will be cleared.",
+          infoLabel: "Show control details",
         },
       };
 
@@ -316,6 +360,7 @@
         const [answers, setAnswers] = useState(() => createDefaultAnswers());
         const [search, setSearch] = useState("");
         const [functionFilter, setFunctionFilter] = useState("ALL");
+        const [infoExpanded, setInfoExpanded] = useState({});
 
         // ---- Chargement / sauvegarde locale ----
 
@@ -403,6 +448,20 @@
           (q) => typeof answers[q.id]?.target === "number"
         );
         const hasData = hasScores || hasTargets;
+
+        const handleReset = useCallback(() => {
+          if (!window.confirm(t.confirmReset)) return;
+
+          setMeta({ project: "", assessor: "", org: "", date: "" });
+          setAnswers(createDefaultAnswers());
+          setSearch("");
+          setFunctionFilter("ALL");
+          setInfoExpanded({});
+        }, [t]);
+
+        const handleToggleInfo = useCallback((id) => {
+          setInfoExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+        }, []);
 
         const handleExportCSV = useCallback(() => {
           const header = [
@@ -753,6 +812,13 @@
                     />
                     <div className="flex items-center gap-2">
                       <button
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-200 bg-white text-sm font-medium text-red-600 hover:border-red-400 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1"
+                        onClick=${handleReset}
+                        type="button"
+                      >
+                        🔄 ${t.resetForm}
+                      </button>
+                      <button
                         className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                         onClick=${handleExportCSV}
                         type="button"
@@ -819,7 +885,35 @@
                               ${q.category}
                             </td>
                             <td className="px-3 py-2 text-neutral-800">
-                              ${q[lang]}
+                              ${(() => {
+                                const detailText =
+                                  lang === "fr" ? q.detailFr : q.detailEn;
+                                const expanded = infoExpanded[q.id];
+                                return html`
+                                  <div className="flex items-start gap-2">
+                                    <span>${q[lang]}</span>
+                                    ${detailText
+                                      ? html`<button
+                                          type="button"
+                                          className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border border-blue-200 bg-blue-50 text-xs font-semibold text-blue-700 hover:border-blue-300 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                          title=${t.infoLabel}
+                                          aria-label=${t.infoLabel}
+                                          aria-expanded=${expanded ? "true" : "false"}
+                                          onClick=${() => handleToggleInfo(q.id)}
+                                        >
+                                          i
+                                        </button>`
+                                      : null}
+                                  </div>
+                                  ${detailText && expanded
+                                    ? html`<p
+                                        className="mt-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-900"
+                                      >
+                                        ${detailText}
+                                      </p>`
+                                    : null}
+                                `;
+                              })()}
                             </td>
                             <td className="px-3 py-2">
                               <${SelectScore}
