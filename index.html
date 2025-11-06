@@ -42,6 +42,9 @@
     <!-- Recharts UMD -->
     <script src="https://unpkg.com/recharts@1.6.2/umd/Recharts.min.js"></script>
 
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <!-- htm (JSX-like sans build) -->
     <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
   </head>
@@ -50,7 +53,7 @@
     <div id="root"></div>
 
     <script>
-      const { useState, useEffect, useMemo } = React;
+      const { useState, useEffect, useMemo, useCallback } = React;
       const html = window.htm.bind(React.createElement);
 
       const {
@@ -191,12 +194,16 @@
           searchPh: "Filtre (ID, texte, fonction...)",
           allFunctions: "Toutes les fonctions",
           filterByFunction: "Fonctions",
+          functionColumn: "Fonction",
+          categoryColumn: "Catégorie",
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
           tips2:
-            "📤 Export possible en copiant les données de la console (JSON) si besoin.",
+            "📤 Utilisez les boutons d’export pour récupérer vos données (CSV ou PDF).",
           cmmiInfo:
             "Notation suggérée : 0–5 (inexistant à optimisé) selon CMMI / NIST.",
           targetInfo: "Objectif moyen saisi (0–5).",
+          exportCsv: "Exporter en CSV",
+          exportPdf: "Exporter en PDF",
         },
         en: {
           appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
@@ -219,12 +226,16 @@
           searchPh: "Filter (ID, text, function...)",
           allFunctions: "All functions",
           filterByFunction: "Functions",
+          functionColumn: "Function",
+          categoryColumn: "Category",
           tips1: "💾 Autosave enabled (browser localStorage).",
           tips2:
-            "📤 You can export data by copying JSON from the console if needed.",
+            "📤 Use the export buttons to retrieve your data (CSV or PDF).",
           cmmiInfo:
             "Suggested rating: 0–5 (non-existent to optimized) based on CMMI / NIST.",
           targetInfo: "Average target set (0–5).",
+          exportCsv: "Export to CSV",
+          exportPdf: "Export to PDF",
         },
       };
 
@@ -393,6 +404,128 @@
         );
         const hasData = hasScores || hasTargets;
 
+        const handleExportCSV = useCallback(() => {
+          const header = [
+            "ID",
+            t.functionColumn,
+            t.categoryColumn,
+            t.questions,
+            t.score,
+            t.target,
+            t.comments,
+          ];
+
+          const csvRows = QUESTIONS.map((q) => {
+            const fn = FUNCTIONS.find((f) => f.id === q.fn);
+            const a = answers[q.id] || {};
+            const clean = (value) =>
+              (value ?? "")
+                .toString()
+                .replace(/"/g, '""')
+                .replace(/\r?\n|\r/g, " ");
+
+            return [
+              q.id,
+              fn ? fn[lang] : q.fn,
+              q.category,
+              q[lang],
+              a.score ?? "",
+              a.target ?? "",
+              clean(a.comments || ""),
+            ].map((value) => `"${clean(value)}"`).join(";");
+          });
+
+          const csvContent = [header.map((value) => `"${value}"`).join(";"), ...csvRows].join("\n");
+          const blob = new Blob([csvContent], {
+            type: "text/csv;charset=utf-8;",
+          });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `nist-csf-questionnaire_${lang}.csv`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, [answers, lang, t]);
+
+        const handleExportPDF = useCallback(() => {
+          if (!window.jspdf || !window.jspdf.jsPDF) {
+            console.warn("jsPDF unavailable");
+            return;
+          }
+
+          const doc = new window.jspdf.jsPDF({
+            orientation: "portrait",
+            unit: "pt",
+            format: "a4",
+          });
+
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const pageHeight = doc.internal.pageSize.getHeight();
+          const margin = 40;
+          let y = margin;
+
+          doc.setFontSize(16);
+          doc.text(t.appTitle, margin, y);
+          y += 24;
+
+          doc.setFontSize(10);
+          const metaEntries = [
+            [t.project, meta.project],
+            [t.assessor, meta.assessor],
+            [t.org, meta.org],
+            [t.date, meta.date],
+          ];
+
+          metaEntries.forEach(([label, value]) => {
+            doc.text(`${label}: ${value || "-"}`, margin, y);
+            y += 14;
+          });
+
+          y += 10;
+
+          const addPageIfNeeded = (spaceNeeded = 0) => {
+            if (y + spaceNeeded <= pageHeight - margin) return;
+            doc.addPage();
+            y = margin;
+          };
+
+          QUESTIONS.forEach((q) => {
+            const fn = FUNCTIONS.find((f) => f.id === q.fn);
+            const a = answers[q.id] || {};
+
+            addPageIfNeeded(80);
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text(`${q.id} – ${fn ? fn[lang] : q.fn}`, margin, y);
+            y += 16;
+
+            doc.setFont("helvetica", "normal");
+            const questionLines = doc.splitTextToSize(q[lang], pageWidth - margin * 2);
+            doc.text(questionLines, margin, y);
+            y += questionLines.length * 14;
+
+            const details = [
+              `${t.score}: ${typeof a.score === "number" ? a.score : "-"}`,
+              `${t.target}: ${typeof a.target === "number" ? a.target : "-"}`,
+              `${t.comments}: ${a.comments ? a.comments.replace(/\r?\n|\r/g, " ") : "-"}`,
+            ];
+
+            details.forEach((line) => {
+              addPageIfNeeded(20);
+              const wrapped = doc.splitTextToSize(line, pageWidth - margin * 2);
+              doc.text(wrapped, margin, y);
+              y += wrapped.length * 14;
+            });
+
+            y += 10;
+          });
+
+          doc.save(`nist-csf-questionnaire_${lang}.pdf`);
+        }, [answers, lang, meta, t]);
+
         return html`
           <div className="min-h-screen bg-neutral-50 py-6 px-3 md:px-6">
             <div className="max-w-6xl mx-auto">
@@ -413,7 +546,7 @@
                     className="px-3 py-1 rounded-full border text-sm bg-white border-neutral-300 hover:border-blue-500 hover:text-blue-600"
                     onClick=${() => setLang(lang === "fr" ? "en" : "fr")}
                   >
-                    ${lang === "fr" ? "FR 🇫🇷" : "EN 🇬🇧"}
+                    ${lang === "fr" ? "EN 🇬🇧" : "FR 🇫🇷"}
                   </button>
                 </div>
               </header>
@@ -611,13 +744,29 @@
                     </div>
                   </div>
 
-                  <div>
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <input
                       className="w-full md:w-80 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder=${t.searchPh}
                       value=${search}
                       onChange=${(e) => setSearch(e.target.value)}
                     />
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                        onClick=${handleExportCSV}
+                        type="button"
+                      >
+                        📄 ${t.exportCsv}
+                      </button>
+                      <button
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                        onClick=${handleExportPDF}
+                        type="button"
+                      >
+                        🧾 ${t.exportPdf}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -626,8 +775,8 @@
                     <thead className="bg-neutral-100 text-neutral-700">
                       <tr>
                         <th className="px-3 py-2 text-left">ID</th>
-                        <th className="px-3 py-2 text-left">Function</th>
-                        <th className="px-3 py-2 text-left">Cat.</th>
+                        <th className="px-3 py-2 text-left">${t.functionColumn}</th>
+                        <th className="px-3 py-2 text-left">${t.categoryColumn}</th>
                         <th className="px-3 py-2 text-left w-1/2">
                           ${t.questions}
                         </th>
