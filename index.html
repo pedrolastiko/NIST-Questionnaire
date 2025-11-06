@@ -146,14 +146,18 @@
         },
       ];
 
-      const CATEGORY_GROUPS = FUNCTIONS.map((fn) => {
-        const categories = [
-          ...new Set(
-            QUESTIONS.filter((q) => q.fn === fn.id).map((q) => q.category)
-          ),
-        ];
-        return { ...fn, categories };
-      }).filter((group) => group.categories.length > 0);
+      const DEFAULT_ANSWERS = QUESTIONS.reduce((acc, q) => {
+        acc[q.id] = { target: 4 };
+        return acc;
+      }, {});
+
+      function createDefaultAnswers() {
+        const copy = {};
+        QUESTIONS.forEach((q) => {
+          copy[q.id] = { ...DEFAULT_ANSWERS[q.id] };
+        });
+        return copy;
+      }
 
       const FUNCTION_COLORS = {
         GOVERN: "#1E3A8A",
@@ -174,6 +178,7 @@
           date: "Date",
           globalLang: "Langue",
           maturityScore: "Score de maturité",
+          maturityTarget: "Score cible moyen",
           maturityByFn: "Maturité par Function",
           radarTitle: "Actuel vs Cible (par Function)",
           noDataYet:
@@ -190,6 +195,7 @@
             "📤 Export possible en copiant les données de la console (JSON) si besoin.",
           cmmiInfo:
             "Notation suggérée : 0–5 (inexistant à optimisé) selon CMMI / NIST.",
+          targetInfo: "Objectif moyen saisi (0–5).",
         },
         en: {
           appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
@@ -200,6 +206,7 @@
           date: "Date",
           globalLang: "Language",
           maturityScore: "Maturity score",
+          maturityTarget: "Average target score",
           maturityByFn: "Maturity by Function",
           radarTitle: "Current vs Target (by Function)",
           noDataYet:
@@ -216,6 +223,7 @@
             "📤 You can export data by copying JSON from the console if needed.",
           cmmiInfo:
             "Suggested rating: 0–5 (non-existent to optimized) based on CMMI / NIST.",
+          targetInfo: "Average target set (0–5).",
         },
       };
 
@@ -293,7 +301,7 @@
           date: "",
         });
 
-        const [answers, setAnswers] = useState({});
+        const [answers, setAnswers] = useState(() => createDefaultAnswers());
         const [search, setSearch] = useState("");
         const [functionFilter, setFunctionFilter] = useState("ALL");
 
@@ -305,7 +313,16 @@
               localStorage.getItem("nist-csf-questionnaire-v1") || "{}"
             );
             if (saved.meta) setMeta(saved.meta);
-            if (saved.answers) setAnswers(saved.answers);
+            if (saved.answers) {
+              const merged = createDefaultAnswers();
+              Object.entries(saved.answers).forEach(([id, value]) => {
+                merged[id] = {
+                  ...merged[id],
+                  ...value,
+                };
+              });
+              setAnswers(merged);
+            }
             if (saved.lang) setLang(saved.lang);
           } catch (e) {
             console.warn("No previous data", e);
@@ -360,12 +377,20 @@
           }));
 
           const allScores = QUESTIONS.map((q) => answers[q.id]?.score);
+          const allTargets = QUESTIONS.map((q) => answers[q.id]?.target);
           const global = avg(allScores);
+          const targetGlobal = avg(allTargets);
 
-          return { byFn, radarData, global };
+          return { byFn, radarData, global, targetGlobal };
         }, [answers, lang]);
 
-        const hasData = stats.global > 0;
+        const hasScores = QUESTIONS.some(
+          (q) => typeof answers[q.id]?.score === "number"
+        );
+        const hasTargets = QUESTIONS.some(
+          (q) => typeof answers[q.id]?.target === "number"
+        );
+        const hasData = hasScores || hasTargets;
 
         return html`
           <div className="min-h-screen bg-neutral-50 py-6 px-3 md:px-6">
@@ -442,6 +467,21 @@
                             </div>
                             <div className="mt-1 text-xs text-blue-900/70">
                               (0–5)
+                            </div>
+                            <div className="mt-4 pt-3 border-t border-blue-100">
+                              <div
+                                className="text-xs uppercase font-semibold text-blue-600 tracking-wide"
+                              >
+                                ${t.maturityTarget}
+                              </div>
+                              <div
+                                className="mt-2 text-2xl font-semibold text-blue-900"
+                              >
+                                ${stats.targetGlobal.toFixed(2)}
+                              </div>
+                              <div className="mt-1 text-xs text-blue-900/70">
+                                ${t.targetInfo}
+                              </div>
                             </div>
                           </div>
 
