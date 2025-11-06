@@ -42,6 +42,9 @@
     <!-- Recharts UMD -->
     <script src="https://unpkg.com/recharts@1.6.2/umd/Recharts.min.js"></script>
 
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <!-- htm (JSX-like sans build) -->
     <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
   </head>
@@ -50,7 +53,7 @@
     <div id="root"></div>
 
     <script>
-      const { useState, useEffect, useMemo } = React;
+      const { useState, useEffect, useMemo, useCallback } = React;
       const html = window.htm.bind(React.createElement);
 
       const {
@@ -67,6 +70,7 @@
         PolarAngleAxis,
         PolarRadiusAxis,
         Legend,
+        Cell,
       } = Recharts;
 
       // ------------------ Données de base ------------------
@@ -146,6 +150,19 @@
         },
       ];
 
+      const DEFAULT_ANSWERS = QUESTIONS.reduce((acc, q) => {
+        acc[q.id] = { target: 4 };
+        return acc;
+      }, {});
+
+      function createDefaultAnswers() {
+        const copy = {};
+        QUESTIONS.forEach((q) => {
+          copy[q.id] = { ...DEFAULT_ANSWERS[q.id] };
+        });
+        return copy;
+      }
+
       const FUNCTION_COLORS = {
         GOVERN: "#1E3A8A",
         IDENTIFY: "#2563EB",
@@ -165,6 +182,7 @@
           date: "Date",
           globalLang: "Langue",
           maturityScore: "Score de maturité",
+          maturityTarget: "Score cible moyen",
           maturityByFn: "Maturité par Function",
           radarTitle: "Actuel vs Cible (par Function)",
           noDataYet:
@@ -173,12 +191,19 @@
           score: "Score",
           target: "Cible",
           comments: "Commentaires",
-          searchPh: "Filtre (ID, texte, catégorie...)",
+          searchPh: "Filtre (ID, texte, fonction...)",
+          allFunctions: "Toutes les fonctions",
+          filterByFunction: "Fonctions",
+          functionColumn: "Fonction",
+          categoryColumn: "Catégorie",
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
           tips2:
-            "📤 Export possible en copiant les données de la console (JSON) si besoin.",
+            "📤 Utilisez les boutons d’export pour récupérer vos données (CSV ou PDF).",
           cmmiInfo:
             "Notation suggérée : 0–5 (inexistant à optimisé) selon CMMI / NIST.",
+          targetInfo: "Objectif moyen saisi (0–5).",
+          exportCsv: "Exporter en CSV",
+          exportPdf: "Exporter en PDF",
         },
         en: {
           appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
@@ -189,6 +214,7 @@
           date: "Date",
           globalLang: "Language",
           maturityScore: "Maturity score",
+          maturityTarget: "Average target score",
           maturityByFn: "Maturity by Function",
           radarTitle: "Current vs Target (by Function)",
           noDataYet:
@@ -197,12 +223,19 @@
           score: "Score",
           target: "Target",
           comments: "Comments",
-          searchPh: "Filter (ID, text, category...)",
+          searchPh: "Filter (ID, text, function...)",
+          allFunctions: "All functions",
+          filterByFunction: "Functions",
+          functionColumn: "Function",
+          categoryColumn: "Category",
           tips1: "💾 Autosave enabled (browser localStorage).",
           tips2:
-            "📤 You can export data by copying JSON from the console if needed.",
+            "📤 Use the export buttons to retrieve your data (CSV or PDF).",
           cmmiInfo:
             "Suggested rating: 0–5 (non-existent to optimized) based on CMMI / NIST.",
+          targetInfo: "Average target set (0–5).",
+          exportCsv: "Export to CSV",
+          exportPdf: "Export to PDF",
         },
       };
 
@@ -280,8 +313,9 @@
           date: "",
         });
 
-        const [answers, setAnswers] = useState({});
+        const [answers, setAnswers] = useState(() => createDefaultAnswers());
         const [search, setSearch] = useState("");
+        const [functionFilter, setFunctionFilter] = useState("ALL");
 
         // ---- Chargement / sauvegarde locale ----
 
@@ -291,7 +325,16 @@
               localStorage.getItem("nist-csf-questionnaire-v1") || "{}"
             );
             if (saved.meta) setMeta(saved.meta);
-            if (saved.answers) setAnswers(saved.answers);
+            if (saved.answers) {
+              const merged = createDefaultAnswers();
+              Object.entries(saved.answers).forEach(([id, value]) => {
+                merged[id] = {
+                  ...merged[id],
+                  ...value,
+                };
+              });
+              setAnswers(merged);
+            }
             if (saved.lang) setLang(saved.lang);
           } catch (e) {
             console.warn("No previous data", e);
@@ -307,9 +350,14 @@
         }, [meta, answers, lang]);
 
         const filteredQuestions = useMemo(() => {
-          if (!search) return QUESTIONS;
           const s = search.toLowerCase();
           return QUESTIONS.filter((q) => {
+            const matchesFunction =
+              functionFilter === "ALL" || q.fn === functionFilter;
+            if (!matchesFunction) return false;
+
+            if (!s) return true;
+
             const text = (q[lang] || "").toLowerCase();
             return (
               q.id.toLowerCase().includes(s) ||
@@ -317,7 +365,7 @@
               text.includes(s)
             );
           });
-        }, [search, lang]);
+        }, [search, lang, functionFilter]);
 
         const stats = useMemo(() => {
           const byFn = {};
@@ -341,12 +389,142 @@
           }));
 
           const allScores = QUESTIONS.map((q) => answers[q.id]?.score);
+          const allTargets = QUESTIONS.map((q) => answers[q.id]?.target);
           const global = avg(allScores);
+          const targetGlobal = avg(allTargets);
 
-          return { byFn, radarData, global };
+          return { byFn, radarData, global, targetGlobal };
         }, [answers, lang]);
 
-        const hasData = stats.global > 0;
+        const hasScores = QUESTIONS.some(
+          (q) => typeof answers[q.id]?.score === "number"
+        );
+        const hasTargets = QUESTIONS.some(
+          (q) => typeof answers[q.id]?.target === "number"
+        );
+        const hasData = hasScores || hasTargets;
+
+        const handleExportCSV = useCallback(() => {
+          const header = [
+            "ID",
+            t.functionColumn,
+            t.categoryColumn,
+            t.questions,
+            t.score,
+            t.target,
+            t.comments,
+          ];
+
+          const csvRows = QUESTIONS.map((q) => {
+            const fn = FUNCTIONS.find((f) => f.id === q.fn);
+            const a = answers[q.id] || {};
+            const clean = (value) =>
+              (value ?? "")
+                .toString()
+                .replace(/"/g, '""')
+                .replace(/\r?\n|\r/g, " ");
+
+            return [
+              q.id,
+              fn ? fn[lang] : q.fn,
+              q.category,
+              q[lang],
+              a.score ?? "",
+              a.target ?? "",
+              clean(a.comments || ""),
+            ].map((value) => `"${clean(value)}"`).join(";");
+          });
+
+          const csvContent = [header.map((value) => `"${value}"`).join(";"), ...csvRows].join("\n");
+          const blob = new Blob([csvContent], {
+            type: "text/csv;charset=utf-8;",
+          });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `nist-csf-questionnaire_${lang}.csv`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, [answers, lang, t]);
+
+        const handleExportPDF = useCallback(() => {
+          if (!window.jspdf || !window.jspdf.jsPDF) {
+            console.warn("jsPDF unavailable");
+            return;
+          }
+
+          const doc = new window.jspdf.jsPDF({
+            orientation: "portrait",
+            unit: "pt",
+            format: "a4",
+          });
+
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const pageHeight = doc.internal.pageSize.getHeight();
+          const margin = 40;
+          let y = margin;
+
+          doc.setFontSize(16);
+          doc.text(t.appTitle, margin, y);
+          y += 24;
+
+          doc.setFontSize(10);
+          const metaEntries = [
+            [t.project, meta.project],
+            [t.assessor, meta.assessor],
+            [t.org, meta.org],
+            [t.date, meta.date],
+          ];
+
+          metaEntries.forEach(([label, value]) => {
+            doc.text(`${label}: ${value || "-"}`, margin, y);
+            y += 14;
+          });
+
+          y += 10;
+
+          const addPageIfNeeded = (spaceNeeded = 0) => {
+            if (y + spaceNeeded <= pageHeight - margin) return;
+            doc.addPage();
+            y = margin;
+          };
+
+          QUESTIONS.forEach((q) => {
+            const fn = FUNCTIONS.find((f) => f.id === q.fn);
+            const a = answers[q.id] || {};
+
+            addPageIfNeeded(80);
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text(`${q.id} – ${fn ? fn[lang] : q.fn}`, margin, y);
+            y += 16;
+
+            doc.setFont("helvetica", "normal");
+            const questionLines = doc.splitTextToSize(q[lang], pageWidth - margin * 2);
+            doc.text(questionLines, margin, y);
+            y += questionLines.length * 14;
+
+            const details = [
+              `${t.score}: ${typeof a.score === "number" ? a.score : "-"}`,
+              `${t.target}: ${typeof a.target === "number" ? a.target : "-"}`,
+              `${t.comments}: ${a.comments ? a.comments.replace(/\r?\n|\r/g, " ") : "-"}`,
+            ];
+
+            details.forEach((line) => {
+              addPageIfNeeded(20);
+              const wrapped = doc.splitTextToSize(line, pageWidth - margin * 2);
+              doc.text(wrapped, margin, y);
+              y += wrapped.length * 14;
+            });
+
+            y += 10;
+          });
+
+          doc.save(`nist-csf-questionnaire_${lang}.pdf`);
+        }, [answers, lang, meta, t]);
 
         return html`
           <div className="min-h-screen bg-neutral-50 py-6 px-3 md:px-6">
@@ -368,7 +546,7 @@
                     className="px-3 py-1 rounded-full border text-sm bg-white border-neutral-300 hover:border-blue-500 hover:text-blue-600"
                     onClick=${() => setLang(lang === "fr" ? "en" : "fr")}
                   >
-                    ${lang === "fr" ? "FR 🇫🇷" : "EN 🇬🇧"}
+                    ${lang === "fr" ? "EN 🇬🇧" : "FR 🇫🇷"}
                   </button>
                 </div>
               </header>
@@ -424,6 +602,21 @@
                             <div className="mt-1 text-xs text-blue-900/70">
                               (0–5)
                             </div>
+                            <div className="mt-4 pt-3 border-t border-blue-100">
+                              <div
+                                className="text-xs uppercase font-semibold text-blue-600 tracking-wide"
+                              >
+                                ${t.maturityTarget}
+                              </div>
+                              <div
+                                className="mt-2 text-2xl font-semibold text-blue-900"
+                              >
+                                ${stats.targetGlobal.toFixed(2)}
+                              </div>
+                              <div className="mt-1 text-xs text-blue-900/70">
+                                ${t.targetInfo}
+                              </div>
+                            </div>
                           </div>
 
                           <div className="text-xs text-neutral-500 space-y-1">
@@ -440,13 +633,22 @@
                                 value: avg(
                                   stats.byFn[fn.id].scores || []
                                 ),
+                                id: fn.id,
                               }))}
                             >
                               <${CartesianGrid} strokeDasharray="3 3" />
                               <${XAxis} dataKey="name" />
                               <${YAxis} domain=${[0, 5]} />
                               <${Tooltip} />
-                              <${Bar} dataKey="value" fill="#2563EB" />
+                              <${Bar} dataKey="value">
+                                ${FUNCTIONS.map(
+                                  (fn) =>
+                                    html`<${Cell}
+                                      key=${fn.id}
+                                      fill=${FUNCTION_COLORS[fn.id]}
+                                    />`
+                                )}
+                              <//>
                             <//>
                           <//>
                           <p className="mt-2 text-xs text-neutral-500">
@@ -493,15 +695,79 @@
 
               <!-- Questions -->
               <${Card} title=${t.questions}>
-                <div
-                  className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3"
-                >
-                  <input
-                    className="w-full md:w-80 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder=${t.searchPh}
-                    value=${search}
-                    onChange=${(e) => setSearch(e.target.value)}
-                  />
+                <div className="flex flex-col gap-4 mb-3">
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-neutral-500 tracking-wide mb-2">
+                      ${t.filterByFunction}
+                    </div>
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+                      <button
+                        className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                        style=${{
+                          backgroundColor:
+                            functionFilter === "ALL" ? "#1F2937" : "white",
+                          color: functionFilter === "ALL" ? "white" : "#374151",
+                          borderColor:
+                            functionFilter === "ALL" ? "#1F2937" : "#D1D5DB",
+                        }}
+                        onClick=${() => setFunctionFilter("ALL")}
+                      >
+                        ${t.allFunctions}
+                      </button>
+                      ${FUNCTIONS.map((fn) => {
+                        const isActive = functionFilter === fn.id;
+                        const activeStyles = {
+                          backgroundColor: FUNCTION_COLORS[fn.id],
+                          color: "white",
+                          borderColor: FUNCTION_COLORS[fn.id],
+                        };
+                        const inactiveStyles = {
+                          backgroundColor: FUNCTION_COLORS[fn.id] + "14",
+                          color: FUNCTION_COLORS[fn.id],
+                          borderColor: FUNCTION_COLORS[fn.id] + "40",
+                        };
+                        return html`
+                          <button
+                            key=${fn.id}
+                            className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                            style=${isActive ? activeStyles : inactiveStyles}
+                            title=${fn[lang]}
+                            onClick=${() =>
+                              setFunctionFilter((prev) =>
+                                prev === fn.id ? "ALL" : fn.id
+                              )}
+                          >
+                            ${(fn[lang] || fn.id).toUpperCase()}
+                          </button>
+                        `;
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <input
+                      className="w-full md:w-80 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder=${t.searchPh}
+                      value=${search}
+                      onChange=${(e) => setSearch(e.target.value)}
+                    />
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                        onClick=${handleExportCSV}
+                        type="button"
+                      >
+                        📄 ${t.exportCsv}
+                      </button>
+                      <button
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                        onClick=${handleExportPDF}
+                        type="button"
+                      >
+                        🧾 ${t.exportPdf}
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -509,8 +775,8 @@
                     <thead className="bg-neutral-100 text-neutral-700">
                       <tr>
                         <th className="px-3 py-2 text-left">ID</th>
-                        <th className="px-3 py-2 text-left">Function</th>
-                        <th className="px-3 py-2 text-left">Cat.</th>
+                        <th className="px-3 py-2 text-left">${t.functionColumn}</th>
+                        <th className="px-3 py-2 text-left">${t.categoryColumn}</th>
                         <th className="px-3 py-2 text-left w-1/2">
                           ${t.questions}
                         </th>
