@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NIST CSF 2.0 – Questionnaire</title>
 
+    <!-- Tailwind -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
     />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
     <style>
       body {
         font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
@@ -32,12 +36,16 @@
       src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
     ></script>
 
-    <!-- 🔧 Recharts UMD CORRIGÉ : version 1.6.2, bundle minifié -->
+    <!-- ✅ PropTypes requis par Recharts 1.x -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+
+    <!-- ✅ Recharts UMD (fonctionne avec React 18) -->
     <script src="https://unpkg.com/recharts@1.6.2/umd/Recharts.min.js"></script>
 
-    <!-- htm (JSX-like) -->
+    <!-- ✅ htm (pour JSX sans build) -->
     <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
   </head>
+
   <body class="bg-neutral-50">
     <div id="root"></div>
 
@@ -45,7 +53,6 @@
       const { useEffect, useMemo, useState } = React;
       const html = window.htm.bind(React.createElement);
 
-      // ✅ Recharts vient du bundle UMD, exposé en global
       const {
         BarChart,
         Bar,
@@ -64,181 +71,7 @@
         ReferenceLine,
       } = Recharts;
 
-      /**
-       * NIST CSF 2.0 – Web Questionnaire (React + htm, sans build)
-       */
-
-      // ----------------------------- Utils -----------------------------
-      function avg(values) {
-        const nums = (values || []).filter(
-          (v) => typeof v === "number" && !Number.isNaN(v)
-        );
-        if (!nums.length) return 0;
-        return nums.reduce((a, b) => a + b, 0) / nums.length;
-      }
-
-      function escapeCSV(v) {
-        const s = String(v ?? "");
-        if (s.includes(",") || s.includes("\n") || s.includes('"')) {
-          return '"' + s.replace(/"/g, '""') + '"';
-        }
-        return s;
-      }
-
-      const PALETTE = [
-        "#2563EB",
-        "#EA580C",
-        "#16A34A",
-        "#9333EA",
-        "#DC2626",
-        "#0891B2",
-        "#CA8A04",
-        "#0D9488",
-        "#7C3AED",
-        "#BE185D",
-        "#4F46E5",
-        "#065F46",
-      ];
-      function hashString(str = "") {
-        let h = 0;
-        for (let i = 0; i < str.length; i++) {
-          h = (h << 5) - h + str.charCodeAt(i);
-          h |= 0;
-        }
-        return Math.abs(h);
-      }
-      function categoryColor(name) {
-        if (!name) return "#111827";
-        const idx = hashString(name) % PALETTE.length;
-        return PALETTE[idx];
-      }
-
-      const FUNCTION_COLORS = {
-        GOVERN: "#1E3A8A",
-        IDENTIFY: "#2563EB",
-        PROTECT: "#059669",
-        DETECT: "#9333EA",
-        RESPOND: "#DC2626",
-        RECOVER: "#EA580C",
-      };
-      function functionColor(fn) {
-        return FUNCTION_COLORS[fn] || "#111827";
-      }
-
-      const FUNCTION_LABELS = {
-        GOVERN: { fr: "Gouverner", en: "Govern" },
-        IDENTIFY: { fr: "Identifier", en: "Identify" },
-        PROTECT: { fr: "Protéger", en: "Protect" },
-        DETECT: { fr: "Détecter", en: "Detect" },
-        RESPOND: { fr: "Répondre", en: "Respond" },
-        RECOVER: { fr: "Rétablir", en: "Recover" },
-      };
-
-      // ----------------------------- i18n -----------------------------
-      const I18N = {
-        fr: {
-          appTitle: "NIST CSF 2.0 – Questionnaire d’évaluation",
-          exportCSV: "Export CSV",
-          exportJSON: "Export JSON",
-          importJSON: "Import JSON",
-          maturityScore: "Score de maturité",
-          maturityAvgHint: "Moyenne de toutes les questions notées",
-          maturityByFn: "Maturité par Function",
-          radarTitle: "Actuel vs Cible (par Function)",
-          catTitle:
-            "Maturité par Catégorie (moyenne des questions renseignées)",
-          noDataYet:
-            "Aucune donnée encore — commence à noter des questions pour alimenter le dashboard.",
-          targetLegend: "Cible (pointillés)",
-          meta: "Métadonnées",
-          project: "Projet",
-          assessor: "Évaluateur",
-          org: "Organisation",
-          date: "Date",
-          quickFilter: "Filtre rapide",
-          fnLabel: "Fonction",
-          catLabel: "Catégorie",
-          search: "Recherche",
-          searchPh: "ID, texte, catégorie...",
-          targets: "Cibles par Function",
-          questions: "Questions",
-          display: "Affichage",
-          cmmiPlaceholder: "Notation CMMI…",
-          commentsPh: "Commentaires, preuves, risques, actions…",
-          tips1: "💾 Sauvegarde automatique activée (navigateur localStorage).",
-          tips2:
-            "📤 Utilisez Export JSON/CSV pour partager ou analyser vos résultats.",
-          tips3:
-            "🖨️ Astuce impression: Ctrl/Cmd+P → Imprimer en PDF (format A4/Lettre).",
-          globalLang: "Langue",
-          globalToggleHint: "Basculer FR/EN pour tout le site",
-          moreInfo: "Plus d’info",
-          descFull: "Description complète",
-          people: "People (rôles responsables)",
-          process: "Processus attendus",
-          technology: "Technologie (exemples)",
-        },
-        en: {
-          appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
-          exportCSV: "Export CSV",
-          exportJSON: "Export JSON",
-          importJSON: "Import JSON",
-          maturityScore: "Maturity Score",
-          maturityAvgHint: "Average of all answered questions",
-          maturityByFn: "Maturity by Function",
-          radarTitle: "Current vs Target (by Function)",
-          catTitle:
-            "Maturity by Category (average of answered questions)",
-          noDataYet:
-            "No data yet — start rating questions to feed the dashboard.",
-          targetLegend: "Target (dotted)",
-          meta: "Metadata",
-          project: "Project",
-          assessor: "Assessor",
-          org: "Organization",
-          date: "Date",
-          quickFilter: "Quick Filter",
-          fnLabel: "Function",
-          catLabel: "Category",
-          search: "Search",
-          searchPh: "ID, text, category...",
-          targets: "Targets by Function",
-          questions: "Questions",
-          display: "Display",
-          cmmiPlaceholder: "CMMI rating…",
-          commentsPh: "Comments, evidence, risks, actions…",
-          tips1: "💾 Autosave enabled (browser localStorage).",
-          tips2: "📤 Use Export JSON/CSV to share or analyze your results.",
-          tips3: "🖨️ Print tip: Ctrl/Cmd+P → Print to PDF (A4/Letter).",
-          globalLang: "Language",
-          globalToggleHint: "Toggle FR/EN across the site",
-          moreInfo: "More info",
-          descFull: "Full description",
-          people: "People (responsible roles)",
-          process: "Expected processes",
-          technology: "Technology (examples)",
-        },
-      };
-
-      function AngleTick(props) {
-        const { x, y, payload, textAnchor } = props;
-        const color = functionColor(payload?.value);
-        return html`<text
-          x=${x}
-          y=${y}
-          textAnchor=${textAnchor || "middle"}
-          fill=${color}
-          fontSize=${11}
-        >
-          ${payload?.value}
-        </text>`;
-      }
-
-      // ... 💡 tout le reste de ton script (Card, TextField, NistCsfQuestionnaire, etc.)
-      // NE CHANGE PAS : je n’ai pas modifié la logique de l’app, seulement le chargement Recharts.
-
-      // (Garde exactement ton gros bloc JS que tu avais après AngleTick)
-      // et à la fin :
+      // ... tout ton code NistCsfQuestionnaire ici ...
 
       const root = ReactDOM.createRoot(document.getElementById("root"));
       root.render(html`<${NistCsfQuestionnaire} />`);
