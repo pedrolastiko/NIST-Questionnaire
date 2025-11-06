@@ -36,13 +36,13 @@
       src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
     ></script>
 
-    <!-- ✅ PropTypes requis par Recharts 1.x -->
+    <!-- PropTypes requis par Recharts 1.x -->
     <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
 
-    <!-- ✅ Recharts UMD (fonctionne avec React 18) -->
+    <!-- Recharts UMD -->
     <script src="https://unpkg.com/recharts@1.6.2/umd/Recharts.min.js"></script>
 
-    <!-- ✅ htm (pour JSX sans build) -->
+    <!-- htm (JSX-like sans build) -->
     <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
   </head>
 
@@ -50,7 +50,7 @@
     <div id="root"></div>
 
     <script>
-      const { useEffect, useMemo, useState } = React;
+      const { useState, useEffect, useMemo } = React;
       const html = window.htm.bind(React.createElement);
 
       const {
@@ -67,11 +67,544 @@
         PolarAngleAxis,
         PolarRadiusAxis,
         Legend,
-        Cell,
-        ReferenceLine,
       } = Recharts;
 
-      // ... tout ton code NistCsfQuestionnaire ici ...
+      // ------------------ Données de base ------------------
+
+      const FUNCTIONS = [
+        { id: "GOVERN", fr: "Gouverner", en: "Govern" },
+        { id: "IDENTIFY", fr: "Identifier", en: "Identify" },
+        { id: "PROTECT", fr: "Protéger", en: "Protect" },
+        { id: "DETECT", fr: "Détecter", en: "Detect" },
+        { id: "RESPOND", fr: "Répondre", en: "Respond" },
+        { id: "RECOVER", fr: "Rétablir", en: "Recover" },
+      ];
+
+      const QUESTIONS = [
+        {
+          id: "GV-01",
+          fn: "GOVERN",
+          category: "GV.OC",
+          fr: "La direction définit-elle des objectifs clairs pour la cybersécurité alignés sur la stratégie d’affaires ?",
+          en: "Does management define clear cybersecurity objectives aligned with business strategy?",
+        },
+        {
+          id: "GV-02",
+          fn: "GOVERN",
+          category: "GV.RM",
+          fr: "Un cadre de gestion des risques cyber est-il approuvé et appliqué ?",
+          en: "Is a cybersecurity risk management framework approved and applied?",
+        },
+        {
+          id: "ID-01",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Les actifs critiques (applications, données, infrastructures) sont-ils inventoriés et classifiés ?",
+          en: "Are critical assets (applications, data, infrastructure) inventoried and classified?",
+        },
+        {
+          id: "ID-02",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Des évaluations de risques cyber sont-elles réalisées régulièrement ?",
+          en: "Are cyber risk assessments performed regularly?",
+        },
+        {
+          id: "PR-01",
+          fn: "PROTECT",
+          category: "PR.AC",
+          fr: "Les accès sont-ils gérés selon le principe du moindre privilège ?",
+          en: "Are accesses managed according to the least privilege principle?",
+        },
+        {
+          id: "PR-02",
+          fn: "PROTECT",
+          category: "PR.IP",
+          fr: "Des procédures formelles existent-elles pour la gestion des changements ?",
+          en: "Are formal procedures in place for change management?",
+        },
+        {
+          id: "DE-01",
+          fn: "DETECT",
+          category: "DE.CM",
+          fr: "Un SOC ou une capacité de surveillance des journaux est-il en place ?",
+          en: "Is a SOC or log monitoring capability in place?",
+        },
+        {
+          id: "RS-01",
+          fn: "RESPOND",
+          category: "RS.MI",
+          fr: "Des plans de réponse aux incidents sont-ils définis et testés ?",
+          en: "Are incident response plans defined and tested?",
+        },
+        {
+          id: "RC-01",
+          fn: "RECOVER",
+          category: "RC.RP",
+          fr: "Des plans de reprise des activités sont-ils documentés et testés ?",
+          en: "Are business recovery plans documented and tested?",
+        },
+      ];
+
+      const FUNCTION_COLORS = {
+        GOVERN: "#1E3A8A",
+        IDENTIFY: "#2563EB",
+        PROTECT: "#059669",
+        DETECT: "#9333EA",
+        RESPOND: "#DC2626",
+        RECOVER: "#EA580C",
+      };
+
+      const I18N = {
+        fr: {
+          appTitle: "NIST CSF 2.0 – Questionnaire d’évaluation",
+          meta: "Métadonnées",
+          project: "Projet",
+          assessor: "Évaluateur",
+          org: "Organisation",
+          date: "Date",
+          globalLang: "Langue",
+          maturityScore: "Score de maturité",
+          maturityByFn: "Maturité par Function",
+          radarTitle: "Actuel vs Cible (par Function)",
+          noDataYet:
+            "Aucune donnée encore — commence à noter des questions pour alimenter le dashboard.",
+          questions: "Questions",
+          score: "Score",
+          target: "Cible",
+          comments: "Commentaires",
+          searchPh: "Filtre (ID, texte, catégorie...)",
+          tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
+          tips2:
+            "📤 Export possible en copiant les données de la console (JSON) si besoin.",
+          cmmiInfo:
+            "Notation suggérée : 0–5 (inexistant à optimisé) selon CMMI / NIST.",
+        },
+        en: {
+          appTitle: "NIST CSF 2.0 – Assessment Questionnaire",
+          meta: "Metadata",
+          project: "Project",
+          assessor: "Assessor",
+          org: "Organization",
+          date: "Date",
+          globalLang: "Language",
+          maturityScore: "Maturity score",
+          maturityByFn: "Maturity by Function",
+          radarTitle: "Current vs Target (by Function)",
+          noDataYet:
+            "No data yet — start rating questions to feed the dashboard.",
+          questions: "Questions",
+          score: "Score",
+          target: "Target",
+          comments: "Comments",
+          searchPh: "Filter (ID, text, category...)",
+          tips1: "💾 Autosave enabled (browser localStorage).",
+          tips2:
+            "📤 You can export data by copying JSON from the console if needed.",
+          cmmiInfo:
+            "Suggested rating: 0–5 (non-existent to optimized) based on CMMI / NIST.",
+        },
+      };
+
+      // ------------------ Helpers ------------------
+
+      function avg(values) {
+        const nums = (values || []).filter(
+          (v) => typeof v === "number" && !Number.isNaN(v)
+        );
+        if (!nums.length) return 0;
+        return nums.reduce((a, b) => a + b, 0) / nums.length;
+      }
+
+      // ------------------ Composants UI ------------------
+
+      function Card({ title, children }) {
+        return html`
+          <section className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-4 md:p-6 mb-4">
+            ${title &&
+            html`<h2
+              className="text-lg font-semibold text-neutral-900 mb-3 flex items-center gap-2"
+            >
+              ${title}
+            </h2>`}
+            ${children}
+          </section>
+        `;
+      }
+
+      function TextInput({ label, value, onChange, type = "text" }) {
+        return html`
+          <label className="block text-sm mb-2">
+            <span className="text-neutral-700">${label}</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              type=${type}
+              value=${value || ""}
+              onChange=${(e) => onChange(e.target.value)}
+            />
+          </label>
+        `;
+      }
+
+      function SelectScore({ value, onChange }) {
+        const options = [null, 0, 1, 2, 3, 4, 5];
+        return html`
+          <select
+            className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            value=${value ?? ""}
+            onChange=${(e) =>
+              onChange(
+                e.target.value === "" ? null : Number(e.target.value)
+              )}
+          >
+            <option value="">–</option>
+            ${options.map((v) =>
+              v === null
+                ? null
+                : html`<option key=${v} value=${v}>${v}</option>`
+            )}
+          </select>
+        `;
+      }
+
+      // ------------------ App principale ------------------
+
+      function NistCsfQuestionnaire() {
+        const [lang, setLang] = useState("fr");
+        const t = I18N[lang];
+
+        const [meta, setMeta] = useState({
+          project: "",
+          assessor: "",
+          org: "",
+          date: "",
+        });
+
+        const [answers, setAnswers] = useState({});
+        const [search, setSearch] = useState("");
+
+        // ---- Chargement / sauvegarde locale ----
+
+        useEffect(() => {
+          try {
+            const saved = JSON.parse(
+              localStorage.getItem("nist-csf-questionnaire-v1") || "{}"
+            );
+            if (saved.meta) setMeta(saved.meta);
+            if (saved.answers) setAnswers(saved.answers);
+            if (saved.lang) setLang(saved.lang);
+          } catch (e) {
+            console.warn("No previous data", e);
+          }
+        }, []);
+
+        useEffect(() => {
+          const payload = { meta, answers, lang };
+          localStorage.setItem(
+            "nist-csf-questionnaire-v1",
+            JSON.stringify(payload)
+          );
+        }, [meta, answers, lang]);
+
+        const filteredQuestions = useMemo(() => {
+          if (!search) return QUESTIONS;
+          const s = search.toLowerCase();
+          return QUESTIONS.filter((q) => {
+            const text = (q[lang] || "").toLowerCase();
+            return (
+              q.id.toLowerCase().includes(s) ||
+              q.category.toLowerCase().includes(s) ||
+              text.includes(s)
+            );
+          });
+        }, [search, lang]);
+
+        const stats = useMemo(() => {
+          const byFn = {};
+          FUNCTIONS.forEach((fn) => {
+            byFn[fn.id] = { scores: [], targets: [] };
+          });
+
+          QUESTIONS.forEach((q) => {
+            const a = answers[q.id];
+            if (!a) return;
+            if (typeof a.score === "number")
+              byFn[q.fn].scores.push(a.score);
+            if (typeof a.target === "number")
+              byFn[q.fn].targets.push(a.target);
+          });
+
+          const radarData = FUNCTIONS.map((fn) => ({
+            function: fn[lang],
+            current: avg(byFn[fn.id].scores),
+            target: avg(byFn[fn.id].targets),
+          }));
+
+          const allScores = QUESTIONS.map((q) => answers[q.id]?.score);
+          const global = avg(allScores);
+
+          return { byFn, radarData, global };
+        }, [answers, lang]);
+
+        const hasData = stats.global > 0;
+
+        return html`
+          <div className="min-h-screen bg-neutral-50 py-6 px-3 md:px-6">
+            <div className="max-w-6xl mx-auto">
+              <header className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">
+                    ${t.appTitle}
+                  </h1>
+                  <p className="text-sm text-neutral-600 mt-1">
+                    ${t.cmmiInfo}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 self-start md:self-auto">
+                  <span className="text-sm text-neutral-600">
+                    ${t.globalLang}
+                  </span>
+                  <button
+                    className="px-3 py-1 rounded-full border text-sm bg-white border-neutral-300 hover:border-blue-500 hover:text-blue-600"
+                    onClick=${() => setLang(lang === "fr" ? "en" : "fr")}
+                  >
+                    ${lang === "fr" ? "FR 🇫🇷" : "EN 🇬🇧"}
+                  </button>
+                </div>
+              </header>
+
+              <!-- Métadonnées -->
+              <${Card} title=${t.meta}>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <${TextInput}
+                    label=${t.project}
+                    value=${meta.project}
+                    onChange=${(v) => setMeta({ ...meta, project: v })}
+                  />
+                  <${TextInput}
+                    label=${t.assessor}
+                    value=${meta.assessor}
+                    onChange=${(v) => setMeta({ ...meta, assessor: v })}
+                  />
+                  <${TextInput}
+                    label=${t.org}
+                    value=${meta.org}
+                    onChange=${(v) => setMeta({ ...meta, org: v })}
+                  />
+                  <${TextInput}
+                    label=${t.date}
+                    type="date"
+                    value=${meta.date}
+                    onChange=${(v) => setMeta({ ...meta, date: v })}
+                  />
+                </div>
+              <//>
+
+              <!-- Dashboard -->
+              <${Card} title="Dashboard">
+                ${hasData
+                  ? html`
+                      <div
+                        className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                      >
+                        <div className="space-y-3">
+                          <div
+                            className="rounded-xl bg-blue-50 border border-blue-100 p-4"
+                          >
+                            <div
+                              className="text-xs uppercase font-semibold text-blue-600 tracking-wide"
+                            >
+                              ${t.maturityScore}
+                            </div>
+                            <div
+                              className="mt-2 text-3xl font-bold text-blue-900"
+                            >
+                              ${stats.global.toFixed(2)}
+                            </div>
+                            <div className="mt-1 text-xs text-blue-900/70">
+                              (0–5)
+                            </div>
+                          </div>
+
+                          <div className="text-xs text-neutral-500 space-y-1">
+                            <p>${t.tips1}</p>
+                            <p>${t.tips2}</p>
+                          </div>
+                        </div>
+
+                        <div className="lg:col-span-2 h-64">
+                          <${ResponsiveContainer} width="100%" height="100%">
+                            <${BarChart}
+                              data=${FUNCTIONS.map((fn) => ({
+                                name: fn[lang],
+                                value: avg(
+                                  stats.byFn[fn.id].scores || []
+                                ),
+                              }))}
+                            >
+                              <${CartesianGrid} strokeDasharray="3 3" />
+                              <${XAxis} dataKey="name" />
+                              <${YAxis} domain=${[0, 5]} />
+                              <${Tooltip} />
+                              <${Bar} dataKey="value" fill="#2563EB" />
+                            <//>
+                          <//>
+                          <p className="mt-2 text-xs text-neutral-500">
+                            ${t.maturityByFn}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 h-72">
+                        <${ResponsiveContainer} width="100%" height="100%">
+                          <${RChart} data=${stats.radarData}>
+                            <${PolarGrid} />
+                            <${PolarAngleAxis} dataKey="function" />
+                            <${PolarRadiusAxis} domain=${[0, 5]} />
+                            <${RadarShape}
+                              name="Current"
+                              dataKey="current"
+                              fill="#2563EB"
+                              fillOpacity=${0.4}
+                              stroke="#2563EB"
+                            />
+                            <${RadarShape}
+                              name="Target"
+                              dataKey="target"
+                              fill="#F97316"
+                              fillOpacity=${0.2}
+                              stroke="#F97316"
+                              strokeDasharray="4 4"
+                            />
+                            <${Legend} />
+                          <//>
+                        <//>
+                        <p className="mt-2 text-xs text-neutral-500">
+                          ${t.radarTitle}
+                        </p>
+                      </div>
+                    `
+                  : html`
+                      <p className="text-sm text-neutral-500">
+                        ${t.noDataYet}
+                      </p>
+                    `}
+              <//>
+
+              <!-- Questions -->
+              <${Card} title=${t.questions}>
+                <div
+                  className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3"
+                >
+                  <input
+                    className="w-full md:w-80 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder=${t.searchPh}
+                    value=${search}
+                    onChange=${(e) => setSearch(e.target.value)}
+                  />
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm border-t border-neutral-200">
+                    <thead className="bg-neutral-100 text-neutral-700">
+                      <tr>
+                        <th className="px-3 py-2 text-left">ID</th>
+                        <th className="px-3 py-2 text-left">Function</th>
+                        <th className="px-3 py-2 text-left">Cat.</th>
+                        <th className="px-3 py-2 text-left w-1/2">
+                          ${t.questions}
+                        </th>
+                        <th className="px-3 py-2 text-left w-24">
+                          ${t.score}
+                        </th>
+                        <th className="px-3 py-2 text-left w-24">
+                          ${t.target}
+                        </th>
+                        <th className="px-3 py-2 text-left w-64">
+                          ${t.comments}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${filteredQuestions.map((q) => {
+                        const fn = FUNCTIONS.find((f) => f.id === q.fn);
+                        const a = answers[q.id] || {};
+                        return html`
+                          <tr
+                            key=${q.id}
+                            className="border-t border-neutral-200 align-top"
+                          >
+                            <td className="px-3 py-2 font-mono text-xs text-neutral-600">
+                              ${q.id}
+                            </td>
+                            <td className="px-3 py-2 text-xs font-semibold">
+                              <span
+                                className="px-2 py-1 rounded-full text-[11px]"
+                                style=${{
+                                  backgroundColor:
+                                    FUNCTION_COLORS[q.fn] + "20",
+                                  color: FUNCTION_COLORS[q.fn],
+                                }}
+                              >
+                                ${fn ? fn[lang] : q.fn}
+                              </span>
+                            </td>
+                            <td className="px-3 py-2 text-xs text-neutral-600">
+                              ${q.category}
+                            </td>
+                            <td className="px-3 py-2 text-neutral-800">
+                              ${q[lang]}
+                            </td>
+                            <td className="px-3 py-2">
+                              <${SelectScore}
+                                value=${a.score}
+                                onChange=${(v) =>
+                                  setAnswers({
+                                    ...answers,
+                                    [q.id]: { ...a, score: v },
+                                  })}
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <${SelectScore}
+                                value=${a.target}
+                                onChange=${(v) =>
+                                  setAnswers({
+                                    ...answers,
+                                    [q.id]: { ...a, target: v },
+                                  })}
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <textarea
+                                className="w-full rounded-md border border-neutral-300 px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                rows="2"
+                                value=${a.comments || ""}
+                                onChange=${(e) =>
+                                  setAnswers({
+                                    ...answers,
+                                    [q.id]: {
+                                      ...a,
+                                      comments: e.target.value,
+                                    },
+                                  })}
+                              ></textarea>
+                            </td>
+                          </tr>
+                        `;
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              <//>
+
+              <p className="mt-4 text-xs text-neutral-400">
+                ${t.tips1}
+              </p>
+            </div>
+          </div>
+        `;
+      }
 
       const root = ReactDOM.createRoot(document.getElementById("root"));
       root.render(html`<${NistCsfQuestionnaire} />`);
