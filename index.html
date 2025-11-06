@@ -182,9 +182,9 @@
           score: "Score",
           target: "Cible",
           comments: "Commentaires",
-          searchPh: "Filtre (ID, texte, catégorie...)",
-          allCategories: "Toutes les catégories",
-          filterByCategory: "Catégories",
+          searchPh: "Filtre (ID, texte, fonction...)",
+          allFunctions: "Toutes les fonctions",
+          filterByFunction: "Fonctions",
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
           tips2:
             "📤 Export possible en copiant les données de la console (JSON) si besoin.",
@@ -208,9 +208,9 @@
           score: "Score",
           target: "Target",
           comments: "Comments",
-          searchPh: "Filter (ID, text, category...)",
-          allCategories: "All categories",
-          filterByCategory: "Categories",
+          searchPh: "Filter (ID, text, function...)",
+          allFunctions: "All functions",
+          filterByFunction: "Functions",
           tips1: "💾 Autosave enabled (browser localStorage).",
           tips2:
             "📤 You can export data by copying JSON from the console if needed.",
@@ -295,7 +295,7 @@
 
         const [answers, setAnswers] = useState({});
         const [search, setSearch] = useState("");
-        const [categoryFilter, setCategoryFilter] = useState("ALL");
+        const [functionFilter, setFunctionFilter] = useState("ALL");
 
         // ---- Chargement / sauvegarde locale ----
 
@@ -323,9 +323,9 @@
         const filteredQuestions = useMemo(() => {
           const s = search.toLowerCase();
           return QUESTIONS.filter((q) => {
-            const matchesCategory =
-              categoryFilter === "ALL" || q.category === categoryFilter;
-            if (!matchesCategory) return false;
+            const matchesFunction =
+              functionFilter === "ALL" || q.fn === functionFilter;
+            if (!matchesFunction) return false;
 
             if (!s) return true;
 
@@ -336,7 +336,7 @@
               text.includes(s)
             );
           });
-        }, [search, lang, categoryFilter]);
+        }, [search, lang, functionFilter]);
 
         const stats = useMemo(() => {
           const byFn = {};
@@ -515,53 +515,50 @@
                 <div className="flex flex-col gap-4 mb-3">
                   <div>
                     <div className="text-xs font-semibold uppercase text-neutral-500 tracking-wide mb-2">
-                      ${t.filterByCategory}
+                      ${t.filterByFunction}
                     </div>
                     <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
                       <button
                         className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
                         style=${{
                           backgroundColor:
-                            categoryFilter === "ALL" ? "#1F2937" : "white",
-                          color: categoryFilter === "ALL" ? "white" : "#374151",
+                            functionFilter === "ALL" ? "#1F2937" : "white",
+                          color: functionFilter === "ALL" ? "white" : "#374151",
                           borderColor:
-                            categoryFilter === "ALL" ? "#1F2937" : "#D1D5DB",
+                            functionFilter === "ALL" ? "#1F2937" : "#D1D5DB",
                         }}
-                        onClick=${() => setCategoryFilter("ALL")}
+                        onClick=${() => setFunctionFilter("ALL")}
                       >
-                        ${t.allCategories}
+                        ${t.allFunctions}
                       </button>
-                      ${CATEGORY_GROUPS.map((group) =>
-                        group.categories.map((cat) => {
-                          const isActive = categoryFilter === cat;
-                          const activeStyles = {
-                            backgroundColor: FUNCTION_COLORS[group.id],
-                            color: "white",
-                            borderColor: FUNCTION_COLORS[group.id],
-                          };
-                          const inactiveStyles = {
-                            backgroundColor:
-                              FUNCTION_COLORS[group.id] + "14",
-                            color: FUNCTION_COLORS[group.id],
-                            borderColor: FUNCTION_COLORS[group.id] + "40",
-                          };
-                          return html`
-                            <button
-                              key=${group.id + cat}
-                              className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
-                              style=${isActive ? activeStyles : inactiveStyles}
-                              title=${`${group[lang]} – ${cat}`}
-                              onClick=${() =>
-                                setCategoryFilter((prev) =>
-                                  prev === cat ? "ALL" : cat
-                                )}
-                            >
-                              <span className="font-semibold">${group[lang]}</span>
-                              <span className="ml-1">${cat}</span>
-                            </button>
-                          `;
-                        })
-                      )}
+                      ${FUNCTIONS.map((fn) => {
+                        const isActive = functionFilter === fn.id;
+                        const activeStyles = {
+                          backgroundColor: FUNCTION_COLORS[fn.id],
+                          color: "white",
+                          borderColor: FUNCTION_COLORS[fn.id],
+                        };
+                        const inactiveStyles = {
+                          backgroundColor: FUNCTION_COLORS[fn.id] + "14",
+                          color: FUNCTION_COLORS[fn.id],
+                          borderColor: FUNCTION_COLORS[fn.id] + "40",
+                        };
+                        return html`
+                          <button
+                            key=${fn.id}
+                            className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                            style=${isActive ? activeStyles : inactiveStyles}
+                            title=${fn[lang]}
+                            onClick=${() =>
+                              setFunctionFilter((prev) =>
+                                prev === fn.id ? "ALL" : fn.id
+                              )}
+                          >
+                            <span className="font-semibold">${fn[lang]}</span>
+                            <span className="ml-1 text-[11px] uppercase">${fn.id}</span>
+                          </button>
+                        `;
+                      })}
                     </div>
                   </div>
 
