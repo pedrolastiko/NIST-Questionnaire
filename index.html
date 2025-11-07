@@ -86,6 +86,61 @@
 
       const QUESTIONS = [
         {
+          id: "GV.OC-01",
+          fn: "GOVERN",
+          category: "GV.OC",
+          fr: "La mission, les objectifs et les parties prenantes de l’organisation sont-ils connus et utilisés pour guider les décisions de gestion du risque cyber ?",
+          en: "Are the organization’s mission, objectives, and stakeholders understood and used to guide cybersecurity risk management decisions?",
+          detailFr:
+            "Cette question vérifie que la direction cartographie la mission, les objectifs stratégiques, les parties prenantes et les activités critiques pour éclairer les arbitrages de cybersécurité. Informations complémentaires : rechercher des documents de planification stratégique, une cartographie des parties prenantes ou un registre d’alignement cyber/business mis à jour. Exemples d’implémentation : ateliers réguliers entre la cybersécurité et les métiers pour réviser la mission, fiche de synthèse reliant objectifs d’affaires et risques cyber, intégration d’indicateurs cyber aux tableaux de bord de gouvernance.",
+          detailEn:
+            "This item confirms leadership maps the mission, strategic objectives, stakeholders, and critical activities so cybersecurity tradeoffs align with business priorities. Additional guidance: look for strategic plans, stakeholder maps, or an updated cybersecurity-to-business alignment register. Implementation examples: recurring workshops between security and business leaders, summary sheets tying business goals to cyber risks, and cybersecurity KPIs embedded in governance dashboards.",
+        },
+        {
+          id: "GV.OC-02",
+          fn: "GOVERN",
+          category: "GV.OC",
+          fr: "Les rôles dans l’écosystème (fournisseurs, partenaires, parties prenantes externes) et les dépendances associées sont-ils identifiés pour éclairer les décisions de cybersécurité ?",
+          en: "Are ecosystem roles (suppliers, partners, external stakeholders) and related dependencies identified to inform cybersecurity decisions?",
+          detailFr:
+            "Le contrôle s’assure que l’organisation connaît les relations critiques de sa chaîne de valeur et les dépendances externes qui influencent la gestion du risque cyber. Informations complémentaires : vérifier la présence d’une cartographie des fournisseurs critiques, d’accords de niveaux de service incluant des exigences cyber ou d’analyses d’impact supply chain. Exemples d’implémentation : registre des tiers critiques avec évaluations de maturité, clauses de cybersécurité intégrées aux contrats, comité de gouvernance supply chain/cyber se réunissant périodiquement.",
+          detailEn:
+            "This control ensures the organization understands critical value-chain relationships and external dependencies that shape cybersecurity risk management. Additional guidance: check for critical supplier maps, service-level agreements with security clauses, or supply-chain impact analyses. Implementation examples: a critical third-party register with maturity reviews, cybersecurity provisions embedded in contracts, and a joint supply-chain/cybersecurity governance forum that meets regularly.",
+        },
+        {
+          id: "GV.OC-03",
+          fn: "GOVERN",
+          category: "GV.OC",
+          fr: "Les exigences juridiques, réglementaires et contractuelles en matière de cybersécurité, de protection des données et de confidentialité sont-elles connues et intégrées dans la gestion des risques ?",
+          en: "Are legal, regulatory, and contractual requirements for cybersecurity, data protection, and privacy understood and integrated into risk management?",
+          detailFr:
+            "Cette question confirme que l’organisation recense et suit les obligations externes affectant la cybersécurité pour orienter les contrôles et priorités. Informations complémentaires : consulter un registre de conformité, les rapports de veille réglementaire ou les matrices d’obligations contractuelles. Exemples d’implémentation : inventaire des textes applicables avec responsables nommés, processus de veille juridique partagé avec la sécurité, clauses de conformité cyber intégrées dans les revues de risques.",
+          detailEn:
+            "This question confirms the organization catalogs and tracks external obligations impacting cybersecurity to steer controls and priorities. Additional guidance: look for compliance registers, regulatory watch reports, or matrices of contractual obligations. Implementation examples: inventory of applicable laws with assigned owners, a joint legal-security regulatory monitoring process, and cybersecurity compliance clauses embedded in risk reviews.",
+        },
+        {
+          id: "GV.OC-04",
+          fn: "GOVERN",
+          category: "GV.OC",
+          fr: "Les services et capacités critiques, ainsi que leurs dépendances, sont-ils identifiés et priorisés pour supporter la gestion du risque cyber ?",
+          en: "Are critical services and capabilities, along with their dependencies, identified and prioritized to support cybersecurity risk management?",
+          detailFr:
+            "Le contrôle vérifie que l’organisation connaît les services essentiels et leurs dépendances technologiques ou opérationnelles pour cibler les efforts de protection. Informations complémentaires : analyser les analyses d’impact sur l’activité (BIA), les cartographies d’architectures critiques ou les registres de dépendances. Exemples d’implémentation : catalogue des services critiques avec niveaux de priorité, matrices reliant services, actifs et propriétaires, ateliers de revue des dépendances avec les métiers.",
+          detailEn:
+            "This control checks that the organization understands essential services and their technological or operational dependencies to target protection efforts. Additional guidance: review business impact analyses, critical architecture maps, or dependency registers. Implementation examples: catalogs of critical services with priority tiers, matrices linking services, assets, and owners, and business workshops to review dependencies.",
+        },
+        {
+          id: "GV.OC-05",
+          fn: "GOVERN",
+          category: "GV.OC",
+          fr: "Des exigences de résilience sont-elles définies pour soutenir la prestation des services critiques identifiés ?",
+          en: "Are resilience requirements defined to support delivery of the identified critical services?",
+          detailFr:
+            "Cette question s’assure que les niveaux de résilience attendus (RTO/RPO, tolérance aux pannes, scénarios de continuité) sont établis pour chaque service critique. Informations complémentaires : examiner les stratégies de continuité, les plans de reprise ou les objectifs de disponibilité approuvés. Exemples d’implémentation : fiches de service détaillant RTO/RPO, tests réguliers de continuité vérifiant les seuils, intégration des exigences de résilience dans la gestion des changements et des contrats fournisseurs.",
+          detailEn:
+            "This question ensures expected resilience levels (RTO/RPO, fault tolerance, continuity scenarios) are defined for each critical service. Additional guidance: review continuity strategies, recovery plans, or approved availability objectives. Implementation examples: service profiles documenting RTO/RPO, regular continuity tests validating thresholds, and resilience requirements embedded in change management and supplier contracts.",
+        },
+        {
           id: "GV-01",
           fn: "GOVERN",
           category: "GV.OC",
