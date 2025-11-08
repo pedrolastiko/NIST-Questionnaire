@@ -1,6 +1,6 @@
 # NIST CSF 2.0 Questionnaire
 
-This project delivers an interactive, bilingual (FR/EN) questionnaire that helps teams evaluate their cyber-security maturity against the NIST Cybersecurity Framework (CSF) 2.0. The application focuses on being simple to share and operate: it ships as a single static HTML file that can be opened locally or hosted on any static site provider.
+This project delivers an interactive questionnaire that helps teams evaluate their cyber-security maturity against the NIST Cybersecurity Framework (CSF) 2.0. The application focuses on being simple to share and operate: it ships as a single static HTML file that can be opened locally or hosted on any static site provider.
 
 ## Key capabilities
 
