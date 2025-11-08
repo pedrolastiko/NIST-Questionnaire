@@ -308,6 +308,7 @@
           org: "Organisation",
           date: "Date",
           globalLang: "Langue",
+          dashboard: "Dashboard",
           maturityScore: "Score de maturité",
           maturityTarget: "Score cible moyen",
           maturityByFn: "Maturité par Function",
@@ -346,6 +347,7 @@
           org: "Organization",
           date: "Date",
           globalLang: "Language",
+          dashboard: "Dashboard",
           maturityScore: "Maturity score",
           maturityTarget: "Average target score",
           maturityByFn: "Maturity by Function",
@@ -692,6 +694,72 @@
             y = margin;
           };
 
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(14);
+          doc.text(t.dashboard, margin, y);
+          y += 18;
+
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(11);
+
+          if (hasData) {
+            const globalScoreText = `${t.maturityScore}: ${
+              hasScores ? stats.global.toFixed(2) : "-"
+            }`;
+            const targetScoreText = `${t.maturityTarget}: ${
+              hasTargets ? stats.targetGlobal.toFixed(2) : "-"
+            }`;
+
+            [globalScoreText, targetScoreText].forEach((line) => {
+              const wrapped = doc.splitTextToSize(
+                line,
+                pageWidth - margin * 2
+              );
+              addPageIfNeeded(wrapped.length * 14);
+              doc.text(wrapped, margin, y);
+              y += wrapped.length * 14;
+            });
+
+            y += 6;
+            doc.setFont("helvetica", "bold");
+            doc.text(t.maturityByFn, margin, y);
+            y += 16;
+            doc.setFont("helvetica", "normal");
+
+            FUNCTIONS.forEach((fn) => {
+              const fnScores = stats.byFn[fn.id]?.scores || [];
+              const fnTargets = stats.byFn[fn.id]?.targets || [];
+              const hasFnScores = fnScores.length > 0;
+              const hasFnTargets = fnTargets.length > 0;
+              const line = `${fn[lang]} – ${t.score}: ${
+                hasFnScores ? avg(fnScores).toFixed(2) : "-"
+              } | ${t.target}: ${
+                hasFnTargets ? avg(fnTargets).toFixed(2) : "-"
+              }`;
+              const wrapped = doc.splitTextToSize(
+                line,
+                pageWidth - margin * 2
+              );
+              addPageIfNeeded(wrapped.length * 14);
+              doc.text(wrapped, margin, y);
+              y += wrapped.length * 14;
+            });
+          } else {
+            const noDataLines = doc.splitTextToSize(
+              t.noDataYet,
+              pageWidth - margin * 2
+            );
+            addPageIfNeeded(noDataLines.length * 14);
+            doc.text(noDataLines, margin, y);
+            y += noDataLines.length * 14;
+          }
+
+          y += 18;
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(14);
+          doc.text(t.questions, margin, y);
+          y += 18;
+
           QUESTIONS.forEach((q) => {
             const fn = FUNCTIONS.find((f) => f.id === q.fn);
             const a = answers[q.id] || {};
@@ -725,7 +793,7 @@
           });
 
           doc.save(`nist-csf-questionnaire_${lang}.pdf`);
-        }, [answers, lang, meta, t]);
+        }, [answers, hasData, hasScores, hasTargets, lang, meta, stats, t]);
 
         return html`
           <div className="min-h-screen bg-neutral-50 py-6 px-3 md:px-6">
@@ -780,7 +848,7 @@
               <//>
 
               <!-- Dashboard -->
-              <${Card} title="Dashboard">
+              <${Card} title=${t.dashboard}>
                 ${hasData
                   ? html`
                       <div
