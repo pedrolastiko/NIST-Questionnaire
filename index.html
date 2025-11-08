@@ -241,6 +241,42 @@
         },
       ];
 
+      const BASE_FUNCTION_CATEGORIES = {
+        GOVERN: ["GV.OC", "GV.RM", "GV.RR", "GV.PO", "GV.OV", "GV.SC"],
+        IDENTIFY: ["ID.AM", "ID.BE", "ID.IM", "ID.RA", "ID.RM", "ID.SC"],
+        PROTECT: ["PR.AA", "PR.AT", "PR.DS", "PR.MA", "PR.PS", "PR.IR"],
+        DETECT: ["DE.AE", "DE.CM", "DE.DP"],
+        RESPOND: ["RS.RP", "RS.CO", "RS.AN", "RS.MI", "RS.IM", "RS.RR"],
+        RECOVER: ["RC.RP", "RC.IM", "RC.CO"],
+      };
+
+      const FUNCTION_CATEGORIES = FUNCTIONS.reduce((acc, fn) => {
+        const base = BASE_FUNCTION_CATEGORIES[fn.id] || [];
+        const fromQuestions = QUESTIONS.filter((q) => q.fn === fn.id).map(
+          (q) => q.category
+        );
+        const unique = Array.from(new Set([...base, ...fromQuestions]));
+        acc[fn.id] = unique;
+        return acc;
+      }, {});
+
+      const CATEGORY_TO_FUNCTION = Object.entries(FUNCTION_CATEGORIES).reduce(
+        (map, [fnId, categories]) => {
+          categories.forEach((category) => {
+            map[category] = fnId;
+          });
+          return map;
+        },
+        {}
+      );
+
+      const ALL_CATEGORIES = FUNCTIONS.reduce((list, fn) => {
+        (FUNCTION_CATEGORIES[fn.id] || []).forEach((category) => {
+          if (!list.includes(category)) list.push(category);
+        });
+        return list;
+      }, []);
+
       const DEFAULT_ANSWERS = QUESTIONS.reduce((acc, q) => {
         acc[q.id] = { target: 4 };
         return acc;
@@ -285,6 +321,8 @@
           searchPh: "Filtre (ID, texte, fonction...)",
           allFunctions: "Toutes les fonctions",
           filterByFunction: "Fonctions",
+          filterByCategory: "Catégories",
+          allCategories: "Toutes les catégories",
           functionColumn: "Fonction",
           categoryColumn: "Catégorie",
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
@@ -321,6 +359,8 @@
           searchPh: "Filter (ID, text, function...)",
           allFunctions: "All functions",
           filterByFunction: "Functions",
+          filterByCategory: "Categories",
+          allCategories: "All categories",
           functionColumn: "Function",
           categoryColumn: "Category",
           tips1: "💾 Autosave enabled (browser localStorage).",
@@ -415,6 +455,9 @@
         const [answers, setAnswers] = useState(() => createDefaultAnswers());
         const [search, setSearch] = useState("");
         const [functionFilter, setFunctionFilter] = useState("ALL");
+        const [selectedCategories, setSelectedCategories] = useState(
+          () => [...ALL_CATEGORIES]
+        );
         const [infoExpanded, setInfoExpanded] = useState({});
 
         // ---- Chargement / sauvegarde locale ----
@@ -456,6 +499,11 @@
               functionFilter === "ALL" || q.fn === functionFilter;
             if (!matchesFunction) return false;
 
+            const matchesCategory =
+              !selectedCategories.length ||
+              selectedCategories.includes(q.category);
+            if (!matchesCategory) return false;
+
             if (!s) return true;
 
             const text = (q[lang] || "").toLowerCase();
@@ -465,7 +513,7 @@
               text.includes(s)
             );
           });
-        }, [search, lang, functionFilter]);
+        }, [search, lang, functionFilter, selectedCategories]);
 
         const stats = useMemo(() => {
           const byFn = {};
@@ -511,12 +559,51 @@
           setAnswers(createDefaultAnswers());
           setSearch("");
           setFunctionFilter("ALL");
+          setSelectedCategories([...ALL_CATEGORIES]);
           setInfoExpanded({});
         }, [t]);
 
         const handleToggleInfo = useCallback((id) => {
           setInfoExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
         }, []);
+
+        useEffect(() => {
+          if (functionFilter === "ALL") {
+            setSelectedCategories([...ALL_CATEGORIES]);
+            return;
+          }
+          setSelectedCategories([
+            ...(FUNCTION_CATEGORIES[functionFilter] || []),
+          ]);
+        }, [functionFilter]);
+
+        const categoryOptions = useMemo(() => {
+          if (functionFilter === "ALL") return ALL_CATEGORIES;
+          return FUNCTION_CATEGORIES[functionFilter] || [];
+        }, [functionFilter]);
+
+        const handleCategoryClick = useCallback(
+          (categoryId) => {
+            setSelectedCategories((prev) => {
+              if (prev.length === 1 && prev[0] === categoryId) {
+                if (functionFilter === "ALL") {
+                  return [...ALL_CATEGORIES];
+                }
+                return [...(FUNCTION_CATEGORIES[functionFilter] || [])];
+              }
+              return [categoryId];
+            });
+          },
+          [functionFilter]
+        );
+
+        const resetCategoriesToDefault = useCallback(() => {
+          if (functionFilter === "ALL") {
+            setSelectedCategories([...ALL_CATEGORIES]);
+            return;
+          }
+          setSelectedCategories([...(FUNCTION_CATEGORIES[functionFilter] || [])]);
+        }, [functionFilter]);
 
         const handleExportCSV = useCallback(() => {
           const header = [
@@ -852,6 +939,52 @@
                               )}
                           >
                             ${(fn[lang] || fn.id).toUpperCase()}
+                          </button>
+                        `;
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-neutral-500 tracking-wide mb-2">
+                      ${t.filterByCategory}
+                    </div>
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+                      <button
+                        className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                        style=${{
+                          backgroundColor: "#1F2937",
+                          color: "white",
+                          borderColor: "#1F2937",
+                        }}
+                        onClick=${resetCategoriesToDefault}
+                        type="button"
+                      >
+                        ${t.allCategories}
+                      </button>
+                      ${categoryOptions.map((categoryId) => {
+                        const fnId = CATEGORY_TO_FUNCTION[categoryId];
+                        const baseColor = FUNCTION_COLORS[fnId] || "#1F2937";
+                        const isActive = selectedCategories.includes(categoryId);
+                        const activeStyles = {
+                          backgroundColor: baseColor,
+                          color: "white",
+                          borderColor: baseColor,
+                        };
+                        const inactiveStyles = {
+                          backgroundColor: baseColor + "14",
+                          color: baseColor,
+                          borderColor: baseColor + "40",
+                        };
+                        return html`
+                          <button
+                            key=${categoryId}
+                            className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                            style=${isActive ? activeStyles : inactiveStyles}
+                            onClick=${() => handleCategoryClick(categoryId)}
+                            type="button"
+                          >
+                            ${categoryId}
                           </button>
                         `;
                       })}
