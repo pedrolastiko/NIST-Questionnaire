@@ -417,31 +417,54 @@
 
       function TargetBarShape(props) {
         const { x, y, width, height, fill } = props;
+
         if (
           !Number.isFinite(x) ||
           !Number.isFinite(y) ||
           !Number.isFinite(width) ||
           !Number.isFinite(height) ||
-          height <= 0 ||
-          width <= 0
+          width <= 0 ||
+          height <= 0
         ) {
           return null;
         }
 
-        return html`<g>
-          <rect
-            x=${x}
-            y=${y}
-            width=${width}
-            height=${height}
-            fill="none"
-            stroke=${fill}
-            strokeWidth=${2}
-            strokeDasharray="4 4"
-            rx=${6}
-            ry=${6}
-          />
-        </g>`;
+        const strokeWidth = 2;
+        const inset = strokeWidth / 2;
+        const effectiveWidth = width - strokeWidth;
+        const effectiveHeight = height - strokeWidth;
+
+        if (effectiveWidth <= 0 || effectiveHeight <= 0) {
+          return null;
+        }
+
+        const left = x + inset;
+        const right = x + width - inset;
+        const top = y + inset;
+        const bottom = y + height - inset;
+        const maxRadius = Math.min(
+          6,
+          effectiveWidth / 2,
+          effectiveHeight
+        );
+
+        const path = [
+          `M ${left} ${bottom}`,
+          `L ${left} ${top + maxRadius}`,
+          `Q ${left} ${top} ${left + maxRadius} ${top}`,
+          `L ${right - maxRadius} ${top}`,
+          `Q ${right} ${top} ${right} ${top + maxRadius}`,
+          `L ${right} ${bottom}`,
+          "Z",
+        ].join(" ");
+
+        return html`<path
+          d=${path}
+          fill="none"
+          stroke=${fill}
+          strokeWidth=${strokeWidth}
+          strokeDasharray="4 4"
+        />`;
       }
 
       // ------------------ Composants UI ------------------
@@ -600,11 +623,15 @@
           () =>
             FUNCTIONS.map((fn) => {
               const entry = stats.byFn[fn.id] || { scores: [], targets: [] };
+              const value = avg(entry.scores);
+              const target = avg(entry.targets);
+              const targetGap = Math.max(0, target - value);
               return {
                 id: fn.id,
                 name: fn[lang],
-                value: avg(entry.scores),
-                target: avg(entry.targets),
+                value,
+                target,
+                targetGap,
               };
             }),
           [lang, stats]
@@ -617,7 +644,9 @@
           (q) => typeof answers[q.id]?.target === "number"
         );
         const hasData = hasScores || hasTargets;
-        const showTargetBars = hasTargets;
+        const showTargetBars = maturityByFunctionData.some(
+          (item) => item.targetGap > 0
+        );
 
         const handleReset = useCallback(() => {
           if (!window.confirm(t.confirmReset)) return;
@@ -1104,11 +1133,25 @@
                               <${CartesianGrid} strokeDasharray="3 3" />
                               <${XAxis} dataKey="name" />
                               <${YAxis} domain=${[0, 5]} />
-                              <${Tooltip} />
+                              <${Tooltip}
+                                formatter=${(value, name, props) => {
+                                  if (props?.dataKey === "targetGap") {
+                                    const target = props?.payload?.target;
+                                    if (typeof target === "number") {
+                                      return [target.toFixed(2), name];
+                                    }
+                                  }
+                                  if (typeof value === "number") {
+                                    return [value.toFixed(2), name];
+                                  }
+                                  return [value, name];
+                                }}
+                              />
                               <${Bar}
                                 dataKey="value"
                                 name=${t.maturityCurrent}
                                 radius=${[6, 6, 0, 0]}
+                                stackId="maturity"
                               >
                                 ${maturityByFunctionData.map(
                                   (item) =>
@@ -1121,12 +1164,13 @@
                               ${
                                 showTargetBars &&
                                 html`<${Bar}
-                                  dataKey="target"
+                                  dataKey="targetGap"
                                   name=${t.maturityTargetLabel}
                                   shape=${TargetBarShape}
                                   isAnimationActive=${false}
                                   legendType="none"
                                   fill="transparent"
+                                  stackId="maturity"
                                 >
                                   ${maturityByFunctionData.map(
                                     (item) =>
