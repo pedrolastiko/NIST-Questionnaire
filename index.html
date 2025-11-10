@@ -53,7 +53,7 @@
     <div id="root"></div>
 
     <script>
-      const { useState, useEffect, useMemo, useCallback } = React;
+      const { useState, useEffect, useMemo, useCallback, useRef } = React;
       const html = window.htm.bind(React.createElement);
 
       const {
@@ -282,12 +282,23 @@
         return acc;
       }, {});
 
+      const DEFAULT_META = {
+        project: "",
+        assessor: "",
+        org: "",
+        date: "",
+      };
+
       function createDefaultAnswers() {
         const copy = {};
         QUESTIONS.forEach((q) => {
           copy[q.id] = { ...DEFAULT_ANSWERS[q.id] };
         });
         return copy;
+      }
+
+      function normalizeMeta(meta) {
+        return { ...DEFAULT_META, ...(meta || {}) };
       }
 
       const FUNCTION_COLORS = {
@@ -328,12 +339,17 @@
           categoryColumn: "Catégorie",
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
           tips2:
-            "📤 Utilisez les boutons d’export pour récupérer vos données (CSV ou PDF).",
+            "📤 Exportez vos données (CSV, PDF ou JSON) ou 📥 importez une évaluation au format JSON.",
           cmmiInfo:
             "Notation suggérée : 0–5 (inexistant à optimisé) selon CMMI / NIST.",
           targetInfo: "Objectif moyen saisi (0–5).",
           exportCsv: "Exporter en CSV",
           exportPdf: "Exporter en PDF",
+          exportJson: "Exporter en JSON",
+          importJson: "Importer une évaluation (JSON)",
+          importJsonSuccess: "Évaluation importée avec succès.",
+          importJsonError:
+            "Impossible de lire le fichier JSON. Vérifiez le format du fichier.",
           resetForm: "Réinitialiser",
           confirmReset:
             "Voulez-vous vraiment réinitialiser le questionnaire ? Toutes les réponses et métadonnées seront effacées.",
@@ -367,12 +383,17 @@
           categoryColumn: "Category",
           tips1: "💾 Autosave enabled (browser localStorage).",
           tips2:
-            "📤 Use the export buttons to retrieve your data (CSV or PDF).",
+            "📤 Export your data (CSV, PDF, or JSON) or 📥 import an assessment from JSON.",
           cmmiInfo:
             "Suggested rating: 0–5 (non-existent to optimized) based on CMMI / NIST.",
           targetInfo: "Average target set (0–5).",
           exportCsv: "Export to CSV",
           exportPdf: "Export to PDF",
+          exportJson: "Export to JSON",
+          importJson: "Import assessment (JSON)",
+          importJsonSuccess: "Assessment imported successfully.",
+          importJsonError:
+            "Unable to read the JSON file. Please verify its format.",
           resetForm: "Reset",
           confirmReset:
             "Do you really want to reset the questionnaire? All answers and metadata will be cleared.",
@@ -447,12 +468,7 @@
         const [lang, setLang] = useState("fr");
         const t = I18N[lang];
 
-        const [meta, setMeta] = useState({
-          project: "",
-          assessor: "",
-          org: "",
-          date: "",
-        });
+        const [meta, setMeta] = useState(() => normalizeMeta());
 
         const [answers, setAnswers] = useState(() => createDefaultAnswers());
         const [search, setSearch] = useState("");
@@ -461,6 +477,7 @@
           () => [...ALL_CATEGORIES]
         );
         const [infoExpanded, setInfoExpanded] = useState({});
+        const fileInputRef = useRef(null);
 
         // ---- Chargement / sauvegarde locale ----
 
@@ -469,7 +486,7 @@
             const saved = JSON.parse(
               localStorage.getItem("nist-csf-questionnaire-v1") || "{}"
             );
-            if (saved.meta) setMeta(saved.meta);
+            setMeta(normalizeMeta(saved.meta));
             if (saved.answers) {
               const merged = createDefaultAnswers();
               Object.entries(saved.answers).forEach(([id, value]) => {
@@ -480,7 +497,7 @@
               });
               setAnswers(merged);
             }
-            if (saved.lang) setLang(saved.lang);
+            if (saved.lang && I18N[saved.lang]) setLang(saved.lang);
           } catch (e) {
             console.warn("No previous data", e);
           }
@@ -652,6 +669,25 @@
           URL.revokeObjectURL(url);
         }, [answers, lang, t]);
 
+        const handleExportJSON = useCallback(() => {
+          const payload = {
+            meta,
+            answers,
+            lang,
+          };
+          const blob = new Blob([JSON.stringify(payload, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `nist-csf-questionnaire_${lang}.json`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, [answers, lang, meta]);
+
         const handleExportPDF = useCallback(() => {
           if (!window.jspdf || !window.jspdf.jsPDF) {
             console.warn("jsPDF unavailable");
@@ -795,6 +831,71 @@
           doc.save(`nist-csf-questionnaire_${lang}.pdf`);
         }, [answers, hasData, hasScores, hasTargets, lang, meta, stats, t]);
 
+        const handleImportJSONClick = useCallback(() => {
+          if (fileInputRef.current) {
+            fileInputRef.current.click();
+          }
+        }, []);
+
+        const handleImportJSON = useCallback(
+          (event) => {
+            const input = event.target;
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+              try {
+                const text = reader.result || "";
+                const parsed = JSON.parse(text);
+
+                if (!parsed || typeof parsed !== "object") {
+                  throw new Error("Invalid JSON structure");
+                }
+
+                const nextMeta = normalizeMeta(parsed.meta);
+
+                if (!parsed.answers || typeof parsed.answers !== "object") {
+                  throw new Error("Missing answers");
+                }
+
+                const merged = createDefaultAnswers();
+                Object.entries(parsed.answers).forEach(([id, value]) => {
+                  if (merged[id]) {
+                    merged[id] = {
+                      ...merged[id],
+                      ...value,
+                    };
+                  }
+                });
+
+                const nextLang =
+                  parsed.lang && I18N[parsed.lang] ? parsed.lang : null;
+
+                setMeta(nextMeta);
+                setAnswers(merged);
+                if (nextLang) {
+                  setLang(nextLang);
+                }
+
+                window.alert(t.importJsonSuccess);
+              } catch (error) {
+                console.error("JSON import failed", error);
+                window.alert(t.importJsonError);
+              } finally {
+                input.value = "";
+              }
+            };
+            reader.onerror = () => {
+              console.error("File reading error", reader.error);
+              window.alert(t.importJsonError);
+              input.value = "";
+            };
+            reader.readAsText(file);
+          },
+          [setAnswers, setLang, setMeta, t]
+        );
+
         return html`
           <div className="min-h-screen bg-neutral-50 py-6 px-3 md:px-6">
             <div className="max-w-6xl mx-auto">
@@ -819,6 +920,59 @@
                   </button>
                 </div>
               </header>
+
+              <div
+                className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+              >
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-200 bg-white text-sm font-medium text-red-600 hover:border-red-400 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1"
+                    onClick=${handleReset}
+                    type="button"
+                  >
+                    🔄 ${t.resetForm}
+                  </button>
+                  <button
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    onClick=${handleExportCSV}
+                    type="button"
+                  >
+                    📄 ${t.exportCsv}
+                  </button>
+                  <button
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    onClick=${handleExportPDF}
+                    type="button"
+                  >
+                    🧾 ${t.exportPdf}
+                  </button>
+                  <button
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    onClick=${handleExportJSON}
+                    type="button"
+                  >
+                    🗂️ ${t.exportJson}
+                  </button>
+                  <button
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    onClick=${handleImportJSONClick}
+                    type="button"
+                  >
+                    📥 ${t.importJson}
+                  </button>
+                  <input
+                    ref=${fileInputRef}
+                    type="file"
+                    accept="application/json,.json"
+                    className="hidden"
+                    onChange=${handleImportJSON}
+                  />
+                </div>
+                <div className="text-xs text-neutral-500 space-y-1">
+                  <p>${t.tips1}</p>
+                  <p>${t.tips2}</p>
+                </div>
+              </div>
 
               <!-- Métadonnées -->
               <${Card} title=${t.meta}>
@@ -1059,36 +1213,13 @@
                     </div>
                   </div>
 
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                  <div className="flex flex-col md:flex-row md:items-center gap-3">
                     <input
                       className="w-full md:w-80 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder=${t.searchPh}
                       value=${search}
                       onChange=${(e) => setSearch(e.target.value)}
                     />
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-200 bg-white text-sm font-medium text-red-600 hover:border-red-400 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1"
-                        onClick=${handleReset}
-                        type="button"
-                      >
-                        🔄 ${t.resetForm}
-                      </button>
-                      <button
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                        onClick=${handleExportCSV}
-                        type="button"
-                      >
-                        📄 ${t.exportCsv}
-                      </button>
-                      <button
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                        onClick=${handleExportPDF}
-                        type="button"
-                      >
-                        🧾 ${t.exportPdf}
-                      </button>
-                    </div>
                   </div>
                 </div>
 
