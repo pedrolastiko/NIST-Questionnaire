@@ -1378,9 +1378,8 @@
                                 ${detailText && expanded
                                   ? html`<p
                                       className="mt-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-900"
-                                    >
-                                      ${detailText}
-                                    </p>`
+                                      dangerouslySetInnerHTML=${{ __html: detailText }}
+                                    />`
                                   : null}
                               </td>
                               <td className="px-3 py-3 text-center align-middle">
