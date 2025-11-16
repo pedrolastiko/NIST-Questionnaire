@@ -84,6 +84,99 @@
         { id: "RECOVER", fr: "Rétablir", en: "Recover" },
       ];
 
+      const NICE_ROLES = [
+        {
+          id: "OV-EXL-001",
+          fr: "Direction cybersécurité / CISO (Executive Cyber Leadership – OV-EXL-001)",
+          en: "Executive Cyber Leadership / CISO (OV-EXL-001)",
+        },
+        {
+          id: "OV-PMA-001",
+          fr: "Program Manager cybersécurité (OV-PMA-001)",
+          en: "Cybersecurity Program Manager (OV-PMA-001)",
+        },
+        {
+          id: "OV-SPP-002",
+          fr: "Cyber Policy & Strategy Planner (OV-SPP-002)",
+          en: "Cyber Policy & Strategy Planner (OV-SPP-002)",
+        },
+        {
+          id: "AN-RSK-001",
+          fr: "Analyste risques cybersécurité (AN-RSK-001)",
+          en: "Cybersecurity Risk Analyst (AN-RSK-001)",
+        },
+        {
+          id: "OM-ANA-001",
+          fr: "Analyste sécurité des systèmes (OM-ANA-001)",
+          en: "Systems Security Analyst (OM-ANA-001)",
+        },
+        {
+          id: "OM-ENG-001",
+          fr: "Ingénieur sécurité des systèmes (OM-ENG-001)",
+          en: "Systems Security Engineer (OM-ENG-001)",
+        },
+        {
+          id: "PR-CDA-001",
+          fr: "Analyste cyberdéfense (PR-CDA-001)",
+          en: "Cyber Defense Analyst (PR-CDA-001)",
+        },
+        {
+          id: "PR-INF-001",
+          fr: "Spécialiste support infrastructures (PR-INF-001)",
+          en: "Infrastructure Support Specialist (PR-INF-001)",
+        },
+        {
+          id: "PR-CIR-001",
+          fr: "Répondant aux incidents cyberdéfense (PR-CIR-001)",
+          en: "Cyber Defense Incident Responder (PR-CIR-001)",
+        },
+        {
+          id: "AN-TWA-001",
+          fr: "Analyste menace / veille (AN-TWA-001)",
+          en: "Threat/Warning Analyst (AN-TWA-001)",
+        },
+      ];
+
+      const ROLE_LOOKUP = NICE_ROLES.reduce((map, role) => {
+        map[role.id] = role;
+        return map;
+      }, {});
+
+      const ALL_ROLE_IDS = NICE_ROLES.map((role) => role.id);
+
+      const CATEGORY_ROLE_MAP = {
+        "GV.OC": ["OV-EXL-001", "OV-SPP-002"],
+        "GV.RM": ["OV-PMA-001", "AN-RSK-001", "OV-EXL-001"],
+        "GV.RR": ["OV-EXL-001", "OV-PMA-001"],
+        "GV.PO": ["OV-SPP-002", "OV-PMA-001"],
+        "GV.OV": ["OV-EXL-001", "OV-PMA-001"],
+        "GV.SC": ["OV-EXL-001", "AN-RSK-001"],
+        "ID.AM": ["OM-ANA-001", "AN-RSK-001"],
+        "ID.BE": ["OV-SPP-002", "AN-RSK-001"],
+        "ID.IM": ["OM-ENG-001", "AN-RSK-001"],
+        "ID.RA": ["AN-RSK-001", "OV-PMA-001"],
+        "ID.RM": ["AN-RSK-001", "OV-EXL-001"],
+        "ID.SC": ["OV-SPP-002", "OM-ANA-001"],
+        "PR.AA": ["PR-CDA-001", "OV-PMA-001"],
+        "PR.AT": ["OV-SPP-002", "PR-CDA-001"],
+        "PR.DS": ["PR-CDA-001", "PR-INF-001"],
+        "PR.MA": ["OM-ENG-001", "PR-CDA-001"],
+        "PR.PS": ["OV-PMA-001", "OM-ANA-001"],
+        "PR.IR": ["PR-CIR-001", "OV-PMA-001"],
+        "DE.AE": ["AN-TWA-001", "PR-CDA-001"],
+        "DE.CM": ["PR-CDA-001", "OM-ANA-001"],
+        "DE.DP": ["AN-TWA-001", "PR-CIR-001"],
+        "RS.RP": ["PR-CIR-001", "OV-PMA-001"],
+        "RS.CO": ["PR-CIR-001", "OV-EXL-001"],
+        "RS.AN": ["AN-TWA-001", "PR-CDA-001"],
+        "RS.MI": ["PR-CIR-001", "OV-EXL-001"],
+        "RS.IM": ["PR-CIR-001", "OV-EXL-001"],
+        "RS.RR": ["OV-EXL-001", "PR-CIR-001"],
+        "RC.RP": ["OV-PMA-001", "OM-ENG-001"],
+        "RC.IM": ["OV-EXL-001", "PR-CIR-001"],
+        "RC.CO": ["OV-PMA-001", "OV-EXL-001"],
+      };
+
       const QUESTIONS = [
         {
           id: "GV.OC-01",
@@ -340,6 +433,12 @@
         },
       ];
 
+      QUESTIONS.forEach((q) => {
+        if (!Array.isArray(q.roles) || q.roles.length === 0) {
+          q.roles = [...(CATEGORY_ROLE_MAP[q.category] || [])];
+        }
+      });
+
       const BASE_FUNCTION_CATEGORIES = {
         GOVERN: ["GV.OC", "GV.RM", "GV.RR", "GV.PO", "GV.OV", "GV.SC"],
         IDENTIFY: ["ID.AM", "ID.BE", "ID.IM", "ID.RA", "ID.RM", "ID.SC"],
@@ -435,9 +534,12 @@
           allFunctions: "Toutes les fonctions",
           filterByFunction: "Fonctions",
           filterByCategory: "Catégories",
+          filterByRole: "Rôles (référentiel NICE)",
           allCategories: "Toutes les catégories",
+          allRoles: "Tous les rôles",
           functionColumn: "Fonction",
           categoryColumn: "Catégorie",
+          roleColumn: "Rôle(s) NICE – contact",
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
           tips2:
             "📤 Exportez vos données (CSV, PDF ou JSON) ou 📥 importez une évaluation au format JSON.",
@@ -481,9 +583,12 @@
           allFunctions: "All functions",
           filterByFunction: "Functions",
           filterByCategory: "Categories",
+          filterByRole: "Roles (NICE framework)",
           allCategories: "All categories",
+          allRoles: "All roles",
           functionColumn: "Function",
           categoryColumn: "Category",
+          roleColumn: "NICE role(s) – contact",
           tips1: "💾 Autosave enabled (browser localStorage).",
           tips2:
             "📤 Export your data (CSV, PDF, or JSON) or 📥 import an assessment from JSON.",
@@ -629,6 +734,9 @@
         const [selectedCategories, setSelectedCategories] = useState(
           () => [...ALL_CATEGORIES]
         );
+        const [selectedRoles, setSelectedRoles] = useState(() => [
+          ...ALL_ROLE_IDS,
+        ]);
         const [infoExpanded, setInfoExpanded] = useState({});
         const fileInputRef = useRef(null);
 
@@ -676,16 +784,36 @@
               selectedCategories.includes(q.category);
             if (!matchesCategory) return false;
 
+            const questionRoles = q.roles || [];
+            const matchesRole =
+              selectedRoles.length === ALL_ROLE_IDS.length ||
+              questionRoles.some((roleId) =>
+                selectedRoles.includes(roleId)
+              );
+            if (!matchesRole) return false;
+
             if (!s) return true;
 
             const text = (q[lang] || "").toLowerCase();
+            const roleText = questionRoles
+              .map(
+                (roleId) => (ROLE_LOOKUP[roleId]?.[lang] || roleId).toLowerCase()
+              )
+              .join(" ");
             return (
               q.id.toLowerCase().includes(s) ||
               q.category.toLowerCase().includes(s) ||
-              text.includes(s)
+              text.includes(s) ||
+              roleText.includes(s)
             );
           });
-        }, [search, lang, functionFilter, selectedCategories]);
+        }, [
+          search,
+          lang,
+          functionFilter,
+          selectedCategories,
+          selectedRoles,
+        ]);
 
         const stats = useMemo(() => {
           const byFn = {};
@@ -753,6 +881,7 @@
           setSearch("");
           setFunctionFilter("ALL");
           setSelectedCategories([...ALL_CATEGORIES]);
+          setSelectedRoles([...ALL_ROLE_IDS]);
           setInfoExpanded({});
         }, [t]);
 
@@ -798,11 +927,26 @@
           setSelectedCategories([...(FUNCTION_CATEGORIES[functionFilter] || [])]);
         }, [functionFilter]);
 
+        const handleRoleClick = useCallback((roleId) => {
+          setSelectedRoles((prev) => {
+            if (prev.includes(roleId)) {
+              const next = prev.filter((id) => id !== roleId);
+              return next.length ? next : [...ALL_ROLE_IDS];
+            }
+            return [...prev, roleId];
+          });
+        }, []);
+
+        const resetRolesToAll = useCallback(() => {
+          setSelectedRoles([...ALL_ROLE_IDS]);
+        }, []);
+
         const handleExportCSV = useCallback(() => {
           const header = [
             "ID",
             t.functionColumn,
             t.categoryColumn,
+            t.roleColumn,
             t.questions,
             t.score,
             t.target,
@@ -817,11 +961,15 @@
                 .toString()
                 .replace(/"/g, '""')
                 .replace(/\r?\n|\r/g, " ");
+            const roleLabels = (q.roles || [])
+              .map((roleId) => ROLE_LOOKUP[roleId]?.[lang] || roleId)
+              .join(", ");
 
             return [
               q.id,
               fn ? fn[lang] : q.fn,
               q.category,
+              roleLabels,
               q[lang],
               a.score ?? "",
               a.target ?? "",
@@ -1419,6 +1567,51 @@
                     </div>
                   </div>
 
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-neutral-500 tracking-wide mb-2">
+                      ${t.filterByRole}
+                    </div>
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+                      <button
+                        className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                        style=${{
+                          backgroundColor: "#111827",
+                          color: "white",
+                          borderColor: "#111827",
+                        }}
+                        onClick=${resetRolesToAll}
+                        type="button"
+                      >
+                        ${t.allRoles}
+                      </button>
+                      ${NICE_ROLES.map((role) => {
+                        const isActive = selectedRoles.includes(role.id);
+                        const activeStyles = {
+                          backgroundColor: "#0F172A",
+                          color: "white",
+                          borderColor: "#0F172A",
+                        };
+                        const inactiveStyles = {
+                          backgroundColor: "#F3F4F6",
+                          color: "#111827",
+                          borderColor: "#E5E7EB",
+                        };
+                        return html`
+                          <button
+                            key=${role.id}
+                            className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                            style=${isActive ? activeStyles : inactiveStyles}
+                            onClick=${() => handleRoleClick(role.id)}
+                            type="button"
+                            title=${role[lang]}
+                          >
+                            ${role.id}
+                          </button>
+                        `;
+                      })}
+                    </div>
+                  </div>
+
                   <div className="flex flex-col md:flex-row md:items-center gap-3">
                     <input
                       className="w-full md:w-80 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1435,6 +1628,7 @@
                       <tr>
                         <th className="px-3 py-2 text-left">${t.functionColumn}</th>
                         <th className="px-3 py-2 text-left">${t.categoryColumn}</th>
+                        <th className="px-3 py-2 text-left">${t.roleColumn}</th>
                         <th className="px-3 py-2 text-left">ID</th>
                         <th className="px-3 py-2 text-left">${lang === "fr" ? "Question" : "Question"}</th>
                         <th className="px-3 py-2 text-center w-16">
@@ -1450,6 +1644,7 @@
                         const a = answers[q.id] || {};
                         const detailText = lang === "fr" ? q.detailFr : q.detailEn;
                         const expanded = infoExpanded[q.id];
+                        const questionRoles = q.roles || [];
                         return html`
                           <${React.Fragment} key=${q.id}>
                             <tr className="border-t border-neutral-200 align-top">
@@ -1466,6 +1661,44 @@
                               </td>
                               <td className="px-3 py-3 text-xs text-neutral-600">
                                 ${q.category}
+                              </td>
+                              <td className="px-3 py-3 text-xs text-neutral-600">
+                                <div className="flex flex-wrap gap-1">
+                                  ${questionRoles.length
+                                    ? questionRoles.map((roleId) => {
+                                        const role = ROLE_LOOKUP[roleId];
+                                        const label = role ? role[lang] : roleId;
+                                        const isRoleActive =
+                                          selectedRoles.includes(roleId);
+                                        const baseClasses =
+                                          "inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold";
+                                        const activeStyles = {
+                                          backgroundColor: "#0F172A",
+                                          color: "white",
+                                          borderColor: "#0F172A",
+                                        };
+                                        const inactiveStyles = {
+                                          backgroundColor: "#E0E7FF",
+                                          color: "#312E81",
+                                          borderColor: "#C7D2FE",
+                                        };
+                                        return html`<button
+                                          key=${roleId}
+                                          type="button"
+                                          className=${baseClasses}
+                                          style=${
+                                            isRoleActive
+                                              ? activeStyles
+                                              : inactiveStyles
+                                          }
+                                          onClick=${() => handleRoleClick(roleId)}
+                                          title=${label}
+                                        >
+                                          ${roleId}
+                                        </button>`;
+                                      })
+                                    : html`<span className="text-neutral-400">–</span>`}
+                                </div>
                               </td>
                               <td className="px-3 py-3 font-mono text-xs text-neutral-600">
                                 ${q.id}
@@ -1515,7 +1748,7 @@
                               </td>
                             </tr>
                             <tr className="border-b border-neutral-200">
-                              <td className="px-3 pb-4 pt-0" colSpan="7">
+                              <td className="px-3 pb-4 pt-0" colSpan="8">
                                 <div className="flex flex-col gap-2">
                                   <div className="text-xs font-medium text-neutral-600">
                                     ${t.comments}
