@@ -747,9 +747,7 @@
         const [selectedCategories, setSelectedCategories] = useState(
           () => [...ALL_CATEGORIES]
         );
-        const [selectedDepartments, setSelectedDepartments] = useState(
-          () => [...ALL_DEPARTMENT_IDS]
-        );
+        const [selectedDepartments, setSelectedDepartments] = useState(() => []);
         const [infoExpanded, setInfoExpanded] = useState({});
         const fileInputRef = useRef(null);
 
@@ -799,7 +797,7 @@
 
             const questionDepartments = q.departments || [];
             const matchesDepartment =
-              selectedDepartments.length === ALL_DEPARTMENT_IDS.length ||
+              selectedDepartments.length === 0 ||
               questionDepartments.some((deptId) =>
                 selectedDepartments.includes(deptId)
               );
@@ -895,7 +893,7 @@
           setSearch("");
           setFunctionFilter("ALL");
           setSelectedCategories([...ALL_CATEGORIES]);
-          setSelectedDepartments([...ALL_DEPARTMENT_IDS]);
+          setSelectedDepartments([]);
           setInfoExpanded({});
         }, [t]);
 
@@ -944,15 +942,14 @@
         const handleDepartmentClick = useCallback((deptId) => {
           setSelectedDepartments((prev) => {
             if (prev.includes(deptId)) {
-              const next = prev.filter((id) => id !== deptId);
-              return next.length ? next : [...ALL_DEPARTMENT_IDS];
+              return prev.filter((id) => id !== deptId);
             }
             return [...prev, deptId];
           });
         }, []);
 
         const resetDepartmentsToAll = useCallback(() => {
-          setSelectedDepartments([...ALL_DEPARTMENT_IDS]);
+          setSelectedDepartments([]);
         }, []);
 
         const handleExportCSV = useCallback(() => {
