@@ -84,6 +84,230 @@
         { id: "RECOVER", fr: "Rétablir", en: "Recover" },
       ];
 
+      const DEPARTMENTS = [
+        { id: "CEO", fr: "CEO", en: "CEO" },
+        { id: "COO", fr: "COO", en: "COO" },
+        { id: "CIO", fr: "CIO", en: "CIO" },
+        { id: "CISO", fr: "CISO", en: "CISO" },
+        {
+          id: "CHIEF_RISK_OFFICER",
+          fr: "Chief Risk Officer",
+          en: "Chief Risk Officer",
+        },
+        { id: "RISK_MANAGER", fr: "Risk Manager", en: "Risk Manager" },
+        {
+          id: "COMPLIANCE_OFFICER",
+          fr: "Compliance Officer",
+          en: "Compliance Officer",
+        },
+        {
+          id: "DATA_PROTECTION_OFFICER",
+          fr: "Data Protection Officer",
+          en: "Data Protection Officer",
+        },
+        {
+          id: "INTERNAL_AUDITOR",
+          fr: "Internal Auditor",
+          en: "Internal Auditor",
+        },
+        {
+          id: "GOVERNANCE_LEAD",
+          fr: "Governance Lead",
+          en: "Governance Lead",
+        },
+        { id: "HR_MANAGER", fr: "HR Manager", en: "HR Manager" },
+        {
+          id: "LEARNING_DEVELOPMENT",
+          fr: "Learning & Development",
+          en: "Learning & Development",
+        },
+        {
+          id: "LEGAL_COUNSEL",
+          fr: "Legal Counsel",
+          en: "Legal Counsel",
+        },
+        {
+          id: "COMMUNICATIONS_MANAGER",
+          fr: "Communications Manager",
+          en: "Communications Manager",
+        },
+        {
+          id: "VENDOR_MANAGER",
+          fr: "Vendor Manager",
+          en: "Vendor Manager",
+        },
+        {
+          id: "ENTERPRISE_ARCHITECT",
+          fr: "Enterprise Architect",
+          en: "Enterprise Architect",
+        },
+        {
+          id: "BUSINESS_CONTINUITY_MANAGER",
+          fr: "Business Continuity Manager",
+          en: "Business Continuity Manager",
+        },
+        {
+          id: "DISASTER_RECOVERY_LEAD",
+          fr: "Disaster Recovery Lead",
+          en: "Disaster Recovery Lead",
+        },
+        {
+          id: "SYSTEM_ADMINISTRATOR",
+          fr: "System Administrator",
+          en: "System Administrator",
+        },
+        {
+          id: "NETWORK_ADMINISTRATOR",
+          fr: "Network Administrator",
+          en: "Network Administrator",
+        },
+        {
+          id: "CLOUD_ENGINEER",
+          fr: "Cloud Engineer",
+          en: "Cloud Engineer",
+        },
+        {
+          id: "DATABASE_ADMINISTRATOR",
+          fr: "Database Administrator",
+          en: "Database Administrator",
+        },
+        {
+          id: "SECURITY_ENGINEER",
+          fr: "Security Engineer",
+          en: "Security Engineer",
+        },
+        {
+          id: "DEVSECOPS_ENGINEER",
+          fr: "DevSecOps Engineer",
+          en: "DevSecOps Engineer",
+        },
+        {
+          id: "SECURITY_ARCHITECT",
+          fr: "Security Architect",
+          en: "Security Architect",
+        },
+        { id: "IAM_MANAGER", fr: "IAM Manager", en: "IAM Manager" },
+        { id: "IAM_ANALYST", fr: "IAM Analyst", en: "IAM Analyst" },
+        {
+          id: "CYBERSECURITY_ANALYST",
+          fr: "Cybersecurity Analyst",
+          en: "Cybersecurity Analyst",
+        },
+      ];
+
+      const DEPARTMENT_LOOKUP = DEPARTMENTS.reduce((map, dept) => {
+        map[dept.id] = dept;
+        return map;
+      }, {});
+
+      const ALL_DEPARTMENT_IDS = DEPARTMENTS.map((dept) => dept.id);
+
+      const CATEGORY_DEPARTMENT_MAP = {
+        "GV.OC": [
+          "CEO",
+          "COO",
+          "CIO",
+          "GOVERNANCE_LEAD",
+        ],
+        "GV.RM": [
+          "CHIEF_RISK_OFFICER",
+          "RISK_MANAGER",
+          "CISO",
+        ],
+        "GV.RR": ["CEO", "COO", "GOVERNANCE_LEAD", "HR_MANAGER"],
+        "GV.PO": [
+          "COMPLIANCE_OFFICER",
+          "LEGAL_COUNSEL",
+          "GOVERNANCE_LEAD",
+        ],
+        "GV.OV": ["INTERNAL_AUDITOR", "COMPLIANCE_OFFICER", "CEO"],
+        "GV.SC": ["VENDOR_MANAGER", "LEGAL_COUNSEL", "COO"],
+        "ID.AM": [
+          "CIO",
+          "SYSTEM_ADMINISTRATOR",
+          "NETWORK_ADMINISTRATOR",
+          "CLOUD_ENGINEER",
+          "DATABASE_ADMINISTRATOR",
+        ],
+        "ID.BE": ["CEO", "COO", "BUSINESS_CONTINUITY_MANAGER"],
+        "ID.IM": [
+          "ENTERPRISE_ARCHITECT",
+          "CIO",
+          "SECURITY_ARCHITECT",
+        ],
+        "ID.RA": [
+          "CHIEF_RISK_OFFICER",
+          "RISK_MANAGER",
+          "CYBERSECURITY_ANALYST",
+        ],
+        "ID.RM": ["CHIEF_RISK_OFFICER", "RISK_MANAGER", "CEO"],
+        "ID.SC": ["VENDOR_MANAGER", "LEGAL_COUNSEL", "CYBERSECURITY_ANALYST"],
+        "PR.AA": ["IAM_MANAGER", "IAM_ANALYST", "SECURITY_ARCHITECT"],
+        "PR.AT": [
+          "HR_MANAGER",
+          "LEARNING_DEVELOPMENT",
+          "COMMUNICATIONS_MANAGER",
+        ],
+        "PR.DS": [
+          "DATA_PROTECTION_OFFICER",
+          "DATABASE_ADMINISTRATOR",
+          "SECURITY_ENGINEER",
+        ],
+        "PR.MA": [
+          "SYSTEM_ADMINISTRATOR",
+          "NETWORK_ADMINISTRATOR",
+          "CLOUD_ENGINEER",
+          "DEVSECOPS_ENGINEER",
+        ],
+        "PR.PS": [
+          "SECURITY_ARCHITECT",
+          "SECURITY_ENGINEER",
+          "DEVSECOPS_ENGINEER",
+          "ENTERPRISE_ARCHITECT",
+        ],
+        "PR.IR": [
+          "BUSINESS_CONTINUITY_MANAGER",
+          "DISASTER_RECOVERY_LEAD",
+          "CIO",
+        ],
+        "DE.AE": [
+          "CYBERSECURITY_ANALYST",
+          "SECURITY_ENGINEER",
+          "NETWORK_ADMINISTRATOR",
+        ],
+        "DE.CM": [
+          "CYBERSECURITY_ANALYST",
+          "SECURITY_ENGINEER",
+          "DEVSECOPS_ENGINEER",
+        ],
+        "DE.DP": [
+          "CYBERSECURITY_ANALYST",
+          "SECURITY_ARCHITECT",
+          "CISO",
+        ],
+        "RS.RP": [
+          "CISO",
+          "BUSINESS_CONTINUITY_MANAGER",
+          "DISASTER_RECOVERY_LEAD",
+        ],
+        "RS.CO": ["COMMUNICATIONS_MANAGER", "CEO", "LEGAL_COUNSEL"],
+        "RS.AN": ["CYBERSECURITY_ANALYST", "SECURITY_ENGINEER", "CISO"],
+        "RS.MI": [
+          "SECURITY_ENGINEER",
+          "DEVSECOPS_ENGINEER",
+          "SYSTEM_ADMINISTRATOR",
+        ],
+        "RS.IM": ["CISO", "CHIEF_RISK_OFFICER", "SECURITY_ARCHITECT"],
+        "RS.RR": ["CEO", "INTERNAL_AUDITOR", "COMPLIANCE_OFFICER"],
+        "RC.RP": [
+          "BUSINESS_CONTINUITY_MANAGER",
+          "DISASTER_RECOVERY_LEAD",
+          "CIO",
+        ],
+        "RC.IM": ["CIO", "CISO", "CHIEF_RISK_OFFICER"],
+        "RC.CO": ["COMMUNICATIONS_MANAGER", "CEO", "LEGAL_COUNSEL"],
+      };
+
       const QUESTIONS = [
         {
           id: "GV.OC-01",
@@ -340,6 +564,12 @@
         },
       ];
 
+      QUESTIONS.forEach((q) => {
+        if (!Array.isArray(q.departments) || q.departments.length === 0) {
+          q.departments = [...(CATEGORY_DEPARTMENT_MAP[q.category] || [])];
+        }
+      });
+
       const BASE_FUNCTION_CATEGORIES = {
         GOVERN: ["GV.OC", "GV.RM", "GV.RR", "GV.PO", "GV.OV", "GV.SC"],
         IDENTIFY: ["ID.AM", "ID.BE", "ID.IM", "ID.RA", "ID.RM", "ID.SC"],
@@ -435,7 +665,10 @@
           allFunctions: "Toutes les fonctions",
           filterByFunction: "Fonctions",
           filterByCategory: "Catégories",
+          filterByDepartment: "Départements responsables",
+          responsibleDepartmentsLabel: "Départements responsables",
           allCategories: "Toutes les catégories",
+          allDepartments: "Tous les départements",
           functionColumn: "Fonction",
           categoryColumn: "Catégorie",
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
@@ -481,7 +714,10 @@
           allFunctions: "All functions",
           filterByFunction: "Functions",
           filterByCategory: "Categories",
+          filterByDepartment: "Departments",
+          responsibleDepartmentsLabel: "Responsible departments",
           allCategories: "All categories",
+          allDepartments: "All departments",
           functionColumn: "Function",
           categoryColumn: "Category",
           tips1: "💾 Autosave enabled (browser localStorage).",
@@ -629,6 +865,7 @@
         const [selectedCategories, setSelectedCategories] = useState(
           () => [...ALL_CATEGORIES]
         );
+        const [selectedDepartments, setSelectedDepartments] = useState(() => []);
         const [infoExpanded, setInfoExpanded] = useState({});
         const fileInputRef = useRef(null);
 
@@ -676,16 +913,37 @@
               selectedCategories.includes(q.category);
             if (!matchesCategory) return false;
 
+            const questionDepartments = q.departments || [];
+            const matchesDepartment =
+              selectedDepartments.length === 0 ||
+              questionDepartments.some((deptId) =>
+                selectedDepartments.includes(deptId)
+              );
+            if (!matchesDepartment) return false;
+
             if (!s) return true;
 
             const text = (q[lang] || "").toLowerCase();
+            const deptText = questionDepartments
+              .map(
+                (deptId) =>
+                  (DEPARTMENT_LOOKUP[deptId]?.[lang] || deptId).toLowerCase()
+              )
+              .join(" ");
             return (
               q.id.toLowerCase().includes(s) ||
               q.category.toLowerCase().includes(s) ||
-              text.includes(s)
+              text.includes(s) ||
+              deptText.includes(s)
             );
           });
-        }, [search, lang, functionFilter, selectedCategories]);
+        }, [
+          search,
+          lang,
+          functionFilter,
+          selectedCategories,
+          selectedDepartments,
+        ]);
 
         const stats = useMemo(() => {
           const byFn = {};
@@ -753,6 +1011,7 @@
           setSearch("");
           setFunctionFilter("ALL");
           setSelectedCategories([...ALL_CATEGORIES]);
+          setSelectedDepartments([]);
           setInfoExpanded({});
         }, [t]);
 
@@ -797,6 +1056,19 @@
           }
           setSelectedCategories([...(FUNCTION_CATEGORIES[functionFilter] || [])]);
         }, [functionFilter]);
+
+        const handleDepartmentClick = useCallback((deptId) => {
+          setSelectedDepartments((prev) => {
+            if (prev.includes(deptId)) {
+              return prev.filter((id) => id !== deptId);
+            }
+            return [...prev, deptId];
+          });
+        }, []);
+
+        const resetDepartmentsToAll = useCallback(() => {
+          setSelectedDepartments([]);
+        }, []);
 
         const handleExportCSV = useCallback(() => {
           const header = [
@@ -1419,6 +1691,51 @@
                     </div>
                   </div>
 
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-neutral-500 tracking-wide mb-2">
+                      ${t.filterByDepartment}
+                    </div>
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+                      <button
+                        className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                        style=${{
+                          backgroundColor: "#111827",
+                          color: "white",
+                          borderColor: "#111827",
+                        }}
+                        onClick=${resetDepartmentsToAll}
+                        type="button"
+                      >
+                        ${t.allDepartments}
+                      </button>
+                      ${DEPARTMENTS.map((dept) => {
+                        const isActive = selectedDepartments.includes(dept.id);
+                        const activeStyles = {
+                          backgroundColor: "#0F172A",
+                          color: "white",
+                          borderColor: "#0F172A",
+                        };
+                        const inactiveStyles = {
+                          backgroundColor: "#F3F4F6",
+                          color: "#111827",
+                          borderColor: "#E5E7EB",
+                        };
+                        return html`
+                          <button
+                            key=${dept.id}
+                            className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                            style=${isActive ? activeStyles : inactiveStyles}
+                            onClick=${() => handleDepartmentClick(dept.id)}
+                            type="button"
+                            title=${dept[lang]}
+                          >
+                            ${dept.id}
+                          </button>
+                        `;
+                      })}
+                    </div>
+                  </div>
+
                   <div className="flex flex-col md:flex-row md:items-center gap-3">
                     <input
                       className="w-full md:w-80 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1450,6 +1767,7 @@
                         const a = answers[q.id] || {};
                         const detailText = lang === "fr" ? q.detailFr : q.detailEn;
                         const expanded = infoExpanded[q.id];
+                        const questionDepartments = q.departments || [];
                         return html`
                           <${React.Fragment} key=${q.id}>
                             <tr className="border-t border-neutral-200 align-top">
@@ -1477,6 +1795,26 @@
                                       className="mt-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-900"
                                       dangerouslySetInnerHTML=${{ __html: detailText }}
                                     />`
+                                  : null}
+                                ${questionDepartments.length
+                                  ? html`<div className="mt-3">
+                                      <div
+                                        className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500 mb-1"
+                                      >
+                                        ${t.responsibleDepartmentsLabel}
+                                      </div>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        ${questionDepartments.map((deptId) => {
+                                          const dept = DEPARTMENT_LOOKUP[deptId] || {};
+                                          return html`<span
+                                            key=${deptId}
+                                            className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-700"
+                                          >
+                                            ${dept[lang] || deptId}
+                                          </span>`;
+                                        })}
+                                      </div>
+                                    </div>`
                                   : null}
                               </td>
                               <td className="px-3 py-3 text-center align-middle">
@@ -1514,8 +1852,8 @@
                                 />
                               </td>
                             </tr>
-                            <tr className="border-b border-neutral-200">
-                              <td className="px-3 pb-4 pt-0" colSpan="7">
+                              <tr className="border-b border-neutral-200">
+                                <td className="px-3 pb-4 pt-0" colSpan="7">
                                 <div className="flex flex-col gap-2">
                                   <div className="text-xs font-medium text-neutral-600">
                                     ${t.comments}
