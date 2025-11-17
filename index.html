@@ -550,6 +550,7 @@
           filterByFunction: "Fonctions",
           filterByCategory: "Catégories",
           filterByDepartment: "Départements responsables",
+          responsibleDepartmentsLabel: "Départements responsables",
           allCategories: "Toutes les catégories",
           allDepartments: "Tous les départements",
           functionColumn: "Fonction",
@@ -598,6 +599,7 @@
           filterByFunction: "Functions",
           filterByCategory: "Categories",
           filterByDepartment: "Departments",
+          responsibleDepartmentsLabel: "Responsible departments",
           allCategories: "All categories",
           allDepartments: "All departments",
           functionColumn: "Function",
@@ -1649,6 +1651,7 @@
                         const a = answers[q.id] || {};
                         const detailText = lang === "fr" ? q.detailFr : q.detailEn;
                         const expanded = infoExpanded[q.id];
+                        const questionDepartments = q.departments || [];
                         return html`
                           <${React.Fragment} key=${q.id}>
                             <tr className="border-t border-neutral-200 align-top">
@@ -1676,6 +1679,26 @@
                                       className="mt-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-900"
                                       dangerouslySetInnerHTML=${{ __html: detailText }}
                                     />`
+                                  : null}
+                                ${questionDepartments.length
+                                  ? html`<div className="mt-3">
+                                      <div
+                                        className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500 mb-1"
+                                      >
+                                        ${t.responsibleDepartmentsLabel}
+                                      </div>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        ${questionDepartments.map((deptId) => {
+                                          const dept = DEPARTMENT_LOOKUP[deptId] || {};
+                                          return html`<span
+                                            key=${deptId}
+                                            className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-700"
+                                          >
+                                            ${dept[lang] || deptId}
+                                          </span>`;
+                                        })}
+                                      </div>
+                                    </div>`
                                   : null}
                               </td>
                               <td className="px-3 py-3 text-center align-middle">
