@@ -486,15 +486,92 @@
             "<strong>Detailed description:</strong> Confirm the employee lifecycle systematically embeds cybersecurity requirements to reduce human risk and reinforce security culture. Additional guidance: check for competency criteria, background checks, continuous awareness, and secure offboarding procedures.<br /><br /><strong>Implementation examples:</strong> job profiles referencing cyber skills, recurring onboarding and training programs, performance objectives tied to security, and processes that revoke access and recover assets at departure.<br /><br /><strong>Supporting documentation examples:</strong> HR policies incorporating cybersecurity, training materials, background verification logs, skills matrices, onboarding/offboarding checklists, and evidence of cyber-related performance tracking.",
         },
         {
-          id: "ID-01",
+          id: "ID.AM-01",
           fn: "IDENTIFY",
           category: "ID.AM",
-          fr: "Les actifs critiques (applications, données, infrastructures) sont-ils inventoriés et classifiés ?",
-          en: "Are critical assets (applications, data, infrastructure) inventoried and classified?",
+          fr: "Les inventaires du matériel géré par l’organisation sont-ils maintenus à jour ?",
+          en: "Are inventories of hardware managed by the organization maintained?",
           detailFr:
-            "<strong>Description détaillée :</strong> Le contrôle vise à confirmer que tous les actifs critiques sont identifiés, catégorisés selon leur importance et mis à jour pour soutenir les analyses de risques. Informations complémentaires : vérifier l’existence d’un référentiel d’actifs, d’une politique de classification et de processus de mise à jour régulière.<br /><br /><strong>Exemples d’implémentation :</strong> inventaire centralisé des actifs critiques, classification par niveau de sensibilité, revue périodique de la complétude avec les propriétaires d’actifs.<br /><br /><strong>Exemples de documentations nécessaires :</strong> CMDB ou inventaire des actifs, politique de classification de l’information, fiches de criticité, rapports d’audit sur l’inventaire, preuves de revues de mise à jour.",
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie que tous les équipements physiques (serveurs, postes, IoT, OT, périphériques) sont recensés, suivis et reliés à leur localisation ou propriétaire. Informations complémentaires : rechercher une CMDB ou un outil d’ITAM intégrant les attributs critiques, des scans de découverte et des procédures pour intégrer/sortir les actifs matériels.<br /><br /><strong>Exemples d’implémentation :</strong> inventaire automatisé couplé aux agents EDR/MDM, rapprochement mensuel avec les données de stocks, revues avec les propriétaires d’actifs pour valider la complétude.<br /><br /><strong>Exemples de documentations nécessaires :</strong> CMDB ou registre matériel, rapports d’asset discovery, politiques d’onboarding/offboarding matériel, comptes rendus d’inventaires physiques, procédures d’escalade pour actifs inconnus.",
           detailEn:
-            "<strong>Detailed description:</strong> This control ensures critical assets are identified, categorized by importance, and maintained in an up-to-date repository to support risk assessments. Additional guidance: confirm the presence of an asset repository, a classification policy, and a regular update process.<br /><br /><strong>Implementation examples:</strong> centralized inventory of critical assets, sensitivity-based classification, and periodic completeness reviews with asset owners.<br /><br /><strong>Supporting documentation examples:</strong> CMDB or asset inventory, information classification policy, criticality profiles, audit reports on asset inventories, and evidence of update reviews.",
+            "<strong>Detailed description:</strong> Confirms every physical device (servers, endpoints, IoT/OT, peripherals) is recorded, tracked, and tied to a location or owner. Additional guidance: look for a CMDB or ITAM tool capturing critical attributes, automated discovery scans, and procedures covering hardware intake and retirement.<br /><br /><strong>Implementation examples:</strong> automated inventories fed by EDR/MDM agents, monthly reconciliations with warehouse data, and owner attestation campaigns validating completeness.<br /><br /><strong>Supporting documentation examples:</strong> hardware CMDB exports, asset discovery reports, hardware onboarding/offboarding policies, physical inventory minutes, and escalation procedures for unidentified devices.",
+        },
+        {
+          id: "ID.AM-02",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Les inventaires des logiciels, services et systèmes gérés par l’organisation sont-ils maintenus ?",
+          en: "Are inventories of software, services, and systems managed by the organization maintained?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Cette question confirme que le périmètre applicatif (logiciels installés, services SaaS, systèmes OT/IT) est recensé avec les versions, propriétaires et statuts d’usage. Informations complémentaires : vérifier la présence d’un référentiel applicatif, d’un catalogue de services ou d’un outil de Software Asset Management (SAM) aligné sur les licences et usages.<br /><br /><strong>Exemples d’implémentation :</strong> catalogue applicatif relié aux pipelines DevSecOps, portail SaaS approuvé, inventaires automatiques issus des scanners ou des agents de gestion logicielle.<br /><br /><strong>Exemples de documentations nécessaires :</strong> registre applicatif/SAM, listes de services SaaS autorisés, politiques de gestion des logiciels, rapports d’audits de licences, tickets de revue périodique des services.",
+          detailEn:
+            "<strong>Detailed description:</strong> Validates that the application estate (installed software, SaaS subscriptions, OT/IT systems) is cataloged with versions, owners, and usage status. Additional guidance: look for an application register, a service catalog, or a software asset management (SAM) platform reconciled with license and consumption records.<br /><br /><strong>Implementation examples:</strong> application catalogs tied to DevSecOps pipelines, approved SaaS portals, and automated inventories from discovery scanners or software management agents.<br /><br /><strong>Supporting documentation examples:</strong> SAM exports, authorized SaaS lists, software management policies, license audit reports, and periodic service review tickets.",
+        },
+        {
+          id: "ID.AM-03",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Des représentations des communications réseau autorisées et des flux de données internes/externes sont-elles maintenues ?",
+          en: "Are representations of authorized network communication and internal and external data flows maintained?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Le contrôle évalue la disponibilité de schémas réseau, cartographies de flux et modèles de segmentation permettant d’identifier les échanges autorisés. Informations complémentaires : examiner la mise à jour des diagrammes, la traçabilité des dépendances inter-applicatives et l’usage de sondes ou d’outils de cartographie dynamique.<br /><br /><strong>Exemples d’implémentation :</strong> diagrammes Visio ou IaC générés automatiquement, cartographie des flux via des outils de Network Detection & Response, revues trimestrielles des règles de pare-feu pour confirmer les flux autorisés.<br /><br /><strong>Exemples de documentations nécessaires :</strong> diagrammes réseau, matrices de flux applicatifs, rapports de revue des règles réseau, exportations d’outils de cartographie dynamique, procédures de gestion des changements réseau.",
+          detailEn:
+            "<strong>Detailed description:</strong> Assesses whether network diagrams, data-flow maps, and segmentation models exist and stay updated so authorized communications are understood. Additional guidance: review diagram maintenance practices, traceability of inter-application dependencies, and use of sensors or dynamic mapping tooling.<br /><br /><strong>Implementation examples:</strong> automatically generated Visio/IaC diagrams, flow maps from network detection platforms, and quarterly firewall-rule reviews validating authorized exchanges.<br /><br /><strong>Supporting documentation examples:</strong> network diagrams, application flow matrices, firewall review reports, exports from dynamic mapping tools, and network change procedures.",
+        },
+        {
+          id: "ID.AM-04",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Les inventaires des services fournis par les fournisseurs sont-ils tenus à jour ?",
+          en: "Are inventories of services provided by suppliers maintained?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Ce contrôle s’assure que les services externalisés (cloud, MSSP, BPO, SaaS critiques) sont inventoriés avec leurs dépendances, contrats et exigences de sécurité. Informations complémentaires : vérifier la présence d’un registre des fournisseurs, d’évaluations de risques tiers et de liens vers les responsables internes.<br /><br /><strong>Exemples d’implémentation :</strong> base tiers intégrant les niveaux de criticité, fiche service/fournisseur partagée avec la gestion des contrats, rapprochement avec les clauses de sécurité.<br /><br /><strong>Exemples de documentations nécessaires :</strong> registre de fournisseurs critiques, fiches de services externalisés, SLA/contrats avec clauses cyber, rapports d’évaluation des tiers, preuves de revues périodiques.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures outsourced services (cloud, MSSP, BPO, critical SaaS) are cataloged with dependencies, contracts, and security requirements. Additional guidance: confirm the existence of a supplier register, third-party risk assessments, and mappings to internal owners.<br /><br /><strong>Implementation examples:</strong> vendor databases capturing criticality tiers, service/supplier fact sheets linked to contract management, and reconciliations with security clauses.<br /><br /><strong>Supporting documentation examples:</strong> critical supplier registers, outsourced service profiles, SLAs/contracts with cybersecurity provisions, third-party assessment reports, and evidence of periodic reviews.",
+        },
+        {
+          id: "ID.AM-05",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Les actifs sont-ils priorisés selon leur classification, criticité, ressources et impact sur la mission ?",
+          en: "Are assets prioritized based on classification, criticality, resources, and impact on the mission?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Cette question vérifie l’existence d’une grille de criticité permettant de hiérarchiser les actifs et d’orienter les investissements de sécurité. Informations complémentaires : rechercher une politique de classification, des critères d’impact métier et des liens avec les plans de continuité ou de gestion des risques.<br /><br /><strong>Exemples d’implémentation :</strong> matrice de priorisation alignée sur les objectifs métiers, attribution d’un niveau de protection attendu par actif, arbitrages budgétaires basés sur ces niveaux.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de classification/criticité, registre des actifs avec niveaux assignés, rapports de comités de priorisation, plans de traitement ou de continuité liés aux actifs critiques.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms a criticality scheme ranks assets to direct security investments. Additional guidance: check for classification policies, business impact criteria, and links to continuity or risk management plans.<br /><br /><strong>Implementation examples:</strong> prioritization matrices aligned with business objectives, expected protection levels per asset, and budget decisions referencing those tiers.<br /><br /><strong>Supporting documentation examples:</strong> classification/criticality policies, asset registers with assigned tiers, prioritization committee reports, and treatment or continuity plans tied to critical assets.",
+        },
+        {
+          id: "ID.AM-06",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Les inventaires des données et métadonnées associées pour les types de données désignés sont-ils maintenus ?",
+          en: "Are inventories of data and corresponding metadata for designated data types maintained?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Le contrôle exige une visibilité sur les jeux de données sensibles (PII, IP, données industrielles) avec localisation, propriétaires, exigences réglementaires et métadonnées (format, volume, cycle de vie). Informations complémentaires : vérifier l’existence d’un registre de données, d’un catalogue ou d’un outil de data governance reliant les exigences de protection.<br /><br /><strong>Exemples d’implémentation :</strong> catalogue de données relié à un outil de gouvernance, fiches de données critiques mentionnant propriétaire, classification et obligations, découverte automatique des données sensibles dans les environnements cloud.<br /><br /><strong>Exemples de documentations nécessaires :</strong> data catalog, registre de PII, fiches de data stewardship, rapports de data discovery, politiques de conservation des données.",
+          detailEn:
+            "<strong>Detailed description:</strong> Requires visibility over sensitive datasets (PII, IP, industrial data) capturing location, owners, regulatory needs, and metadata (format, volume, lifecycle). Additional guidance: look for a data register, catalog, or governance platform linking required protections.<br /><br /><strong>Implementation examples:</strong> governance-backed data catalogs, critical data fact sheets referencing owners, classification and obligations, and automated sensitive-data discovery in cloud environments.<br /><br /><strong>Supporting documentation examples:</strong> data catalog exports, PII registers, data stewardship records, sensitive-data discovery reports, and data retention policies.",
+        },
+        {
+          id: "ID.AM-07",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Les dépendances entre actifs, données et processus critiques sont-elles documentées et suivies ?",
+          en: "Are dependencies between assets, data, and critical business processes documented and tracked?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Cette question confirme que les liens entre actifs techniques, jeux de données et processus métiers sont connus afin d’anticiper les impacts et orchestrer les réponses. Informations complémentaires : vérifier les matrices de dépendances, les analyses d’impact métier et les correspondances entre inventaires d’actifs et chaînes de valeur.<br /><br /><strong>Exemples d’implémentation :</strong> cartographie reliant services métier, applications, infrastructures et données, outils d’architecture d’entreprise tenant à jour ces dépendances, exercices de simulation évaluant les impacts en cascade.<br /><br /><strong>Exemples de documentations nécessaires :</strong> matrices processus/actifs, analyses BIA, dossiers d’architecture, registres de dépendances dans la CMDB, comptes rendus d’exercices de continuité.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms relationships between technical assets, datasets, and business processes are known to anticipate cascading impacts and orchestrate responses. Additional guidance: review dependency matrices, business impact analyses, and mappings between asset inventories and value chains.<br /><br /><strong>Implementation examples:</strong> maps linking business services to applications, infrastructure, and data; enterprise-architecture tools maintaining dependencies; and tabletop exercises validating cascading-impact scenarios.<br /><br /><strong>Supporting documentation examples:</strong> process-to-asset matrices, BIA reports, architecture dossiers, dependency records in the CMDB, and continuity exercise minutes.",
+        },
+        {
+          id: "ID.AM-08",
+          fn: "IDENTIFY",
+          category: "ID.AM",
+          fr: "Les systèmes, matériels, logiciels, services et données sont-ils gérés tout au long de leur cycle de vie ?",
+          en: "Are systems, hardware, software, services, and data managed throughout their life cycles?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie que l’ensemble du cycle de vie (planification, acquisition, exploitation, maintenance, retrait) inclut des exigences de sécurité et de gouvernance des actifs. Informations complémentaires : examiner les processus d’ingénierie, d’intégration, de patching, de désaffectation sécurisée et les critères de transfert vers l’archivage.<br /><br /><strong>Exemples d’implémentation :</strong> check-lists de sécurité dans les processus de procurement, pipelines DevSecOps imposant des contrôles avant mise en production, procédures de nettoyage sécurisé et de destruction des données lors de la mise hors service.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politiques de cycle de vie des actifs, procédures de déploiement/décommissionnement, preuves de patching et de maintenance, rapports de destruction de données, matrices de contrôle DevSecOps.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures every lifecycle phase (planning, acquisition, operations, maintenance, retirement) embeds security and governance requirements for assets. Additional guidance: review engineering processes, onboarding, patching, secure decommissioning, and archival criteria.<br /><br /><strong>Implementation examples:</strong> security checklists within procurement workflows, DevSecOps pipelines enforcing gates pre-production, and sanitized disposal procedures when services are retired.<br /><br /><strong>Supporting documentation examples:</strong> asset lifecycle policies, deployment/decommissioning procedures, patching and maintenance evidence, data destruction reports, and DevSecOps control matrices.",
         },
         {
           id: "ID-02",
