@@ -833,7 +833,7 @@
       }
 
       function SelectScore({ value, onChange }) {
-        const options = Array.from({ length: 11 }, (_, index) => index * 0.5);
+        const options = Array.from({ length: 6 }, (_, index) => index);
         return html`
           <select
             className="w-full rounded-md border border-neutral-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -845,7 +845,7 @@
           >
             <option value="">–</option>
             ${options.map((v) =>
-              html`<option key=${v} value=${v}>${Number.isInteger(v) ? v : v.toFixed(1)}</option>`
+              html`<option key=${v} value=${v}>${v}</option>`
             )}
           </select>
         `;
