@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NIST - Questionnaire Light</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #06030f;
+        --card: #110f23;
+        --accent: #7f5dff;
+        --accent-soft: rgba(127, 93, 255, 0.12);
+        --text: #f5f2ff;
+        --muted: #b8b3d9;
+        --border: rgba(255, 255, 255, 0.1);
+        --danger: #ff8b6a;
+        --success: #4ecdc4;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #1d1351, #05030e 60%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem 1.5rem 4rem;
+      }
+
+      main {
+        width: min(1100px, 100%);
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      header {
+        text-align: center;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+
+      header p {
+        margin: 0.35rem 0 0;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 1.75rem;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, transparent 20%, rgba(127, 93, 255, 0.12));
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+
+      .card:hover::before {
+        opacity: 1;
+      }
+
+      .question-card {
+        grid-column: 1 / -1;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border-radius: 999px;
+        padding: 0.25rem 0.85rem;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .function-tag {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.1);
+        margin-left: 0.5rem;
+      }
+
+      .question {
+        font-size: clamp(1.25rem, 3vw, 1.6rem);
+        margin: 1rem 0 0.75rem;
+      }
+
+      .objective {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: none;
+        padding: 0.95rem 1.75rem;
+        border-radius: 14px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button.primary {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 15px 30px rgba(127, 93, 255, 0.4);
+      }
+
+      button.secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      button:not(:disabled):hover {
+        transform: translateY(-2px);
+      }
+
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        font-weight: 600;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      textarea,
+      select {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text);
+        padding: 0.95rem 1.1rem;
+        font-size: 1rem;
+        font-family: inherit;
+        resize: vertical;
+      }
+
+      textarea:focus,
+      select:focus {
+        outline: 2px solid var(--accent);
+      }
+
+      .progress {
+        margin-top: 1.25rem;
+      }
+
+      .progress-bar {
+        height: 8px;
+        width: 100%;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-bar span {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, var(--accent), #ff9c6b);
+        border-radius: inherit;
+        width: 0%;
+        transition: width 0.4s ease;
+      }
+
+      .progress small {
+        display: inline-block;
+        margin-top: 0.5rem;
+        color: var(--muted);
+      }
+
+      .summary-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-height: 340px;
+        overflow: auto;
+      }
+
+      .summary-item {
+        padding: 1rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+      }
+
+      .summary-item strong {
+        display: block;
+        margin-bottom: 0.35rem;
+      }
+
+      .summary-item span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 720px) {
+        body {
+          padding: 1.5rem 1rem 3rem;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="badge">Mode rapide NIST CSF</p>
+        <h1>Questionnaire Cyber « Light »</h1>
+        <p>
+          Faites défiler les questions, capturez vos commentaires et évaluez chaque
+          pratique sur l'échelle CMMI (0-5).
+        </p>
+      </header>
+
+      <section class="card question-card" aria-live="polite">
+        <div class="badge">
+          Question <span id="questionIndex">1</span>/<span id="questionTotal">0</span>
+          <span class="function-tag" id="functionTag">Govern</span>
+        </div>
+        <h2 class="question" id="questionText"></h2>
+        <p class="objective" id="objectiveText"></p>
+
+        <div class="grid" style="margin-top: 1.75rem">
+          <label>
+            Commentaires / notes
+            <textarea
+              id="notes"
+              rows="4"
+              placeholder="Ajoutez les faits saillants, preuves ou plans d'action..."
+            ></textarea>
+          </label>
+          <label>
+            Note CMMI (0 = inexistant, 5 = optimisé)
+            <select id="rating">
+              <option value="">Sélectionner une note</option>
+              <option value="0">0 - Non traité</option>
+              <option value="1">1 - Initial</option>
+              <option value="2">2 - Géré</option>
+              <option value="3">3 - Défini</option>
+              <option value="4">4 - Quantitativement géré</option>
+              <option value="5">5 - Optimisé</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="controls">
+          <button class="secondary" id="prevBtn">◀ Précédent</button>
+          <button class="primary" id="nextBtn">Question suivante ▶</button>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar"><span id="progressValue"></span></div>
+          <small id="progressLabel"></small>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="badge">Vue synthétique</div>
+        <h3 style="margin: 1rem 0">Bloc-notes & scoring</h3>
+        <ul class="summary-list" id="summary"></ul>
+      </section>
+    </main>
+
+    <script>
+      const questions = [
+        {
+          question:
+            "Comment vos rôles et responsabilités en matière de cybersécurité sont-ils définis et communiqués ?",
+          objective:
+            "Vérifier la gouvernance et la clarté des responsabilités",
+          func: "Govern",
+        },
+        {
+          question:
+            "Quelles politiques ou obligations réglementaires entrent en vigueur ?",
+          objective: "Vérifier si un cadre régulatoire est appliqué",
+          func: "Govern",
+        },
+        {
+          question:
+            "Disposez-vous d'un inventaire complet à jour de tous vos actifs numériques ?",
+          objective:
+            "Vérifier que les risques majeurs pour l'organisation sont visibles",
+          func: "Identify",
+        },
+        {
+          question: "Comment sont gérés les risques et vulnérabilités identifiés ?",
+          objective:
+            "Vérifier que les risques majeurs sont priorisés selon les mesures",
+          func: "Identify",
+        },
+        {
+          question:
+            "Quelles sont les risques que vous considérez comme les plus critiques pour votre organisation ?",
+          objective:
+            "Vérifier que les risques majeurs pour l'organisation sont visibles",
+          func: "Identify",
+        },
+        {
+          question:
+            "Comment sécurisez-vous les accès privilégiés (Admins) et l'authentification des services critiques ?",
+          objective: "Vérifier la robustesse de l'accès privilégié",
+          func: "Protect",
+        },
+        {
+          question: "Comment sensibilisez-vous vos employés à la cybersécurité ?",
+          objective: "Vérifier la sensibilisation des employés",
+          func: "Protect",
+        },
+        {
+          question:
+            "Quels sont vos outils pour la détection des menaces et les alertes de sécurité ?",
+          objective: "Vérifier la capacité de détection des menaces",
+          func: "Detect",
+        },
+        {
+          question:
+            "Comment répondez-vous aux incidents de sécurité ? Disposez-vous d'un centre de réponse (SOC) ?",
+          objective:
+            "Vérifier la capacité de réponse aux incidents et la couverture SOC/MFA",
+          func: "Respond",
+        },
+        {
+          question:
+            "Quels sont votre processus d'escalade en cas incidents de sécurité ?",
+          objective: "Vérifier la capacité de réponse aux incidents",
+          func: "Respond",
+        },
+        {
+          question:
+            "Comment communiquez-vous avec vos clients en cas d'incident ?",
+          objective: "Vérifier la communication externe",
+          func: "Respond",
+        },
+        {
+          question: "Comment gérez-vous vos sauvegardes ?",
+          objective: "Vérifier la résilience des données (sauvegardes)",
+          func: "Recover",
+        },
+        {
+          question:
+            "Quels sont vos plans de continuité et de reprise (BCP/DRP) ? Si oui, à quelle fréquence les testez-vous ?",
+          objective: "Vérifier la résilience opérationnelle",
+          func: "Recover",
+        },
+        {
+          question: "Comment la résilience est alignée avec les objectifs stratégiques ?",
+          objective: "Vérifier l'alignement stratégique de la résilience",
+          func: "Recover",
+        },
+      ];
+
+      const total = questions.length;
+      const questionIndex = document.getElementById("questionIndex");
+      const questionTotal = document.getElementById("questionTotal");
+      const questionText = document.getElementById("questionText");
+      const objectiveText = document.getElementById("objectiveText");
+      const functionTag = document.getElementById("functionTag");
+      const notesField = document.getElementById("notes");
+      const ratingField = document.getElementById("rating");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const progressValue = document.getElementById("progressValue");
+      const progressLabel = document.getElementById("progressLabel");
+      const summary = document.getElementById("summary");
+
+      questionTotal.textContent = total;
+      const answers = Array.from({ length: total }, () => ({ notes: "", rating: "" }));
+      let current = 0;
+
+      const functionColors = {
+        Govern: "#7f5dff",
+        Identify: "#00d4ff",
+        Protect: "#4ecdc4",
+        Detect: "#ff9c6b",
+        Respond: "#ffd166",
+        Recover: "#c77dff",
+      };
+
+      function updateQuestion() {
+        const item = questions[current];
+        questionIndex.textContent = current + 1;
+        questionText.textContent = item.question;
+        objectiveText.textContent = item.objective;
+        functionTag.textContent = item.func;
+        functionTag.style.background = functionColors[item.func] + "33";
+        functionTag.style.color = functionColors[item.func];
+
+        notesField.value = answers[current].notes;
+        ratingField.value = answers[current].rating;
+
+        prevBtn.disabled = current === 0;
+        nextBtn.textContent = current === total - 1 ? "Terminer" : "Question suivante ▶";
+
+        const progressPercent = ((current + 1) / total) * 100;
+        progressValue.style.width = `${progressPercent}%`;
+        progressLabel.textContent = `${Math.round(progressPercent)}% du parcours complété`;
+      }
+
+      function saveCurrentInputs() {
+        answers[current].notes = notesField.value.trim();
+        answers[current].rating = ratingField.value;
+        renderSummary();
+      }
+
+      function renderSummary() {
+        summary.innerHTML = answers
+          .map((answer, index) => {
+            const base = questions[index];
+            return `
+              <li class="summary-item">
+                <strong>${index + 1}. ${base.question}</strong>
+                <span>Fonction : ${base.func}</span><br />
+                <span>Note CMMI : ${answer.rating || "—"}</span>
+                <p style="margin-top: 0.4rem; color: var(--text); white-space: pre-wrap;">${
+                  answer.notes || "Pas de commentaire pour le moment."
+                }</p>
+              </li>
+            `;
+          })
+          .join("");
+      }
+
+      prevBtn.addEventListener("click", () => {
+        saveCurrentInputs();
+        if (current > 0) {
+          current -= 1;
+          updateQuestion();
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        saveCurrentInputs();
+        if (current < total - 1) {
+          current += 1;
+          updateQuestion();
+        } else {
+          nextBtn.textContent = "🎉 Parcours terminé";
+          nextBtn.disabled = true;
+        }
+      });
+
+      notesField.addEventListener("input", () => {
+        answers[current].notes = notesField.value;
+        renderSummary();
+      });
+
+      ratingField.addEventListener("change", () => {
+        answers[current].rating = ratingField.value;
+        renderSummary();
+      });
+
+      renderSummary();
+      updateQuestion();
+    </script>
+  </body>
+</html>
