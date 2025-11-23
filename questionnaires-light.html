@@ -77,6 +77,11 @@
         overflow: hidden;
       }
 
+      .stacked {
+        display: grid;
+        gap: 1rem;
+      }
+
       .card::before {
         content: "";
         position: absolute;
@@ -247,6 +252,36 @@
         font-size: 0.9rem;
       }
 
+      .results {
+        display: none;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        align-items: start;
+      }
+
+      .pill {
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .ai-summary h4 {
+        margin: 0 0 0.5rem;
+      }
+
+      .ai-summary ul {
+        padding-left: 1.1rem;
+        margin: 0.5rem 0 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
       @media (max-width: 720px) {
         body {
           padding: 1.5rem 1rem 3rem;
@@ -320,8 +355,23 @@
         <h3 style="margin: 1rem 0">Bloc-notes & scoring</h3>
         <ul class="summary-list" id="summary"></ul>
       </section>
+
+      <section class="card stacked" id="resultsCard">
+        <div>
+          <div class="badge">Synthèse finale</div>
+          <h3 style="margin: 1rem 0">Signaux forts et faiblesses</h3>
+          <p class="pill" id="completionStatus">Répondez aux questions pour générer la synthèse.</p>
+          <div class="ai-summary" id="aiSummary"></div>
+        </div>
+        <div>
+          <div class="badge">Radar CMMI par fonction</div>
+          <h3 style="margin: 1rem 0">Moyenne par catégorie NIST</h3>
+          <canvas id="scoreChart" height="280" role="img" aria-label="Radar des scores par fonction"></canvas>
+        </div>
+      </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const questions = [
         {
@@ -424,10 +474,15 @@
       const progressValue = document.getElementById("progressValue");
       const progressLabel = document.getElementById("progressLabel");
       const summary = document.getElementById("summary");
+      const resultsCard = document.getElementById("resultsCard");
+      const aiSummary = document.getElementById("aiSummary");
+      const completionStatus = document.getElementById("completionStatus");
+      const scoreChart = document.getElementById("scoreChart");
 
       questionTotal.textContent = total;
       const answers = Array.from({ length: total }, () => ({ notes: "", rating: "" }));
       let current = 0;
+      let chartInstance = null;
 
       const functionColors = {
         Govern: "#7f5dff",
@@ -437,6 +492,8 @@
         Respond: "#ffd166",
         Recover: "#c77dff",
       };
+
+      resultsCard.style.display = "none";
 
       function updateQuestion() {
         const item = questions[current];
@@ -462,6 +519,9 @@
         answers[current].notes = notesField.value.trim();
         answers[current].rating = ratingField.value;
         renderSummary();
+        if (nextBtn.disabled) {
+          showResults();
+        }
       }
 
       function renderSummary() {
@@ -482,6 +542,141 @@
           .join("");
       }
 
+      function computeFunctionScores() {
+        const buckets = Object.keys(functionColors).reduce((acc, key) => {
+          acc[key] = { total: 0, count: 0 };
+          return acc;
+        }, {});
+
+        answers.forEach((answer, index) => {
+          const rating = answer.rating === "" ? null : Number(answer.rating);
+          const func = questions[index].func;
+          if (rating !== null && !Number.isNaN(rating)) {
+            buckets[func].total += rating;
+            buckets[func].count += 1;
+          }
+        });
+
+        return Object.keys(buckets).map((func) => {
+          const bucket = buckets[func];
+          const avg = bucket.count ? bucket.total / bucket.count : 0;
+          return { func, avg: Number(avg.toFixed(2)) };
+        });
+      }
+
+      function renderChart() {
+        const scores = computeFunctionScores();
+        const labels = scores.map((item) => item.func);
+        const data = scores.map((item) => item.avg);
+
+        if (!chartInstance) {
+          chartInstance = new Chart(scoreChart, {
+            type: "radar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Moyenne CMMI",
+                  data,
+                  backgroundColor: "rgba(127, 93, 255, 0.2)",
+                  borderColor: "rgba(127, 93, 255, 0.8)",
+                  pointBackgroundColor: labels.map((label) => functionColors[label]),
+                  borderWidth: 2,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                r: {
+                  suggestedMin: 0,
+                  suggestedMax: 5,
+                  grid: { color: "rgba(255, 255, 255, 0.08)" },
+                  ticks: { color: "#dcd6ff" },
+                  angleLines: { color: "rgba(255, 255, 255, 0.08)" },
+                },
+              },
+              plugins: {
+                legend: { labels: { color: "#fff" } },
+              },
+            },
+          });
+        } else {
+          chartInstance.data.labels = labels;
+          chartInstance.data.datasets[0].data = data;
+          chartInstance.data.datasets[0].pointBackgroundColor = labels.map(
+            (label) => functionColors[label]
+          );
+          chartInstance.update();
+        }
+      }
+
+      function renderAiInsights() {
+        const filledRatings = answers.filter((a) => a.rating !== "");
+        const completionRatio = Math.round((filledRatings.length / total) * 100);
+        const overallScore = filledRatings.reduce((sum, a) => sum + Number(a.rating), 0);
+        const averageScore = filledRatings.length
+          ? (overallScore / filledRatings.length).toFixed(2)
+          : "0.00";
+
+        const strengths = [];
+        const gaps = [];
+        const pending = [];
+
+        answers.forEach((answer, index) => {
+          const rating = answer.rating === "" ? null : Number(answer.rating);
+          const base = questions[index];
+          if (rating === null) {
+            pending.push(base.func);
+            return;
+          }
+          if (rating >= 4) {
+            strengths.push(`${base.func} · ${base.question}`);
+          } else if (rating <= 2) {
+            const hint = answer.notes
+              ? ` (note: ${answer.notes.slice(0, 80)}${answer.notes.length > 80 ? "..." : ""})`
+              : "";
+            gaps.push(`${base.func} · ${base.question}${hint}`);
+          }
+        });
+
+        const statusText =
+          completionRatio === 100
+            ? "Synthèse générée sur l'ensemble du parcours."
+            : `Synthèse préliminaire — ${completionRatio}% des réponses saisies.`;
+        completionStatus.textContent = statusText;
+
+        const listItem = (title, items, emptyLabel) => {
+          const content = items.length
+            ? items
+                .slice(0, 3)
+                .map((item) => `<li>${item}</li>`)
+                .join("")
+            : `<li>${emptyLabel}</li>`;
+          return `<h4>${title}</h4><ul>${content}</ul>`;
+        };
+
+        aiSummary.innerHTML = `
+          <div class="pill">Score moyen global : ${averageScore} / 5</div>
+          ${listItem("Points forts", strengths, "Pas encore de forces identifiées — ajoutez des notes.")}
+          ${listItem(
+            "Zones à améliorer",
+            gaps,
+            "Aucune faiblesse détectée pour le moment (notes ≤ 2)."
+          )}
+          ${pending.length
+            ? `<p style="color: var(--muted); margin-top: 0.75rem;">Champs à compléter : ${[...new Set(
+                pending
+              )].join(", ")}</p>`
+            : ""}
+        `;
+      }
+
+      function showResults() {
+        resultsCard.style.display = "grid";
+        renderChart();
+        renderAiInsights();
+      }
+
       prevBtn.addEventListener("click", () => {
         saveCurrentInputs();
         if (current > 0) {
@@ -498,17 +693,20 @@
         } else {
           nextBtn.textContent = "🎉 Parcours terminé";
           nextBtn.disabled = true;
+          showResults();
         }
       });
 
       notesField.addEventListener("input", () => {
         answers[current].notes = notesField.value;
         renderSummary();
+        if (nextBtn.disabled) showResults();
       });
 
       ratingField.addEventListener("change", () => {
         answers[current].rating = ratingField.value;
         renderSummary();
+        if (nextBtn.disabled) showResults();
       });
 
       renderSummary();
