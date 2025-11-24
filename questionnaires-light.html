@@ -306,6 +306,17 @@
           Faites défiler les questions, capturez vos commentaires et évaluez chaque
           pratique sur l'échelle CMMI (0-5).
         </p>
+        <div class="controls" style="justify-content: center; margin-top: 1.25rem">
+          <button class="secondary" id="importBtn">📂 Importer (JSON)</button>
+          <button class="primary" id="exportBtn">💾 Exporter (JSON)</button>
+          <input
+            type="file"
+            id="importInput"
+            accept="application/json"
+            aria-label="Charger un fichier JSON d'évaluation"
+            style="display: none"
+          />
+        </div>
       </header>
 
       <section class="card question-card" aria-live="polite">
@@ -478,6 +489,9 @@
       const aiSummary = document.getElementById("aiSummary");
       const completionStatus = document.getElementById("completionStatus");
       const scoreChart = document.getElementById("scoreChart");
+      const importBtn = document.getElementById("importBtn");
+      const exportBtn = document.getElementById("exportBtn");
+      const importInput = document.getElementById("importInput");
 
       questionTotal.textContent = total;
       const answers = Array.from({ length: total }, () => ({ notes: "", rating: "" }));
@@ -676,6 +690,79 @@
         renderChart();
         renderAiInsights();
       }
+
+      function exportEvaluation() {
+        saveCurrentInputs();
+        const payload = {
+          version: "light-1",
+          exportedAt: new Date().toISOString(),
+          answers,
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `nist-light-evaluation-${new Date()
+          .toISOString()
+          .split("T")[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      function validateImportedData(data) {
+        if (!data || !Array.isArray(data.answers) || data.answers.length !== total) {
+          return false;
+        }
+        return data.answers.every((item) => {
+          const validRating = item.rating === "" || ["0", "1", "2", "3", "4", "5"].includes(item.rating);
+          const validNotes = typeof item.notes === "string";
+          return validRating && validNotes;
+        });
+      }
+
+      function importEvaluation(file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if (!validateImportedData(data)) {
+              alert("Fichier incompatible : structure ou longueur invalide.");
+              return;
+            }
+            data.answers.forEach((item, index) => {
+              answers[index].notes = item.notes.trim();
+              answers[index].rating = item.rating;
+            });
+            current = 0;
+            nextBtn.disabled = false;
+            nextBtn.textContent = "Question suivante ▶";
+            renderSummary();
+            updateQuestion();
+            if (answers.every((a) => a.rating !== "")) {
+              nextBtn.textContent = "🎉 Parcours terminé";
+              nextBtn.disabled = true;
+              showResults();
+            }
+          } catch (error) {
+            alert("Impossible de lire le fichier JSON fourni.");
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      importBtn.addEventListener("click", () => importInput.click());
+      exportBtn.addEventListener("click", exportEvaluation);
+      importInput.addEventListener("change", (event) => {
+        const [file] = event.target.files;
+        if (file) {
+          importEvaluation(file);
+          importInput.value = "";
+        }
+      });
 
       prevBtn.addEventListener("click", () => {
         saveCurrentInputs();
