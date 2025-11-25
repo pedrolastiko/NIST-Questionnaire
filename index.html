@@ -899,6 +899,80 @@
             "<strong>Detailed description:</strong> Confirms critical suppliers are evaluated before onboarding, covering security posture, continuity, and compliance. Additional guidance: check requested questionnaires, audits, or certifications and how they influence purchase decisions.<br /><br /><strong>Implementation examples:</strong> pre-signature cyber due diligence, third-party risk scoring influencing selection, and validation of remediation plans before onboarding.<br /><br /><strong>Supporting documentation examples:</strong> supplier assessment procedures, questionnaire or audit results, scoring reports, purchase decisions, and contractual remediation plans.",
         },
         {
+          id: "PR.AA-01",
+          fn: "PROTECT",
+          category: "PR.AA",
+          fr:
+            "Les identités et informations d’identification des utilisateurs, services et matériels autorisés sont-elles gérées par l’organisation ?",
+          en:
+            "Are identities and credentials for authorized users, services, and hardware managed by the organization?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les identités (humaines, services, machines) et leurs secrets/jetons sont administrés de manière centralisée et sécurisée. Informations complémentaires : chercher une source d’autorité (IdP/AD), des processus de provisioning/deprovisioning, une gestion des secrets/clefs et des contrôles de révocation.<br /><br /><strong>Exemples d’implémentation :</strong> identité centrale dans un annuaire ou un IdP cloud, coffres-forts de secrets pour les services/machines, workflows automatisés de création/suppression de comptes, mécanismes de rotation et de révocation de certificats ou jetons.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique IAM, procédures de provisioning/deprovisioning, architecture IdP/PKI ou coffre-fort de secrets, journaux d’émission et de révocation de credentials, rapports de revue de comptes.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms identities (human, service, machine) and their secrets/tokens are centrally and securely administered. Additional guidance: look for a system of record (IdP/AD), provisioning/deprovisioning processes, secret/key management, and revocation controls.<br /><br /><strong>Implementation examples:</strong> centralized identities in a directory or cloud IdP, secret vaults for services/machines, automated account creation/removal workflows, and certificate or token rotation and revocation mechanisms.<br /><br /><strong>Supporting documentation examples:</strong> IAM policy, provisioning/deprovisioning procedures, IdP/PKI or secret-vault architecture, credential issuance and revocation logs, and account review reports.",
+        },
+        {
+          id: "PR.AA-02",
+          fn: "PROTECT",
+          category: "PR.AA",
+          fr:
+            "Les identités sont-elles éprouvées (proofing) et liées à des informations d’identification en fonction du contexte et des interactions ?",
+          en:
+            "Are identities proofed and bound to credentials based on the context of interactions?",
+          detailFr:
+            "<strong>Description détaillée :</strong> S’assure que le niveau de vérification de l’identité et le type de credential (mot de passe, MFA, certificats, FIDO) sont proportionnés au risque et au contexte (sensibilité des données, action, canal). Informations complémentaires : vérifier les politiques de niveau d’assurance, les contrôles de preuve d’identité (KYC/HR) et l’alignement avec les parcours utilisateurs et API.<br /><br /><strong>Exemples d’implémentation :</strong> preuve d’identité renforcée pour les comptes à privilèges, MFA contextuel ou adaptatif, certificats mutual TLS pour services-to-services, clés FIDO pour accès critiques, exigences KYC pour partenaires externes.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politiques de niveau d’assurance d’identité, procédures de proofing (RH/KYC), matrices d’authentification contextuelle, configurations MFA ou mTLS, journaux d’activation et de vérification des credentials.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures identity proofing and credential types (password, MFA, certificates, FIDO) are commensurate with risk and context (data sensitivity, action, channel). Additional guidance: review assurance-level policies, identity proofing controls (KYC/HR), and alignment with user and API journeys.<br /><br /><strong>Implementation examples:</strong> enhanced proofing for privileged accounts, contextual or adaptive MFA, mutual TLS certificates for service-to-service access, FIDO keys for critical access, and KYC requirements for external partners.<br /><br /><strong>Supporting documentation examples:</strong> identity assurance level policies, proofing procedures (HR/KYC), contextual authentication matrices, MFA or mTLS configurations, and credential activation/verification logs.",
+        },
+        {
+          id: "PR.AA-03",
+          fn: "PROTECT",
+          category: "PR.AA",
+          fr: "Les utilisateurs, services et matériels sont-ils authentifiés ?",
+          en: "Are users, services, and hardware authenticated?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que chaque interaction avec les systèmes repose sur une authentification robuste et contrôlée, couvrant les humains, les services applicatifs et les équipements. Informations complémentaires : examiner la couverture MFA, les mécanismes d’authentification forte pour les API et l’inventaire des certificats ou clefs pour les équipements.<br /><br /><strong>Exemples d’implémentation :</strong> MFA obligatoire pour les accès sensibles, authentification forte (OAuth2/OIDC, mTLS) pour les API et services-to-services, certificats ou clés d’appareil (802.1X/NAC) pour connecter les équipements.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique d’authentification, configurations MFA et SSO, politiques d’authentification API, inventaires ou registres de certificats/clefs machines, journaux d’authentification et d’échecs.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures every interaction with systems uses strong, controlled authentication across humans, application services, and devices. Additional guidance: review MFA coverage, strong authentication for APIs, and inventories of device certificates or keys.<br /><br /><strong>Implementation examples:</strong> mandatory MFA for sensitive access, strong authentication (OAuth2/OIDC, mTLS) for APIs and service-to-service calls, and device certificates or keys (802.1X/NAC) for equipment connectivity.<br /><br /><strong>Supporting documentation examples:</strong> authentication policy, MFA and SSO configurations, API authentication policies, device certificate/key inventories, and authentication or failure logs.",
+        },
+        {
+          id: "PR.AA-04",
+          fn: "PROTECT",
+          category: "PR.AA",
+          fr: "Les assertions d’identité sont-elles protégées, transmises et vérifiées ?",
+          en: "Are identity assertions protected, conveyed, and verified?",
+          detailFr:
+            "<strong>Description détaillée :</strong> S’assure que les assertions d’identité (tokens OIDC/SAML, assertions fédérées, tickets) sont protégées en transit et au repos, signées/chiffrées, à durée de vie limitée et validées côté consommateur. Informations complémentaires : vérifier les paramètres d’audience, d’expiration, de signature, les protections anti-rejeu et l’usage de canaux sécurisés (TLS/mTLS).<br /><br /><strong>Exemples d’implémentation :</strong> tokens signés avec rotation des clefs, durée de vie courte, validation d’audience/issuer côté applications, obligations TLS/mTLS entre services, politiques de passerelle API appliquant la vérification des assertions.<br /><br /><strong>Exemples de documentations nécessaires :</strong> configurations IdP/fédération, politiques de durée de vie et de rotation des clefs de signature, règles de validation dans les reverse-proxy/API gateways, journaux de vérification d’assertions et tests anti-rejeu.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures identity assertions (OIDC/SAML tokens, federated assertions, tickets) are protected in transit and at rest, signed/encrypted, time-bound, and validated by consumers. Additional guidance: verify audience, expiration, signature parameters, anti-replay protections, and secure channels (TLS/mTLS).<br /><br /><strong>Implementation examples:</strong> signed tokens with key rotation, short lifetimes, audience/issuer validation in applications, mandatory TLS/mTLS between services, and API gateway policies enforcing assertion verification.<br /><br /><strong>Supporting documentation examples:</strong> IdP/federation configurations, token lifetime and signing-key rotation policies, validation rules in reverse proxies/API gateways, and assertion-verification logs plus anti-replay test evidence.",
+        },
+        {
+          id: "PR.AA-05",
+          fn: "PROTECT",
+          category: "PR.AA",
+          fr:
+            "Les autorisations d’accès et droits sont-ils définis dans une politique, gérés, appliqués, revus et intègrent-ils le moindre privilège et la séparation des tâches ?",
+          en:
+            "Are access permissions and entitlements defined in policy, managed, enforced, reviewed, and aligned with least privilege and separation of duties?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les droits (RBAC/ABAC) sont gouvernés par une politique, provisionnés via des workflows contrôlés, appliqués dans les systèmes, révisés périodiquement et conçus pour limiter les cumuls incompatibles. Informations complémentaires : rechercher des matrices de rôles, des règles de séparation des tâches (SoD) et des campagnes de recertification.<br /><br /><strong>Exemples d’implémentation :</strong> catalogue de rôles/attributs, moteur ABAC pour adapter les droits au contexte, règles SoD empêchant les cumuls risqués (p. ex. commande et approbation), revues trimestrielles d’accès avec retrait automatisé des droits orphelins.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de contrôle d’accès, matrices de rôles et SoD, workflows d’approbation des demandes, rapports de revues/recertifications, journaux d’application et d’orfanisation des droits.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms entitlements (RBAC/ABAC) are policy-driven, provisioned through controlled workflows, enforced in systems, periodically reviewed, and designed to avoid conflicting combinations. Additional guidance: look for role catalogs, separation-of-duties (SoD) rules, and recertification campaigns.<br /><br /><strong>Implementation examples:</strong> role/attribute catalogs, ABAC engines tailoring rights to context, SoD rules blocking risky combinations (e.g., request and approval), and quarterly access reviews with automated removal of orphaned rights.<br /><br /><strong>Supporting documentation examples:</strong> access control policy, role and SoD matrices, approval workflows, review/recertification reports, and enforcement or orphan-rights remediation logs.",
+        },
+        {
+          id: "PR.AA-06",
+          fn: "PROTECT",
+          category: "PR.AA",
+          fr:
+            "L’accès physique aux actifs est-il géré, surveillé et appliqué de manière proportionnée au risque ?",
+          en:
+            "Is physical access to assets managed, monitored, and enforced commensurate with risk?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme la maîtrise des accès physiques aux sites, salles et équipements critiques (centres de données, armoires réseau, postes sensibles) avec une surveillance adaptée au niveau de risque. Informations complémentaires : vérifier la gestion des badges/visiteurs, la journalisation des entrées/sorties, la vidéosurveillance et les contrôles périodiques.<br /><br /><strong>Exemples d’implémentation :</strong> contrôle d’accès badge ou biométrie pour zones critiques, consignation des visiteurs avec escortes, caméras et alertes d’ouverture d’armoires, revues régulières des droits physiques et tests de résilience (intrusion simulée).<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de sécurité physique, registres d’accès/badge et visiteurs, plans de vidéosurveillance et de rétention, comptes rendus d’inspection ou de tests d’intrusion physique, preuves de révocation de droits physiques.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures physical access to sites, rooms, and critical equipment (data centers, network cabinets, sensitive workstations) is controlled and monitored at a level proportionate to risk. Additional guidance: review badge/visitor management, entry/exit logging, CCTV coverage, and periodic control checks.<br /><br /><strong>Implementation examples:</strong> badge or biometric access for critical zones, escorted visitor logging, cameras and cabinet-open alerts, periodic reviews of physical entitlements, and simulated intrusion tests.<br /><br /><strong>Supporting documentation examples:</strong> physical security policy, badge/visitor and access logs, CCTV and retention plans, inspection or physical intrusion test reports, and evidence of revoking physical rights.",
+        },
+        {
           id: "PR-01",
           fn: "PROTECT",
           category: "PR.AC",
