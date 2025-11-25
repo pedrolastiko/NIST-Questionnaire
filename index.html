@@ -739,6 +739,56 @@
             "<strong>Detailed description:</strong> Ensures every lifecycle phase (planning, acquisition, operations, maintenance, retirement) embeds security and governance requirements for assets. Additional guidance: review engineering processes, onboarding, patching, secure decommissioning, and archival criteria.<br /><br /><strong>Implementation examples:</strong> security checklists within procurement workflows, DevSecOps pipelines enforcing gates pre-production, and sanitized disposal procedures when services are retired.<br /><br /><strong>Supporting documentation examples:</strong> asset lifecycle policies, deployment/decommissioning procedures, patching and maintenance evidence, data destruction reports, and DevSecOps control matrices.",
         },
         {
+          id: "ID.IM-01",
+          fn: "IDENTIFY",
+          category: "ID.IM",
+          fr: "Les améliorations sont-elles identifiées à partir des évaluations ?",
+          en: "Are improvements identified from evaluations?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les conclusions des évaluations (internes ou externes) alimentent un plan d’amélioration documenté et priorisé. Informations complémentaires : rechercher un processus formel pour collecter les constats, qualifier les causes racines et suivre les actions issues des évaluations.<br /><br /><strong>Exemples d’implémentation :</strong> intégration systématique des constats d’audit ou d’autoévaluation dans un backlog de remédiation, revue périodique des progrès par les responsables, traçabilité entre constat, cause et action.<br /><br /><strong>Exemples de documentations nécessaires :</strong> rapports d’audit/évaluation, matrices de causes racines, plans d’actions ou backlogs avec priorisation et échéances, comptes rendus de suivi.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms findings from internal or external assessments feed a documented, prioritized improvement plan. Additional guidance: look for a formal process to capture findings, analyze root causes, and track actions derived from assessments.<br /><br /><strong>Implementation examples:</strong> systematically adding audit or self-assessment findings to a remediation backlog, periodic progress reviews by accountable owners, and traceability linking finding, root cause, and action.<br /><br /><strong>Supporting documentation examples:</strong> audit/assessment reports, root-cause matrices, action plans or backlogs with prioritization and due dates, and follow-up meeting minutes.",
+        },
+        {
+          id: "ID.IM-02",
+          fn: "IDENTIFY",
+          category: "ID.IM",
+          fr:
+            "Les améliorations sont-elles identifiées à partir des tests et exercices de sécurité, y compris ceux menés en coordination avec les fournisseurs et tiers concernés ?",
+          en:
+            "Are improvements identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties?",
+          detailFr:
+            "<strong>Description détaillée :</strong> S’assure que les tests techniques (pentests, scans) et les exercices (table-top, simulations de crise) produisent des plans d’amélioration, y compris pour les dépendances critiques fournisseurs/partenaires. Informations complémentaires : vérifier la présence de REX post-exercice, la classification des lacunes et l’attribution des actions aux parties prenantes internes et externes.<br /><br /><strong>Exemples d’implémentation :</strong> inclusion des retours d’exercices avec fournisseurs dans les plans de remédiation, mise à jour des playbooks SOC/CSIRT après un test, définition de SLA de correction partagés avec les tiers concernés.<br /><br /><strong>Exemples de documentations nécessaires :</strong> rapports de tests et d’exercices (internes et avec fournisseurs), comptes rendus de REX, listes des écarts identifiés, plans d’action avec propriétaires internes/externes, mises à jour de playbooks ou de procédures.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures technical tests (pentests, scans) and exercises (tabletops, crisis simulations) generate improvement plans, including for critical supplier/partner dependencies. Additional guidance: check for post-exercise lessons-learned, gap classification, and action ownership across internal and external stakeholders.<br /><br /><strong>Implementation examples:</strong> incorporating exercise feedback with suppliers into remediation plans, updating SOC/CSIRT playbooks after testing, and defining shared remediation SLAs with involved third parties.<br /><br /><strong>Supporting documentation examples:</strong> test and exercise reports (internal and supplier-related), lessons-learned minutes, gap lists, action plans with internal/external owners, and updated playbooks or procedures.",
+        },
+        {
+          id: "ID.IM-03",
+          fn: "IDENTIFY",
+          category: "ID.IM",
+          fr:
+            "Les améliorations sont-elles identifiées à partir de l’exécution des processus, procédures et activités opérationnelles ?",
+          en:
+            "Are improvements identified from execution of operational processes, procedures, and activities?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que l’exploitation quotidienne (opérations, support, surveillance) produit des retours structurés pour améliorer les processus et contrôles. Informations complémentaires : rechercher un mécanisme de collecte des incidents mineurs, dysfonctionnements ou écarts opérationnels et leur transformation en actions d’amélioration continue.<br /><br /><strong>Exemples d’implémentation :</strong> revue régulière des tickets récurrents pour simplifier les procédures, indicateurs de performance/qualité utilisés pour prioriser des optimisations, boucle d’amélioration alimentée par les rapports d’incidents non majeurs.<br /><br /><strong>Exemples de documentations nécessaires :</strong> rapports d’exploitation ou de disponibilité, tableaux de bord d’incidents/problèmes, revues de performance des processus, registres d’amélioration continue et décisions associées.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures day-to-day operations (run, support, monitoring) generate structured feedback to improve processes and controls. Additional guidance: look for mechanisms that collect minor incidents, operational deviations, or recurring issues and convert them into continuous-improvement actions.<br /><br /><strong>Implementation examples:</strong> regular review of recurring tickets to streamline procedures, using performance/quality indicators to prioritize optimizations, and feeding continuous-improvement loops with reports from non-major incidents.<br /><br /><strong>Supporting documentation examples:</strong> operations or availability reports, incident/problem dashboards, process performance reviews, continuous-improvement logs, and related decisions.",
+        },
+        {
+          id: "ID.IM-04",
+          fn: "IDENTIFY",
+          category: "ID.IM",
+          fr:
+            "Des plans de réponse aux incidents et d’autres plans cybers qui affectent les opérations sont-ils établis, communiqués, maintenus et améliorés ?",
+          en:
+            "Are incident response and other cyber plans that affect operations established, communicated, maintained, and improved?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie l’existence, la diffusion et la mise à jour continue des plans cyber impactant les opérations (réponse aux incidents, gestion de crise, continuité). Informations complémentaires : s’assurer que les plans sont testés, qu’ils intègrent les retours d’expérience et qu’ils sont accessibles aux parties prenantes pertinentes.<br /><br /><strong>Exemples d’implémentation :</strong> calendrier de tests et d’exercices des plans, communication des rôles et contacts critiques, revue annuelle intégrant les leçons apprises et les changements organisationnels ou technologiques.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de réponse aux incidents et de crise, registres de diffusion ou d’accessibilité, rapports d’exercices et de tests, historiques de mises à jour et décisions d’amélioration.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms cyber plans affecting operations (incident response, crisis management, continuity) are established, communicated, continuously maintained, and improved. Additional guidance: verify plans are tested, incorporate lessons learned, and remain accessible to relevant stakeholders.<br /><br /><strong>Implementation examples:</strong> scheduled testing and exercise calendar for plans, communication of roles and critical contacts, and annual reviews incorporating lessons learned plus organizational/technology changes.<br /><br /><strong>Supporting documentation examples:</strong> incident response and crisis plans, distribution or accessibility records, exercise and test reports, update history, and improvement decisions.",
+        },
+        {
           id: "ID.RA-01",
           fn: "IDENTIFY",
           category: "ID.RA",
