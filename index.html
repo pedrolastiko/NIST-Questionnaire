@@ -739,15 +739,114 @@
             "<strong>Detailed description:</strong> Ensures every lifecycle phase (planning, acquisition, operations, maintenance, retirement) embeds security and governance requirements for assets. Additional guidance: review engineering processes, onboarding, patching, secure decommissioning, and archival criteria.<br /><br /><strong>Implementation examples:</strong> security checklists within procurement workflows, DevSecOps pipelines enforcing gates pre-production, and sanitized disposal procedures when services are retired.<br /><br /><strong>Supporting documentation examples:</strong> asset lifecycle policies, deployment/decommissioning procedures, patching and maintenance evidence, data destruction reports, and DevSecOps control matrices.",
         },
         {
-          id: "ID-02",
+          id: "ID.RA-01",
           fn: "IDENTIFY",
           category: "ID.RA",
-          fr: "Des évaluations de risques cyber sont-elles réalisées régulièrement ?",
-          en: "Are cyber risk assessments performed regularly?",
+          fr: "Les vulnérabilités des actifs sont-elles identifiées, validées et enregistrées ?",
+          en: "Are vulnerabilities in assets identified, validated, and recorded?",
           detailFr:
-            "<strong>Description détaillée :</strong> Il s’agit de vérifier que des analyses de risques périodiques évaluent les menaces, vulnérabilités et impacts, et qu’elles débouchent sur des plans d’actions. Informations complémentaires : rechercher un calendrier d’évaluations, des rapports récents et un suivi des plans de traitement associés.<br /><br /><strong>Exemples d’implémentation :</strong> campagnes annuelles d’évaluation des risques, ateliers interfonctionnels pour qualifier les scénarios, suivi des plans de traitement en comité de risques.<br /><br /><strong>Exemples de documentations nécessaires :</strong> rapports d’évaluation des risques, registre des scénarios et des plans d’action, planning des évaluations, comptes rendus de comités de risques, indicateurs de suivi des plans de traitement.",
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie l’existence d’un processus documenté pour détecter, valider et consigner les vulnérabilités (techniques et métier) affectant les actifs critiques. Informations complémentaires : rechercher des scans réguliers, une qualification des faux positifs et un registre des vulnérabilités avec responsables et échéances.<br /><br /><strong>Exemples d’implémentation :</strong> scans automatisés corrélés avec une CMDB, validation par les équipes SOC/ingénierie avant ouverture de tickets, priorisation basée sur la sévérité et la criticité des actifs.<br /><br /><strong>Exemples de documentations nécessaires :</strong> rapports de scans, procédures de tri et de validation, registre des vulnérabilités, tickets de remédiation avec dates cibles et responsables.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms that periodic risk assessments evaluate threats, vulnerabilities, and impacts, leading to actionable mitigation or treatment plans. Additional guidance: look for an assessment schedule, recent reports, and tracking of associated treatment plans.<br /><br /><strong>Implementation examples:</strong> annual risk assessment campaigns, cross-functional workshops to qualify scenarios, and treatment plan tracking within risk committees.<br /><br /><strong>Supporting documentation examples:</strong> risk assessment reports, scenario and action plan register, assessment calendar, risk committee minutes, and treatment plan performance indicators.",
+            "<strong>Detailed description:</strong> Validates that a documented process exists to detect, validate, and log vulnerabilities (technical and business) on critical assets. Additional guidance: check for regular scans, false-positive qualification, and a vulnerability register with owners and due dates.<br /><br /><strong>Implementation examples:</strong> automated scans correlated with the CMDB, SOC/engineering validation before ticket creation, and prioritization based on severity and asset criticality.<br /><br /><strong>Supporting documentation examples:</strong> scan reports, triage and validation procedures, vulnerability registers, and remediation tickets with target dates and owners.",
+        },
+        {
+          id: "ID.RA-02",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Le renseignement sur les cybermenaces est-il enrichi par des forums et sources de partage d’information ?",
+          en: "Is cyber threat intelligence informed from information sharing forums and sources?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que l’organisation consomme et intègre des flux CTI (ISAC, CERT, sectoriels) pour alimenter les analyses de risques et la détection. Informations complémentaires : vérifier l’abonnement à des sources pertinentes, les règles de diffusion interne et l’intégration dans les playbooks SOC.<br /><br /><strong>Exemples d’implémentation :</strong> abonnements à des flux STIX/TAXII, participation à un ISAC sectoriel, synthèses CTI partagées aux équipes SOC/risque, enrichissement des règles de détection avec des IoC issus des flux.<br /><br /><strong>Exemples de documentations nécessaires :</strong> contrats ou adhésions CTI, procédures de gestion des renseignements, rapports de diffusion interne, tickets ou règles de détection enrichies par des IoC.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures the organization consumes and integrates CTI feeds (ISAC, CERT, sector sources) to inform risk analysis and detection. Additional guidance: confirm subscriptions to relevant sources, internal dissemination rules, and SOC playbook integration.<br /><br /><strong>Implementation examples:</strong> STIX/TAXII feed subscriptions, participation in a sector ISAC, CTI briefs shared with SOC/risk teams, and detection rules enriched with feed IoCs.<br /><br /><strong>Supporting documentation examples:</strong> CTI contracts or memberships, intelligence handling procedures, internal CTI reports, and tickets or rules showing IoC-based enrichment.",
+        },
+        {
+          id: "ID.RA-03",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Les menaces internes et externes pour l’organisation sont-elles identifiées et enregistrées ?",
+          en: "Are internal and external threats to the organization identified and recorded?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie la tenue d’un registre des menaces couvrant les acteurs internes, externes et tiers, avec des scénarios et motivations associés. Informations complémentaires : examiner les modèles de menace, les analyses d’environnement et les mises à jour périodiques.<br /><br /><strong>Exemples d’implémentation :</strong> cartographie des menaces internes (fraude, sabotage) et externes (APT, ransomware, hacktivisme), revue trimestrielle des scénarios par l’équipe risque, alignement des plans de contrôle sur ces scénarios.<br /><br /><strong>Exemples de documentations nécessaires :</strong> registre des menaces, modèles ou dossiers de menace, comptes rendus de revues périodiques, liens entre scénarios de menace et contrôles.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms a threat register exists covering internal, external, and third-party actors with associated scenarios and motivations. Additional guidance: review threat models, environmental analyses, and periodic updates.<br /><br /><strong>Implementation examples:</strong> mapping internal threats (fraud, sabotage) and external ones (APT, ransomware, hacktivism), quarterly scenario reviews by risk teams, and control plans aligned to these scenarios.<br /><br /><strong>Supporting documentation examples:</strong> threat registers, threat models or dossiers, minutes from periodic reviews, and mappings from threat scenarios to controls.",
+        },
+        {
+          id: "ID.RA-04",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Les impacts potentiels et les probabilités que des menaces exploitent les vulnérabilités sont-ils identifiés et enregistrés ?",
+          en: "Are potential impacts and likelihoods of threats exploiting vulnerabilities identified and recorded?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Ce point confirme l’évaluation structurée de l’impact et de la vraisemblance des scénarios d’exploitation des vulnérabilités. Informations complémentaires : vérifier les matrices de cotation, les hypothèses de vraisemblance et les liens avec les niveaux de criticité des actifs.<br /><br /><strong>Exemples d’implémentation :</strong> utilisation d’une grille d’impact/vraisemblance normalisée, ateliers de scoring multi-équipes, révision périodique des hypothèses pour refléter l’évolution de la menace.<br /><br /><strong>Exemples de documentations nécessaires :</strong> matrices de scoring, rapports de scoring par scénario, hypothèses et sources utilisées, décisions de recalibrage ou de révision des scores.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms structured assessment of impact and likelihood for scenarios where threats exploit vulnerabilities. Additional guidance: check scoring matrices, likelihood assumptions, and links to asset criticality tiers.<br /><br /><strong>Implementation examples:</strong> standardized impact/likelihood grids, multi-team scoring workshops, and periodic review of assumptions to reflect evolving threats.<br /><br /><strong>Supporting documentation examples:</strong> scoring matrices, scenario scoring reports, documented assumptions and sources, and decisions to recalibrate or revise scores.",
+        },
+        {
+          id: "ID.RA-05",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Les menaces, vulnérabilités, probabilités et impacts sont-ils utilisés pour comprendre le risque inhérent et prioriser la réponse ?",
+          en: "Are threats, vulnerabilities, likelihoods, and impacts used to understand inherent risk and inform risk response prioritization?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les éléments de risque (menaces, vulnérabilités, impacts, vraisemblance) sont combinés pour déterminer le risque inhérent et orienter les priorités de traitement. Informations complémentaires : rechercher des rapports consolidés, une hiérarchisation des scénarios et la traçabilité vers les plans d’actions.<br /><br /><strong>Exemples d’implémentation :</strong> tableaux de bord de risques avec notation inhérente, critères de priorisation reliés aux objectifs métier, arbitrages documentés pour sélectionner les scénarios à traiter en premier.<br /><br /><strong>Exemples de documentations nécessaires :</strong> registres de risques avec scores inhérents, méthodologie de priorisation, comptes rendus de comités de priorisation, plans de traitement liés aux scénarios critiques.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures risk elements (threats, vulnerabilities, impacts, likelihood) are combined to compute inherent risk and drive treatment priorities. Additional guidance: look for consolidated reporting, scenario ranking, and traceability into action plans.<br /><br /><strong>Implementation examples:</strong> risk dashboards with inherent scoring, prioritization criteria tied to business objectives, and documented trade-offs selecting scenarios to address first.<br /><br /><strong>Supporting documentation examples:</strong> risk registers with inherent scores, prioritization methodology, prioritization committee minutes, and treatment plans linked to critical scenarios.",
+        },
+        {
+          id: "ID.RA-06",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Les réponses aux risques sont-elles choisies, hiérarchisées, planifiées, suivies et communiquées ?",
+          en: "Are risk responses chosen, prioritized, planned, tracked, and communicated?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme l’existence d’un cycle de traitement des risques allant du choix des options (accepter, atténuer, transférer, éviter) jusqu’au suivi des plans et à la communication aux parties prenantes. Informations complémentaires : vérifier les matrices de décision, les plans de traitement avec jalons et les rapports de suivi.<br /><br /><strong>Exemples d’implémentation :</strong> fiches de décision par scénario, roadmaps de remédiation priorisées, suivi mensuel des jalons et communication aux sponsors métier.<br /><br /><strong>Exemples de documentations nécessaires :</strong> registres de décisions de traitement, plans d’action détaillés, indicateurs d’avancement, comptes rendus de communication ou de comités de pilotage.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms a full risk-treatment cycle from selecting options (accept, mitigate, transfer, avoid) to planning, tracking, and communicating progress to stakeholders. Additional guidance: review decision matrices, treatment plans with milestones, and follow-up reports.<br /><br /><strong>Implementation examples:</strong> decision sheets per scenario, prioritized remediation roadmaps, monthly milestone tracking, and communications to business sponsors.<br /><br /><strong>Supporting documentation examples:</strong> treatment decision logs, detailed action plans, progress indicators, and communication or steering committee minutes.",
+        },
+        {
+          id: "ID.RA-07",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Les changements et dérogations sont-ils gérés, évalués pour leur impact sur le risque, enregistrés et suivis ?",
+          en: "Are changes and exceptions managed, assessed for risk impact, recorded, and tracked?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que tout changement ou dérogation aux contrôles est évalué pour son impact sur le risque, documenté et suivi jusqu’à sa clôture. Informations complémentaires : rechercher des procédures d’exception, l’évaluation des risques associée et un registre des dérogations avec dates de revue.<br /><br /><strong>Exemples d’implémentation :</strong> processus formalisé de gestion des exceptions de sécurité, revues de risque obligatoires avant approbation, suivi des dérogations et dates de fin prévues.<br /><br /><strong>Exemples de documentations nécessaires :</strong> formulaires d’exception, analyses de risque correspondantes, registres des dérogations, décisions d’approbation et preuves de clôture ou de renouvellement.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures any change or control exception is risk-assessed, documented, and tracked to closure. Additional guidance: look for exception procedures, associated risk evaluations, and an exception register with review dates.<br /><br /><strong>Implementation examples:</strong> formal security exception process, mandatory risk reviews before approval, and tracking of exceptions with planned end dates.<br /><br /><strong>Supporting documentation examples:</strong> exception request forms, corresponding risk analyses, exception registers, approval decisions, and closure or renewal evidence.",
+        },
+        {
+          id: "ID.RA-08",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Des processus de réception, d’analyse et de réponse aux divulgations de vulnérabilités sont-ils mis en œuvre ?",
+          en: "Are processes for receiving, analyzing, and responding to vulnerability disclosures implemented?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme la présence d’un dispositif de divulgation responsable (VDP) ou de bug bounty permettant de recevoir, qualifier et traiter les vulnérabilités signalées par des tiers. Informations complémentaires : vérifier les canaux de soumission, les engagements de réponse et les procédures de remédiation.<br /><br /><strong>Exemples d’implémentation :</strong> publication d’une politique VDP, boîte de réception dédiée ou plateforme tierce, SLA de réponse aux chercheurs, intégration des tickets dans la chaîne de remédiation.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique VDP, instructions de soumission, rapports de vulnérabilités reçues, métriques de temps de réponse et de correction, preuves de communication avec les chercheurs.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms a responsible disclosure (VDP) or bug bounty mechanism exists to receive, triage, and remediate externally reported vulnerabilities. Additional guidance: check submission channels, response commitments, and remediation procedures.<br /><br /><strong>Implementation examples:</strong> published VDP policy, dedicated inbox or third-party platform, response SLAs for researchers, and ticket integration into remediation workflows.<br /><br /><strong>Supporting documentation examples:</strong> VDP policy, submission instructions, received vulnerability reports, response and fix time metrics, and evidence of researcher communications.",
+        },
+        {
+          id: "ID.RA-09",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "L’authenticité et l’intégrité du matériel et des logiciels critiques pour la mission sont-elles évaluées avant acquisition et utilisation ?",
+          en: "Are the authenticity and integrity of mission-critical hardware and software assessed prior to acquisition and use?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que des contrôles d’authenticité et d’intégrité (provenance, signature, chaîne d’approvisionnement) sont appliqués avant l’achat ou le déploiement de composants critiques. Informations complémentaires : examiner les exigences fournisseurs, les tests d’intégrité et les critères d’acceptation.<br /><br /><strong>Exemples d’implémentation :</strong> vérification des signatures et checksums des logiciels, contrôles de provenance des équipements, exigences contractuelles sur l’intégrité de la supply chain, tests d’acceptation sécurisés avant mise en service.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures d’acquisition sécurisée, rapports de vérification d’intégrité, clauses contractuelles supply chain, procès-verbaux de tests d’acceptation.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures authenticity and integrity checks (provenance, signatures, supply-chain validation) are applied before purchasing or deploying mission-critical components. Additional guidance: review supplier requirements, integrity testing, and acceptance criteria.<br /><br /><strong>Implementation examples:</strong> signature and checksum verification of software, provenance checks for equipment, contractual supply-chain integrity clauses, and secure acceptance testing before production use.<br /><br /><strong>Supporting documentation examples:</strong> secure procurement procedures, integrity verification reports, supply-chain contractual clauses, and acceptance test records.",
+        },
+        {
+          id: "ID.RA-12",
+          fn: "IDENTIFY",
+          category: "ID.RA",
+          fr: "Les fournisseurs critiques sont-ils évalués avant acquisition ?",
+          en: "Are critical suppliers assessed prior to acquisition?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme qu’une évaluation des fournisseurs critiques est réalisée avant leur intégration, couvrant la posture de sécurité, la continuité et la conformité. Informations complémentaires : vérifier les questionnaires, audits ou certifications demandés et leur prise en compte dans la décision d’achat.<br /><br /><strong>Exemples d’implémentation :</strong> processus de due diligence cyber préalable à la signature, scoring de risque tiers influençant la sélection, validation des plans de remédiation avant onboarding.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures d’évaluation fournisseurs, résultats de questionnaires ou audits, rapports de scoring, décisions d’achat et plans de remédiation contractualisés.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms critical suppliers are evaluated before onboarding, covering security posture, continuity, and compliance. Additional guidance: check requested questionnaires, audits, or certifications and how they influence purchase decisions.<br /><br /><strong>Implementation examples:</strong> pre-signature cyber due diligence, third-party risk scoring influencing selection, and validation of remediation plans before onboarding.<br /><br /><strong>Supporting documentation examples:</strong> supplier assessment procedures, questionnaire or audit results, scoring reports, purchase decisions, and contractual remediation plans.",
         },
         {
           id: "PR-01",
