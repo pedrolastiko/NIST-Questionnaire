@@ -999,6 +999,84 @@
             "<strong>Detailed description:</strong> Ensures sensitive technical or business roles (SOC, IAM, DevSecOps, admins, critical procurement, legal) receive training tailored to their missions and responsibilities. Additional guidance: check role-based paths, regular content updates, skills validation, and alignment with regulatory or contractual requirements.<br /><br /><strong>Implementation examples:</strong> advanced courses for SOC analysts and administrators, DevSecOps workshops for product teams, procurement sessions on cyber clauses, and sector-specific training (e.g., health, finance).<br /><br /><strong>Supporting documentation examples:</strong> role-based training catalogs, competency development plans, obtained certificates or attestations, attendance records, and assessments or quizzes.",
         },
         {
+          id: "PR.DS-01",
+          fn: "PROTECT",
+          category: "PR.DS",
+          fr:
+            "La confidentialité, l’intégrité et la disponibilité des données au repos sont-elles protégées ?",
+          en:
+            "Are the confidentiality, integrity, and availability of data at rest protected?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les données stockées sur les serveurs, postes, terminaux ou supports amovibles bénéficient de protections proportionnées (chiffrement, cloisonnement, contrôle d’accès, durabilité). Informations complémentaires : examiner les politiques de chiffrement, la gestion des clés, la segmentation des environnements et la protection des supports sensibles.<br /><br /><strong>Exemples d’implémentation :</strong> chiffrement disque ou volume (FDE), coffres-forts pour données sensibles, segmentation réseau pour les dépôts critiques, immobilisation ou effacement sécurisé des supports amovibles.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de protection des données au repos, inventaire des dépôts de données, procédures de gestion et rotation des clés, journaux de chiffrement, preuves d’effacement ou de destruction sécurisée.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms stored data on servers, endpoints, and removable media receive proportional protections (encryption, segmentation, access control, durability). Additional guidance: review encryption policies, key management, environment separation, and safeguards for sensitive media.<br /><br /><strong>Implementation examples:</strong> full-disk or volume encryption, vaulting of sensitive datasets, network segmentation around critical repositories, and blocking or securely wiping removable media.<br /><br /><strong>Supporting documentation examples:</strong> data-at-rest protection policy, inventory of data repositories, key management and rotation procedures, encryption logs, and evidence of secure wiping or destruction.",
+        },
+        {
+          id: "PR.DS-02",
+          fn: "PROTECT",
+          category: "PR.DS",
+          fr:
+            "La confidentialité, l’intégrité et la disponibilité des données en transit sont-elles protégées ?",
+          en:
+            "Are the confidentiality, integrity, and availability of data in transit protected?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que les flux de données sont protégés contre l’interception, l’altération et les interruptions (chiffrement, authentification des extrémités, redondance réseau). Informations complémentaires : vérifier l’utilisation de protocoles sécurisés, la gestion des certificats et la résilience des chemins critiques.<br /><br /><strong>Exemples d’implémentation :</strong> TLS/mTLS pour les API et applications, tunnels VPN pour l’accès distant, signatures ou MAC pour l’intégrité, chemins réseau redondants ou SD-WAN pour les services critiques.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de sécurité des communications, inventaire des flux et protocoles, procédures de gestion des certificats, rapports de tests de configuration TLS, plans de continuité réseau.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures data flows are protected from interception, tampering, and interruption (encryption, endpoint authentication, network resilience). Additional guidance: check secure protocol usage, certificate lifecycle management, and redundancy for critical paths.<br /><br /><strong>Implementation examples:</strong> TLS/mTLS for APIs and applications, VPN tunnels for remote access, message authentication codes or signatures for integrity, and redundant or SD-WAN paths for critical services.<br /><br /><strong>Supporting documentation examples:</strong> communication security policy, inventory of flows and protocols, certificate management procedures, TLS configuration test reports, and network continuity plans.",
+        },
+        {
+          id: "PR.DS-03",
+          fn: "PROTECT",
+          category: "PR.DS",
+          fr:
+            "La confidentialité, l’intégrité et la disponibilité des données en cours d’utilisation sont-elles protégées ?",
+          en:
+            "Are the confidentiality, integrity, and availability of data in use protected?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les données manipulées par les applications et utilisateurs sont protégées contre les fuites, modifications non autorisées et interruptions pendant le traitement. Informations complémentaires : évaluer les contrôles d’authentification forte, la gestion des sessions, l’obfuscation ou le masquage, et les contrôles DLP ou anti-exfiltration sur postes et environnements de travail.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms data handled by applications and users are guarded against leakage, unauthorized changes, and disruption while being processed. Additional guidance: review strong authentication, session management, masking or obfuscation, and DLP/anti-exfiltration controls on endpoints and workspaces.",
+        },
+        {
+          id: "PR.DS-04",
+          fn: "PROTECT",
+          category: "PR.DS",
+          fr:
+            "La confidentialité, l’intégrité et la disponibilité des données partagées ou distribuées sont-elles protégées pour les destinataires autorisés ?",
+          en:
+            "Are the confidentiality, integrity, and availability of distributed or shared data protected for authorized recipients?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que les données communiquées en interne ou vers des tiers ne sont accessibles qu’aux destinataires autorisés et restent fiables et disponibles. Informations complémentaires : vérifier l’usage de classifications, de contrôles d’accès basés sur le besoin d’en connaître, de protections contre la retransmission non autorisée et de clauses contractuelles de protection des données lors du partage avec des fournisseurs.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures data shared internally or with third parties is limited to authorized recipients while remaining trustworthy and available. Additional guidance: check data classification, need-to-know access controls, protections against unauthorized retransmission, and contractual data protection clauses when sharing with suppliers.",
+        },
+        {
+          id: "PR.DS-05",
+          fn: "PROTECT",
+          category: "PR.DS",
+          fr:
+            "La disponibilité des données est-elle maintenue et les données sont-elles conservées aussi longtemps que nécessaire et pertinent ?",
+          en:
+            "Is data availability maintained and data retained for only as long as needed and relevant?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les données critiques restent disponibles via des objectifs de RPO/RTO appropriés et que la conservation respecte le principe de minimisation (durées légales ou métiers clairement définies). Informations complémentaires : examiner les politiques de rétention, les plans de continuité applicatifs et les contrôles de purge ou d’archivage.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms critical data remain available through suitable RPO/RTO targets and that retention follows minimization principles (clear legal or business durations). Additional guidance: review retention policies, application continuity plans, and purge or archiving controls.",
+        },
+        {
+          id: "PR.DS-06",
+          fn: "PROTECT",
+          category: "PR.DS",
+          fr:
+            "Les sauvegardes des données sont-elles créées, protégées, maintenues et testées ?",
+          en:
+            "Are backups of data created, protected, maintained, and tested?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme l’existence de sauvegardes régulières, protégées contre les altérations ou suppressions (isolation, immutabilité, chiffrement) et testées pour restaurer dans les délais requis. Informations complémentaires : vérifier la couverture des systèmes critiques, la rotation et la rétention, ainsi que des exercices de restauration documentés.<br /><br /><strong>Exemples d’implémentation :</strong> sauvegardes immuables hors ligne ou cloud, séparation des comptes et MFA pour l’administration de la sauvegarde, tests de restauration planifiés incluant des scénarios ransomware.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de sauvegarde et rétention, calendrier des sauvegardes, rapports de succès/échec, preuves d’isolement ou d’immutabilité, rapports de tests de restauration.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms backups are taken regularly, safeguarded from tampering or deletion (isolation, immutability, encryption), and tested to meet required recovery timelines. Additional guidance: check coverage of critical systems, rotation and retention, and documented restore exercises.<br /><br /><strong>Implementation examples:</strong> offline or cloud immutable backups, split administration with MFA for backup systems, scheduled restore tests including ransomware scenarios.<br /><br /><strong>Supporting documentation examples:</strong> backup and retention policy, backup schedules, success/failure reports, evidence of isolation or immutability, and restore test reports.",
+        },
+        {
           id: "PR-01",
           fn: "PROTECT",
           category: "PR.AC",
