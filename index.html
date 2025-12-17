@@ -243,21 +243,10 @@
         "ID.RM": ["CHIEF_RISK_OFFICER", "RISK_MANAGER", "CEO"],
         "ID.SC": ["VENDOR_MANAGER", "LEGAL_COUNSEL", "CYBERSECURITY_ANALYST"],
         "PR.AA": ["IAM_MANAGER", "IAM_ANALYST", "SECURITY_ARCHITECT"],
-        "PR.AT": [
-          "HR_MANAGER",
-          "LEARNING_DEVELOPMENT",
-          "COMMUNICATIONS_MANAGER",
-        ],
         "PR.DS": [
           "DATA_PROTECTION_OFFICER",
           "DATABASE_ADMINISTRATOR",
           "SECURITY_ENGINEER",
-        ],
-        "PR.MA": [
-          "SYSTEM_ADMINISTRATOR",
-          "NETWORK_ADMINISTRATOR",
-          "CLOUD_ENGINEER",
-          "DEVSECOPS_ENGINEER",
         ],
         "PR.PS": [
           "SECURITY_ARCHITECT",
@@ -968,32 +957,6 @@
             "<strong>Detailed description:</strong> Ensures physical access to sites, rooms, and critical equipment (data centers, network cabinets, sensitive workstations) is controlled and monitored at a level proportionate to risk. Additional guidance: review badge/visitor management, entry/exit logging, CCTV coverage, and periodic control checks.<br /><br /><strong>Implementation examples:</strong> badge or biometric access for critical zones, escorted visitor logging, cameras and cabinet-open alerts, periodic reviews of physical entitlements, and simulated intrusion tests.<br /><br /><strong>Supporting documentation examples:</strong> physical security policy, badge/visitor and access logs, CCTV and retention plans, inspection or physical intrusion test reports, and evidence of revoking physical rights.",
         },
         {
-          id: "PR.AT-01",
-          fn: "PROTECT",
-          category: "PR.AT",
-          fr:
-            "Les collaborateurs reçoivent-ils une sensibilisation et une formation pour accomplir leurs tâches générales en intégrant les risques cyber ?",
-          en:
-            "Are personnel provided with awareness and training so they can perform general tasks with cybersecurity risks in mind?",
-          detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que tous les collaborateurs suivent régulièrement des modules de sensibilisation couvrant les risques clés (phishing, mots de passe, navigation, données sensibles) et les comportements attendus. Informations complémentaires : rechercher un programme annuel, des rappels fréquents, des indicateurs de participation et des scénarios contextualisés pour l’organisation.<br /><br /><strong>Exemples d’implémentation :</strong> parcours e-learning annuels obligatoires, micro-modules mensuels sur les campagnes de phishing récentes, affiches ou communications internes, simulations de phishing avec accompagnement pédagogique.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plan de formation annuel, contenus ou supports de sensibilisation, taux de complétion et de réussite, rapports de simulations de phishing, communications internes ou attestations de suivi.",
-          detailEn:
-            "<strong>Detailed description:</strong> Confirms all personnel regularly complete awareness modules covering key risks (phishing, passwords, browsing, sensitive data) and expected behaviors. Additional guidance: look for an annual program, frequent reminders, participation metrics, and scenarios tailored to the organization.<br /><br /><strong>Implementation examples:</strong> mandatory annual e-learning tracks, monthly micro-trainings on recent phishing themes, internal posters or comms, and phishing simulations with coaching.<br /><br /><strong>Supporting documentation examples:</strong> annual training plan, awareness content or materials, completion and pass rates, phishing simulation reports, internal communications, or attendance attestations.",
-        },
-        {
-          id: "PR.AT-02",
-          fn: "PROTECT",
-          category: "PR.AT",
-          fr:
-            "Les personnes occupant des rôles spécialisés reçoivent-elles une sensibilisation et une formation pour accomplir leurs tâches liées au cyberrisque ?",
-          en:
-            "Are individuals in specialized roles provided with awareness and training to perform cybersecurity-relevant tasks?",
-          detailFr:
-            "<strong>Description détaillée :</strong> S’assure que les rôles techniques ou métiers sensibles (SOC, IAM, DevSecOps, administrateurs, acheteurs critiques, juridique) reçoivent des formations adaptées à leurs missions et responsabilités. Informations complémentaires : vérifier des parcours par rôle, la mise à jour régulière des contenus, la validation des compétences et la prise en compte des exigences réglementaires ou contractuelles.<br /><br /><strong>Exemples d’implémentation :</strong> formations avancées pour analystes SOC et administrateurs, ateliers DevSecOps pour équipes produit, sessions dédiées aux acheteurs sur les clauses cyber, formations spécifiques aux exigences sectorielles (ex. santé, finance).<br /><br /><strong>Exemples de documentations nécessaires :</strong> catalogues de formation par rôle, plans de développement des compétences, attestations ou certifications obtenues, relevés de participation, évaluations ou quiz de validation.",
-          detailEn:
-            "<strong>Detailed description:</strong> Ensures sensitive technical or business roles (SOC, IAM, DevSecOps, admins, critical procurement, legal) receive training tailored to their missions and responsibilities. Additional guidance: check role-based paths, regular content updates, skills validation, and alignment with regulatory or contractual requirements.<br /><br /><strong>Implementation examples:</strong> advanced courses for SOC analysts and administrators, DevSecOps workshops for product teams, procurement sessions on cyber clauses, and sector-specific training (e.g., health, finance).<br /><br /><strong>Supporting documentation examples:</strong> role-based training catalogs, competency development plans, obtained certificates or attestations, attendance records, and assessments or quizzes.",
-        },
-        {
           id: "PR.DS-01",
           fn: "PROTECT",
           category: "PR.DS",
@@ -1124,28 +1087,6 @@
             "<strong>Detailed description:</strong> Confirms capacity (compute, storage, network, licenses) is monitored and planned to prevent saturation that would degrade availability. Additional guidance: check threshold alerts, capacity forecasts, surge agreements, and automation (scaling) where appropriate.<br /><br /><strong>Implementation examples:</strong> CPU/memory/IO alert thresholds, cloud reservations or capacity plans, redundant network bandwidth, configured autoscaling for critical web services, and periodic trend reviews of license or quota usage.",
         },
         {
-          id: "PR-01",
-          fn: "PROTECT",
-          category: "PR.AC",
-          fr: "Les accès sont-ils gérés selon le principe du moindre privilège ?",
-          en: "Are accesses managed according to the least privilege principle?",
-          detailFr:
-            "<strong>Description détaillée :</strong> Vérifiez que les droits d’accès sont accordés en fonction des rôles, revus régulièrement et révoqués dès qu’ils ne sont plus nécessaires. Informations complémentaires : examiner les politiques IAM, les revues d’accès périodiques et les procédures de provisioning/deprovisioning.<br /><br /><strong>Exemples d’implémentation :</strong> modèles de rôles avec moindre privilège, campagnes de recertification d’accès, automatisation des retraits d’accès lors des départs.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de gestion des accès, matrices de rôles et privilèges, rapports de revues d’accès, procédures IAM, journaux de recertification ou de désactivation.",
-          detailEn:
-            "<strong>Detailed description:</strong> Ensure access rights are role-based, reviewed regularly, and revoked promptly when no longer required to enforce least privilege. Additional guidance: review IAM policies, periodic access reviews, and provisioning/deprovisioning procedures.<br /><br /><strong>Implementation examples:</strong> role models enforcing least privilege, access recertification campaigns, and automated deprovisioning during offboarding.<br /><br /><strong>Supporting documentation examples:</strong> access management policy, role and privilege matrices, access review reports, IAM procedures, and recertification or deprovisioning logs.",
-        },
-        {
-          id: "PR-02",
-          fn: "PROTECT",
-          category: "PR.IP",
-          fr: "Des procédures formelles existent-elles pour la gestion des changements ?",
-          en: "Are formal procedures in place for change management?",
-          detailFr:
-            "<strong>Description détaillée :</strong> La procédure de changement doit documenter les validations, tests, retours arrière et responsabilités afin de limiter les risques opérationnels. Informations complémentaires : rechercher un processus formalisé, des formulaires de demande et des preuves de revues par un CAB ou comité de changement.<br /><br /><strong>Exemples d’implémentation :</strong> procédure ITIL détaillant les étapes de validation, comité de changement hebdomadaire, vérification systématique des plans de retour arrière.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique ou procédure de gestion des changements, formulaires ou tickets de demande de changement, comptes rendus de CAB, calendrier des changements, rapports de tests et de plans de retour arrière.",
-          detailEn:
-            "<strong>Detailed description:</strong> Change processes should document approvals, testing, rollback plans, and ownership to limit operational and security risks. Additional guidance: identify the formal process, request templates, and evidence of CAB or change board reviews.<br /><br /><strong>Implementation examples:</strong> ITIL-based procedure detailing approval steps, weekly change advisory board meetings, and systematic validation of rollback plans.<br /><br /><strong>Supporting documentation examples:</strong> change management policy or procedure, change request forms or tickets, CAB minutes, change calendar, and testing or rollback evidence.",
-        },
-        {
           id: "DE-01",
           fn: "DETECT",
           category: "DE.CM",
@@ -1189,7 +1130,7 @@
       const BASE_FUNCTION_CATEGORIES = {
         GOVERN: ["GV.OC", "GV.RM", "GV.RR", "GV.PO", "GV.OV", "GV.SC"],
         IDENTIFY: ["ID.AM", "ID.BE", "ID.IM", "ID.RA", "ID.RM", "ID.SC"],
-        PROTECT: ["PR.AA", "PR.AT", "PR.DS", "PR.MA", "PR.PS", "PR.IR"],
+        PROTECT: ["PR.AA", "PR.DS", "PR.PS", "PR.IR"],
         DETECT: ["DE.AE", "DE.CM"],
         RESPOND: ["RS.RP", "RS.CO", "RS.AN", "RS.MI", "RS.IM", "RS.RR"],
         RECOVER: ["RC.RP", "RC.IM", "RC.CO"],
