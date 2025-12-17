@@ -243,6 +243,12 @@
         "ID.RM": ["CHIEF_RISK_OFFICER", "RISK_MANAGER", "CEO"],
         "ID.SC": ["VENDOR_MANAGER", "LEGAL_COUNSEL", "CYBERSECURITY_ANALYST"],
         "PR.AA": ["IAM_MANAGER", "IAM_ANALYST", "SECURITY_ARCHITECT"],
+        "PR.AT": [
+          "HR_MANAGER",
+          "LEARNING_DEVELOPMENT",
+          "CISO",
+          "COMMUNICATIONS_MANAGER",
+        ],
         "PR.DS": [
           "DATA_PROTECTION_OFFICER",
           "DATABASE_ADMINISTRATOR",
@@ -957,6 +963,32 @@
             "<strong>Detailed description:</strong> Ensures physical access to sites, rooms, and critical equipment (data centers, network cabinets, sensitive workstations) is controlled and monitored at a level proportionate to risk. Additional guidance: review badge/visitor management, entry/exit logging, CCTV coverage, and periodic control checks.<br /><br /><strong>Implementation examples:</strong> badge or biometric access for critical zones, escorted visitor logging, cameras and cabinet-open alerts, periodic reviews of physical entitlements, and simulated intrusion tests.<br /><br /><strong>Supporting documentation examples:</strong> physical security policy, badge/visitor and access logs, CCTV and retention plans, inspection or physical intrusion test reports, and evidence of revoking physical rights.",
         },
         {
+          id: "PR.AT-01",
+          fn: "PROTECT",
+          category: "PR.AT",
+          fr:
+            "Le personnel bénéficie-t-il de sensibilisation et de formations afin de disposer des connaissances et compétences nécessaires pour réaliser les tâches générales en tenant compte des risques cybersécurité ?",
+          en:
+            "Personnel are provided with awareness and training so that they possess the knowledge and skills to perform general tasks with cybersecurity risks in mind",
+          detailFr:
+            "<strong>Description détaillée :</strong> Ce contrôle confirme que l’ensemble des collaborateurs suit un programme de sensibilisation et de formation récurrent couvrant les politiques, les bonnes pratiques d’hygiène et la détection des menaces courantes. Informations complémentaires : vérifier l’intégration dans l’onboarding, le calendrier annuel, les évaluations de connaissances et la capacité des employés à signaler les incidents.<br /><br /><strong>Exemples d’implémentation :</strong> module d’accueil obligatoire sur la cybersécurité, parcours e-learning annuel incluant le phishing, simulations de phishing suivies de débriefings et rappels ciblés, micro-formations régulières relayées par la communication interne.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plan de formation et de sensibilisation, supports ou modules e-learning, registres de participation et résultats de quiz, rapports de campagnes de simulation et communications internes associées.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms all personnel complete a recurring awareness and training program that covers policies, security hygiene, and common threat recognition. Additional guidance: check onboarding coverage, annual schedule, knowledge assessments, and employees’ ability to report incidents.<br /><br /><strong>Implementation examples:</strong> mandatory cybersecurity onboarding module, annual e-learning covering phishing and safe behaviors, simulated phishing with debriefs and targeted refreshers, and periodic micro-trainings shared via internal communications.<br /><br /><strong>Supporting documentation examples:</strong> awareness and training plan, learning materials or e-learning modules, attendance logs and quiz scores, simulation campaign reports, and related internal communications.",
+        },
+        {
+          id: "PR.AT-02",
+          fn: "PROTECT",
+          category: "PR.AT",
+          fr:
+            "Le personnel occupant des rôles spécialisés reçoit-il des formations pour développer les connaissances et compétences nécessaires à l’exécution de tâches spécialisées en tenant compte des risques cybersécurité ?",
+          en:
+            "Individuals in specialized roles are provided with awareness and training so that they possess the knowledge and skills to perform relevant tasks with cybersecurity risks in mind",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les équipes techniques, opérationnelles ou à privilèges élevés bénéficient de formations avancées adaptées à leurs responsabilités et aux technologies utilisées. Informations complémentaires : examiner les programmes spécifiques (SOC, DevSecOps, OT, administrateurs), les certifications requises, la fréquence de mise à jour et l’intégration des retours d’incident dans les contenus.<br /><br /><strong>Exemples d’implémentation :</strong> parcours DevSecOps incluant la sécurité des pipelines CI/CD, formations pratiques pour analystes SOC sur la détection et la réponse, ateliers pour administrateurs sur le durcissement et la gestion des accès à privilèges, sessions dédiées aux équipes OT sur la sécurité industrielle et la sûreté.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de formation par rôle ou profil, supports techniques, preuves de participation à des ateliers ou laboratoires, inventaire des certifications détenues ou en cours, bilans de compétences et leçons tirées des incidents.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures technical, operational, or highly privileged teams receive advanced training tailored to their responsibilities and technologies. Additional guidance: review role-specific curricula (SOC, DevSecOps, OT, administrators), required certifications, update cadence, and how incident lessons are fed back into content.<br /><br /><strong>Implementation examples:</strong> DevSecOps tracks covering CI/CD pipeline security, hands-on SOC analyst training on detection and response, administrator workshops on hardening and privileged access management, and OT team sessions on industrial security and safety.<br /><br /><strong>Supporting documentation examples:</strong> role- or profile-based training plans, technical course materials, evidence of attendance at workshops or labs, inventory of held or in-progress certifications, skill assessments, and incident-derived lessons learned incorporated into curricula.",
+        },
+        {
           id: "PR.DS-01",
           fn: "PROTECT",
           category: "PR.DS",
@@ -1130,7 +1162,7 @@
       const BASE_FUNCTION_CATEGORIES = {
         GOVERN: ["GV.OC", "GV.RM", "GV.RR", "GV.PO", "GV.OV", "GV.SC"],
         IDENTIFY: ["ID.AM", "ID.BE", "ID.IM", "ID.RA", "ID.RM", "ID.SC"],
-        PROTECT: ["PR.AA", "PR.DS", "PR.PS", "PR.IR"],
+        PROTECT: ["PR.AA", "PR.AT", "PR.DS", "PR.PS", "PR.IR"],
         DETECT: ["DE.AE", "DE.CM"],
         RESPOND: ["RS.RP", "RS.CO", "RS.AN", "RS.MI", "RS.IM", "RS.RR"],
         RECOVER: ["RC.RP", "RC.IM", "RC.CO"],
