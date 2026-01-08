@@ -276,26 +276,23 @@
           "SECURITY_ENGINEER",
           "DEVSECOPS_ENGINEER",
         ],
-        "RS.RP": [
+        "RS.MA": [
           "CISO",
           "BUSINESS_CONTINUITY_MANAGER",
           "DISASTER_RECOVERY_LEAD",
         ],
-        "RS.CO": ["COMMUNICATIONS_MANAGER", "CEO", "LEGAL_COUNSEL"],
         "RS.AN": ["CYBERSECURITY_ANALYST", "SECURITY_ENGINEER", "CISO"],
+        "RS.CO": ["COMMUNICATIONS_MANAGER", "CEO", "LEGAL_COUNSEL"],
         "RS.MI": [
           "SECURITY_ENGINEER",
           "DEVSECOPS_ENGINEER",
           "SYSTEM_ADMINISTRATOR",
         ],
-        "RS.IM": ["CISO", "CHIEF_RISK_OFFICER", "SECURITY_ARCHITECT"],
-        "RS.RR": ["CEO", "INTERNAL_AUDITOR", "COMPLIANCE_OFFICER"],
         "RC.RP": [
           "BUSINESS_CONTINUITY_MANAGER",
           "DISASTER_RECOVERY_LEAD",
           "CIO",
         ],
-        "RC.IM": ["CIO", "CISO", "CHIEF_RISK_OFFICER"],
         "RC.CO": ["COMMUNICATIONS_MANAGER", "CEO", "LEGAL_COUNSEL"],
       };
 
@@ -1262,26 +1259,272 @@
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
-          id: "RS-01",
+          id: "RS.MA-01",
           fn: "RESPOND",
-          category: "RS.MI",
-          fr: "Des plans de réponse aux incidents sont-ils définis et testés ?",
-          en: "Are incident response plans defined and tested?",
+          category: "RS.MA",
+          fr:
+            "Les plans de gestion des incidents sont-ils exécutés pendant ou après un incident de cybersécurité ?",
+          en:
+            "Are incident management plans executed during or after a cybersecurity incident?",
           detailFr:
-            "<strong>Description détaillée :</strong> Les plans doivent couvrir les scénarios majeurs, préciser les rôles et inclure des exercices réguliers pour vérifier l’efficacité de la réponse. Informations complémentaires : examiner la cartographie des scénarios, les procédures d’escalade et les retours d’expérience des exercices.<br /><br /><strong>Exemples d’implémentation :</strong> plan de réponse aux incidents détaillé par type d’incident, exercices annuels de simulation ou de table-top, revue post-incident intégrant les enseignements dans le plan.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plan de réponse aux incidents, runbooks opérationnels, rapports d’exercices et de tests, fiches d’escalade et de communication, rapports post-incident.",
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
           detailEn:
-            "<strong>Detailed description:</strong> Plans should cover major scenarios, clarify responsibilities, and include rehearsals or tabletop exercises to prove response effectiveness. Additional guidance: review scenario mapping, escalation procedures, and lessons learned from exercises.<br /><br /><strong>Implementation examples:</strong> incident response plan tailored to incident types, annual simulations or tabletop exercises, and post-incident reviews feeding updates into the plan.<br /><br /><strong>Supporting documentation examples:</strong> incident response plan, operational runbooks, exercise and test reports, escalation and communication playbooks, and post-incident reviews.",
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
-          id: "RC-01",
+          id: "RS.MA-02",
+          fn: "RESPOND",
+          category: "RS.MA",
+          fr:
+            "Les leçons tirées des incidents sont-elles intégrées dans les plans et procédures de gestion des incidents ?",
+          en:
+            "Are lessons learned from incidents incorporated into incident management plans and procedures?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.MA-03",
+          fn: "RESPOND",
+          category: "RS.MA",
+          fr:
+            "Les stratégies et plans de gestion des incidents sont-ils mis à jour selon les enseignements tirés ?",
+          en:
+            "Are incident management strategies and plans updated based on lessons learned?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.AN-01",
+          fn: "RESPOND",
+          category: "RS.AN",
+          fr:
+            "Les alertes issues des systèmes de détection sont-elles analysées pour comprendre les événements ?",
+          en:
+            "Are alerts from detection systems analyzed to understand events?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.AN-02",
+          fn: "RESPOND",
+          category: "RS.AN",
+          fr:
+            "L’impact des incidents est-il compris et évalué pour orienter la réponse ?",
+          en:
+            "Is the impact of incidents understood and assessed to guide response?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.AN-03",
+          fn: "RESPOND",
+          category: "RS.AN",
+          fr:
+            "Les investigations et analyses forensiques sont-elles réalisées pour soutenir la réponse et la reprise ?",
+          en:
+            "Are investigations and forensics performed to support response and recovery?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.AN-04",
+          fn: "RESPOND",
+          category: "RS.AN",
+          fr: "Les incidents sont-ils catégorisés de manière cohérente ?",
+          en: "Are incidents categorized consistently?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.AN-05",
+          fn: "RESPOND",
+          category: "RS.AN",
+          fr:
+            "Des processus existent-ils pour recevoir, analyser et répondre aux vulnérabilités signalées par des sources internes ou externes ?",
+          en:
+            "Are processes in place to receive, analyze, and respond to vulnerabilities disclosed by internal or external sources?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.CO-01",
+          fn: "RESPOND",
+          category: "RS.CO",
+          fr:
+            "Le personnel connaît-il ses rôles, responsabilités et l’ordre des opérations lorsque la réponse aux incidents est nécessaire ?",
+          en:
+            "Do personnel know their roles, responsibilities, and order of operations when incident response is required?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.CO-02",
+          fn: "RESPOND",
+          category: "RS.CO",
+          fr:
+            "Les incidents sont-ils signalés conformément aux critères et exigences définis ?",
+          en:
+            "Are incidents reported consistent with established criteria and requirements?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.CO-03",
+          fn: "RESPOND",
+          category: "RS.CO",
+          fr:
+            "Les informations relatives aux incidents sont-elles partagées conformément aux plans de réponse ?",
+          en:
+            "Is incident-related information shared consistent with response plans?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.CO-04",
+          fn: "RESPOND",
+          category: "RS.CO",
+          fr:
+            "La coordination avec les parties prenantes internes et externes est-elle assurée conformément aux plans de réponse ?",
+          en:
+            "Is coordination with internal and external stakeholders ensured consistent with response plans?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.CO-05",
+          fn: "RESPOND",
+          category: "RS.CO",
+          fr:
+            "Les informations sur les incidents sont-elles partagées volontairement avec des partenaires (ISAC/ISSO, autorités, etc.) ?",
+          en:
+            "Is information on incidents voluntarily shared with partners (ISAC/ISSO, authorities, etc.)?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.MI-01",
+          fn: "RESPOND",
+          category: "RS.MI",
+          fr: "Les incidents sont-ils contenus pour limiter leur propagation ?",
+          en: "Are incidents contained to limit their spread?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.MI-02",
+          fn: "RESPOND",
+          category: "RS.MI",
+          fr:
+            "Les incidents sont-ils atténués pour réduire leur impact sur l’organisation ?",
+          en: "Are incidents mitigated to reduce their impact on the organization?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RS.MI-03",
+          fn: "RESPOND",
+          category: "RS.MI",
+          fr:
+            "Les vulnérabilités nouvellement identifiées sont-elles corrigées ou documentées ?",
+          en:
+            "Are newly identified vulnerabilities mitigated or documented?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.RP-01",
           fn: "RECOVER",
           category: "RC.RP",
-          fr: "Des plans de reprise des activités sont-ils documentés et testés ?",
-          en: "Are business recovery plans documented and tested?",
+          fr:
+            "Les activités de restauration sont-elles réalisées pour assurer la disponibilité opérationnelle des systèmes et services affectés par des incidents de cybersécurité ?",
+          en:
+            "Are restoration activities performed to ensure operational availability of systems and services affected by cybersecurity incidents?",
           detailFr:
-            "<strong>Description détaillée :</strong> Ce contrôle garantit la présence de procédures de reprise documentées, testées et alignées sur les objectifs de continuité de l’organisation. Informations complémentaires : analyser les plans de reprise, les rapports de tests PRA/PCA et les mécanismes de mise à jour.<br /><br /><strong>Exemples d’implémentation :</strong> plans de reprise par application ou service, exercices réguliers de bascule, revue des enseignements et mise à jour des procédures après chaque test.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de reprise d’activité (PRA/PCA), procédures de restauration, rapports de tests de continuité, listes de contacts de crise, calendriers de tests et preuves de mises à jour.",
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures recovery procedures are documented, tested, and aligned with organizational continuity objectives and recovery timeframes. Additional guidance: review recovery plans, PRA/BCP test reports, and update mechanisms.<br /><br /><strong>Implementation examples:</strong> service-specific recovery plans, regular failover exercises, and post-test reviews updating recovery procedures.<br /><br /><strong>Supporting documentation examples:</strong> business continuity/disaster recovery plans, restoration procedures, continuity test reports, crisis contact lists, test calendars, and evidence of plan updates.",
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.RP-02",
+          fn: "RECOVER",
+          category: "RC.RP",
+          fr:
+            "Les plans de reprise sont-ils exécutés pour restaurer les actifs et les opérations à un état sécurisé ?",
+          en:
+            "Are recovery plans executed to restore assets and operations to a secure state?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.RP-03",
+          fn: "RECOVER",
+          category: "RC.RP",
+          fr:
+            "Les activités de restauration sont-elles validées pour confirmer le retour à un fonctionnement attendu ?",
+          en:
+            "Are restoration activities validated to confirm return to expected operations?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.CO-01",
+          fn: "RECOVER",
+          category: "RC.CO",
+          fr:
+            "Les activités de restauration sont-elles coordonnées avec les parties internes et externes concernées ?",
+          en:
+            "Are restoration activities coordinated with relevant internal and external parties?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.CO-02",
+          fn: "RECOVER",
+          category: "RC.CO",
+          fr:
+            "L’état d’avancement de la reprise est-il communiqué aux parties prenantes concernées ?",
+          en:
+            "Is recovery status communicated to relevant stakeholders?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
       ];
 
@@ -1296,8 +1539,8 @@
         IDENTIFY: ["ID.AM", "ID.BE", "ID.IM", "ID.RA", "ID.RM", "ID.SC"],
         PROTECT: ["PR.AA", "PR.AT", "PR.DS", "PR.PS", "PR.IR"],
         DETECT: ["DE.AE", "DE.CM"],
-        RESPOND: ["RS.RP", "RS.CO", "RS.AN", "RS.MI", "RS.IM", "RS.RR"],
-        RECOVER: ["RC.RP", "RC.IM", "RC.CO"],
+        RESPOND: ["RS.MA", "RS.AN", "RS.CO", "RS.MI"],
+        RECOVER: ["RC.RP", "RC.CO"],
       };
 
       const FUNCTION_CATEGORIES = FUNCTIONS.reduce((acc, fn) => {
