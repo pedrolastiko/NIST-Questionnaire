@@ -293,7 +293,6 @@
           "DISASTER_RECOVERY_LEAD",
           "CIO",
         ],
-        "RC.IM": ["CIO", "CISO", "CHIEF_RISK_OFFICER"],
         "RC.CO": ["COMMUNICATIONS_MANAGER", "CEO", "LEGAL_COUNSEL"],
       };
 
@@ -1463,15 +1462,69 @@
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
-          id: "RC-01",
+          id: "RC.RP-01",
           fn: "RECOVER",
           category: "RC.RP",
-          fr: "Des plans de reprise des activités sont-ils documentés et testés ?",
-          en: "Are business recovery plans documented and tested?",
+          fr:
+            "Les activités de restauration sont-elles réalisées pour assurer la disponibilité opérationnelle des systèmes et services affectés par des incidents de cybersécurité ?",
+          en:
+            "Are restoration activities performed to ensure operational availability of systems and services affected by cybersecurity incidents?",
           detailFr:
-            "<strong>Description détaillée :</strong> Ce contrôle garantit la présence de procédures de reprise documentées, testées et alignées sur les objectifs de continuité de l’organisation. Informations complémentaires : analyser les plans de reprise, les rapports de tests PRA/PCA et les mécanismes de mise à jour.<br /><br /><strong>Exemples d’implémentation :</strong> plans de reprise par application ou service, exercices réguliers de bascule, revue des enseignements et mise à jour des procédures après chaque test.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de reprise d’activité (PRA/PCA), procédures de restauration, rapports de tests de continuité, listes de contacts de crise, calendriers de tests et preuves de mises à jour.",
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures recovery procedures are documented, tested, and aligned with organizational continuity objectives and recovery timeframes. Additional guidance: review recovery plans, PRA/BCP test reports, and update mechanisms.<br /><br /><strong>Implementation examples:</strong> service-specific recovery plans, regular failover exercises, and post-test reviews updating recovery procedures.<br /><br /><strong>Supporting documentation examples:</strong> business continuity/disaster recovery plans, restoration procedures, continuity test reports, crisis contact lists, test calendars, and evidence of plan updates.",
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.RP-02",
+          fn: "RECOVER",
+          category: "RC.RP",
+          fr:
+            "Les plans de reprise sont-ils exécutés pour restaurer les actifs et les opérations à un état sécurisé ?",
+          en:
+            "Are recovery plans executed to restore assets and operations to a secure state?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.RP-03",
+          fn: "RECOVER",
+          category: "RC.RP",
+          fr:
+            "Les activités de restauration sont-elles validées pour confirmer le retour à un fonctionnement attendu ?",
+          en:
+            "Are restoration activities validated to confirm return to expected operations?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.CO-01",
+          fn: "RECOVER",
+          category: "RC.CO",
+          fr:
+            "Les activités de restauration sont-elles coordonnées avec les parties internes et externes concernées ?",
+          en:
+            "Are restoration activities coordinated with relevant internal and external parties?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "RC.CO-02",
+          fn: "RECOVER",
+          category: "RC.CO",
+          fr:
+            "L’état d’avancement de la reprise est-il communiqué aux parties prenantes concernées ?",
+          en:
+            "Is recovery status communicated to relevant stakeholders?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
       ];
 
@@ -1487,7 +1540,7 @@
         PROTECT: ["PR.AA", "PR.AT", "PR.DS", "PR.PS", "PR.IR"],
         DETECT: ["DE.AE", "DE.CM"],
         RESPOND: ["RS.MA", "RS.AN", "RS.CO", "RS.MI"],
-        RECOVER: ["RC.RP", "RC.IM", "RC.CO"],
+        RECOVER: ["RC.RP", "RC.CO"],
       };
 
       const FUNCTION_CATEGORIES = FUNCTIONS.reduce((acc, fn) => {
