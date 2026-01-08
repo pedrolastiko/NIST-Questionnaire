@@ -1125,7 +1125,7 @@
           en:
             "Are potentially adverse events analyzed to better understand associated activities?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Cette question vérifie que chaque événement suspect est analysé pour reconstituer la séquence d’actions, identifier les techniques utilisées et distinguer un incident réel d’un faux positif. Informations complémentaires : s’assurer que l’analyse inclut la chronologie, les actifs touchés et la cause probable.<br /><br /><strong>Exemples d’implémentation :</strong> triage SOC avec enrichissement des journaux SIEM, analyse d’événements via playbooks de qualification, revue croisée par un analyste senior pour valider l’interprétation.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures de triage et d’analyse, rapports d’analyse d’événements, matrices de qualification (incident/faux positif), historiques de tickets d’investigation.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1137,7 +1137,7 @@
             "Les informations sont-elles corrélées depuis plusieurs sources ?",
           en: "Is information correlated from multiple sources?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle confirme que les signaux provenant de sources multiples (EDR, pare-feu, identités, applications) sont corrélés pour obtenir une vision complète d’un événement et réduire les angles morts. Informations complémentaires : vérifier la normalisation des données et la couverture des principales sources.<br /><br /><strong>Exemples d’implémentation :</strong> règles de corrélation SIEM combinant logs réseau et endpoint, agrégation via UEBA pour détecter des comportements anormaux, enrichissement automatique des alertes avec des sources CMDB et IAM.<br /><br /><strong>Exemples de documentations nécessaires :</strong> inventaire des sources de logs, règles de corrélation documentées, schémas d’intégration des flux de logs, rapports de couverture et de qualité des données.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1150,7 +1150,7 @@
           en:
             "Are the estimated impact and scope of adverse events understood?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie que l’organisation évalue l’impact potentiel et l’étendue d’un événement (systèmes, données, services touchés) afin d’orienter la priorisation et la réponse. Informations complémentaires : inclure l’estimation des impacts métiers, réglementaires et opérationnels.<br /><br /><strong>Exemples d’implémentation :</strong> check-list de scoping initial, cartographie rapide des actifs impactés via CMDB, évaluation d’impact business avec les propriétaires applicatifs.<br /><br /><strong>Exemples de documentations nécessaires :</strong> modèles d’évaluation d’impact, rapports de scoping d’incidents, cartographies d’actifs critiques, registres d’impacts métiers et réglementaires.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1163,7 +1163,7 @@
           en:
             "Is information on adverse events provided to authorized staff and tools?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle confirme que les informations sur les événements suspects sont diffusées aux équipes et outils habilités (SOC, IR, supervision) avec des droits d’accès adaptés et des délais maîtrisés. Informations complémentaires : vérifier les canaux d’alerte, les niveaux d’escalade et la traçabilité des notifications.<br /><br /><strong>Exemples d’implémentation :</strong> routage automatique des alertes vers un outil de ticketing, notifications enrichies envoyées aux analystes de garde, intégration SIEM/SOAR pour déclencher des actions de réponse.<br /><br /><strong>Exemples de documentations nécessaires :</strong> matrices d’escalade et de notification, diagrammes d’intégration SIEM/SOAR, listes d’accès et rôles autorisés, journaux de notifications et d’assignation.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1176,7 +1176,7 @@
           en:
             "Are cyber threat intelligence and other contextual information integrated into the analysis?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question valide que les renseignements sur les menaces et le contexte métier (criticité, exposition, vulnérabilités) enrichissent l’analyse afin d’améliorer la détection et la compréhension des risques. Informations complémentaires : s’assurer que les IoC et tactiques/techniques sont utilisés dans l’investigation.<br /><br /><strong>Exemples d’implémentation :</strong> intégration de flux CTI (STIX/TAXII) dans le SIEM, mapping MITRE ATT&CK pour qualifier l’activité observée, priorisation des alertes selon la criticité des actifs.<br /><br /><strong>Exemples de documentations nécessaires :</strong> liste des sources CTI, règles d’enrichissement et de scoring, rapports d’analyse contextualisée, preuves d’utilisation des IoC dans les investigations.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1189,7 +1189,7 @@
           en:
             "Are incidents declared when adverse events meet the defined incident criteria?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie que l’organisation applique des critères formalisés pour déclarer un incident dès que l’événement répond aux seuils définis (gravité, périmètre, impact). Informations complémentaires : vérifier la cohérence entre la politique d’incident et la pratique opérationnelle.<br /><br /><strong>Exemples d’implémentation :</strong> matrice de sévérité avec seuils de déclenchement, bascule automatique d’un ticket “événement” en “incident” selon des règles, revue quotidienne des événements pour validation.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de classification des incidents, critères de déclaration, historiques de requalification événement/incident, comptes rendus d’escalade.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1202,7 +1202,7 @@
           en:
             "Are networks and network services monitored to find potentially adverse events?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question confirme que les réseaux et services critiques sont surveillés en continu pour détecter des anomalies (trafic inhabituel, indisponibilités, scans, exfiltration). Informations complémentaires : examiner la couverture des segments et la profondeur de la surveillance.<br /><br /><strong>Exemples d’implémentation :</strong> IDS/IPS et NetFlow pour l’analyse de trafic, supervision de services DNS/HTTP/SMTP, alertes sur débits anormaux et connexions suspectes.<br /><br /><strong>Exemples de documentations nécessaires :</strong> architecture de supervision réseau, inventaire des capteurs, règles de détection réseau, rapports de surveillance et d’alerting.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1215,7 +1215,7 @@
           en:
             "Is the physical environment monitored to find potentially adverse events?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle s’assure que l’environnement physique (datacenters, salles serveurs, locaux sensibles) est surveillé pour identifier des accès ou conditions anormales. Informations complémentaires : vérifier la présence de capteurs, contrôles d’accès et surveillance vidéo.<br /><br /><strong>Exemples d’implémentation :</strong> badges et contrôles d’accès avec logs, vidéosurveillance avec alertes, capteurs température/humidité et détecteurs d’ouverture de baie.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures de sécurité physique, journaux d’accès et rapports de revue, plans d’implantation des capteurs, politiques de conservation des enregistrements.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1228,7 +1228,7 @@
           en:
             "Are personnel activity and technology usage monitored to find potentially adverse events?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie que l’activité des utilisateurs et l’usage des technologies sont surveillés afin d’identifier des comportements anormaux ou non conformes. Informations complémentaires : s’assurer que la surveillance respecte les règles de confidentialité et d’éthique.<br /><br /><strong>Exemples d’implémentation :</strong> collecte des logs d’authentification, UEBA pour détecter des anomalies d’usage, alertes DLP sur transferts de données sensibles.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de surveillance des utilisateurs, journaux d’activité et rapports d’alertes, chartes d’usage acceptables, procédures de gestion des alertes comportementales.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1241,7 +1241,7 @@
           en:
             "Are external service provider activities and services monitored to find potentially adverse events?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle confirme que l’organisation surveille les activités des prestataires externes (MSSP, cloud, infogérance) pour détecter des anomalies, non-conformités ou accès abusifs. Informations complémentaires : vérifier les mécanismes d’audit et de contrôle des accès tiers.<br /><br /><strong>Exemples d’implémentation :</strong> logs d’accès des prestataires centralisés dans le SIEM, revues périodiques des actions administratives, alertes sur connexions hors fenêtres autorisées.<br /><br /><strong>Exemples de documentations nécessaires :</strong> clauses contractuelles de monitoring, journaux d’accès tiers, rapports de revue d’activité fournisseurs, comptes rendus d’audits des prestataires.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1254,7 +1254,7 @@
           en:
             "Are computing hardware and software, runtime environments, and their data monitored to find potentially adverse events?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie que les systèmes, logiciels, environnements d’exécution et données sont surveillés pour détecter des événements indésirables (malware, modifications non autorisées, exfiltration). Informations complémentaires : vérifier la couverture EDR, la journalisation et les contrôles d’intégrité.<br /><br /><strong>Exemples d’implémentation :</strong> déploiement d’EDR/antimalware, supervision des journaux applicatifs et systèmes, contrôle d’intégrité des fichiers, surveillance des workloads cloud.<br /><br /><strong>Exemples de documentations nécessaires :</strong> standards de supervision système, inventaire de couverture des agents, configurations de journalisation, rapports d’alertes et de détection.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1267,7 +1267,7 @@
           en:
             "Are incident management plans executed during or after a cybersecurity incident?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie que les plans de gestion des incidents sont activés et suivis pendant ou après un incident, avec des rôles définis et une coordination structurée. Informations complémentaires : s’assurer que les playbooks sont accessibles et utilisés.<br /><br /><strong>Exemples d’implémentation :</strong> activation d’un incident commander et d’une cellule de crise, exécution de playbooks par type d’incident, tenue de points de situation réguliers.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plan de réponse aux incidents, playbooks opérationnels, journaux de crise et de décisions, comptes rendus d’incidents.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1280,7 +1280,7 @@
           en:
             "Are lessons learned from incidents incorporated into incident management plans and procedures?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question confirme que les retours d’expérience sont intégrés dans les plans et procédures afin d’améliorer la réponse future. Informations complémentaires : vérifier l’existence d’un processus post-incident formalisé.<br /><br /><strong>Exemples d’implémentation :</strong> post-mortem avec actions correctives, mise à jour des playbooks après incident majeur, suivi des recommandations en backlog d’amélioration.<br /><br /><strong>Exemples de documentations nécessaires :</strong> rapports de leçons apprises, plans d’actions post-incident, historique des versions de procédures, preuves de suivi des actions.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1293,7 +1293,7 @@
           en:
             "Are incident management strategies and plans updated based on lessons learned?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle s’assure que les stratégies et plans de gestion des incidents sont régulièrement révisés et mis à jour en fonction des enseignements tirés et de l’évolution des menaces. Informations complémentaires : vérifier la fréquence des revues et l’appropriation par les équipes.<br /><br /><strong>Exemples d’implémentation :</strong> revue annuelle des plans IR, mise à jour des matrices de sévérité, exercices de simulation conduisant à des ajustements de stratégie.<br /><br /><strong>Exemples de documentations nécessaires :</strong> calendrier de revues IR, comptes rendus de comités de mise à jour, versions datées des plans, preuves d’exercices et d’ajustements.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1306,7 +1306,7 @@
           en:
             "Are alerts from detection systems analyzed to understand events?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie que les alertes issues des systèmes de détection sont analysées pour confirmer leur pertinence, déterminer la cause et décider des actions. Informations complémentaires : s’assurer que les faux positifs sont documentés.<br /><br /><strong>Exemples d’implémentation :</strong> files d’alertes SOC avec SLA de traitement, triage automatisé par SOAR, validation manuelle par analystes pour les cas critiques.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures de triage, enregistrements de tickets d’alerte, métriques de temps de traitement, registres de faux positifs.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1319,7 +1319,7 @@
           en:
             "Is the impact of incidents understood and assessed to guide response?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle confirme que l’impact des incidents est évalué (opérationnel, financier, réglementaire) afin de prioriser la réponse et l’escalade. Informations complémentaires : vérifier l’implication des métiers et la cohérence avec la criticité des actifs.<br /><br /><strong>Exemples d’implémentation :</strong> utilisation d’un modèle d’analyse d’impact, consultation des propriétaires d’actifs critiques, estimation des effets sur la continuité de service.<br /><br /><strong>Exemples de documentations nécessaires :</strong> modèles d’évaluation d’impact, rapports d’analyse d’incident, cartographies de criticité, décisions d’escalade basées sur l’impact.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1332,7 +1332,7 @@
           en:
             "Are investigations and forensics performed to support response and recovery?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie que des investigations et analyses forensiques sont conduites pour comprendre l’incident, préserver les preuves et soutenir la reprise. Informations complémentaires : s’assurer du respect de la chaîne de possession.<br /><br /><strong>Exemples d’implémentation :</strong> collecte d’images disque et de mémoire, analyse de logs pour reconstituer la chronologie, recours à des experts forensiques externes si nécessaire.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures forensiques, registres de chaîne de possession, rapports d’investigation, inventaires des preuves collectées.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1343,7 +1343,7 @@
           fr: "Les incidents sont-ils catégorisés de manière cohérente ?",
           en: "Are incidents categorized consistently?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle confirme que les incidents sont classifiés selon une taxonomie commune (type, gravité, impact) afin d’assurer une réponse cohérente et comparable. Informations complémentaires : vérifier l’application uniforme de la classification.<br /><br /><strong>Exemples d’implémentation :</strong> matrice de sévérité utilisée dans le ticketing, champs obligatoires de catégorisation, revues périodiques de cohérence des classifications.<br /><br /><strong>Exemples de documentations nécessaires :</strong> référentiel de catégorisation, guide de classification, rapports de cohérence, exports de tickets avec catégories.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1356,7 +1356,7 @@
           en:
             "Are processes in place to receive, analyze, and respond to vulnerabilities disclosed by internal or external sources?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie l’existence de processus pour recevoir, analyser et traiter les vulnérabilités signalées par des sources internes ou externes. Informations complémentaires : inclure les engagements de délai et les canaux de contact.<br /><br /><strong>Exemples d’implémentation :</strong> boîte de contact sécurité ou VDP, workflow de triage des signalements, intégration des tickets dans la remédiation.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de divulgation, procédures de traitement des vulnérabilités, registres de signalements, métriques de délais de réponse.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1369,7 +1369,7 @@
           en:
             "Do personnel know their roles, responsibilities, and order of operations when incident response is required?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle s’assure que le personnel connaît ses rôles, responsabilités et l’ordre des opérations en cas d’incident, afin d’éviter les blocages et doublons. Informations complémentaires : vérifier la formation et les exercices.<br /><br /><strong>Exemples d’implémentation :</strong> matrice RACI pour la réponse, fiches de rôle distribuées, exercices réguliers impliquant toutes les parties.<br /><br /><strong>Exemples de documentations nécessaires :</strong> RACI de réponse aux incidents, supports de formation, comptes rendus d’exercices, listes de contact d’astreinte.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1382,7 +1382,7 @@
           en:
             "Are incidents reported consistent with established criteria and requirements?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question confirme que les incidents sont signalés conformément aux critères définis (réglementaires, contractuels, internes), avec des délais et canaux adaptés. Informations complémentaires : vérifier la traçabilité des notifications.<br /><br /><strong>Exemples d’implémentation :</strong> procédure de notification réglementaire, formulaires de signalement standardisés, validation juridique avant envoi.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures de reporting, registres de notifications, modèles de communication aux autorités, preuves de respect des délais.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1395,7 +1395,7 @@
           en:
             "Is incident-related information shared consistent with response plans?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie que les informations liées aux incidents sont partagées conformément aux plans de réponse, en respectant le besoin d’en connaître et la confidentialité. Informations complémentaires : s’assurer de la cohérence des messages.<br /><br /><strong>Exemples d’implémentation :</strong> plan de communication de crise, points de situation réguliers, canaux sécurisés pour le partage d’informations sensibles.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plan de communication IR, listes de parties prenantes, comptes rendus d’information, politiques de classification des informations.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1408,7 +1408,7 @@
           en:
             "Is coordination with internal and external stakeholders ensured consistent with response plans?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question confirme que la coordination avec les parties internes et externes est organisée conformément aux plans de réponse (métiers, fournisseurs, autorités). Informations complémentaires : vérifier la disponibilité des contacts et procédures d’escalade.<br /><br /><strong>Exemples d’implémentation :</strong> ponts de coordination multi-acteurs, procédures d’escalade vers les fournisseurs, synchronisation avec la communication externe.<br /><br /><strong>Exemples de documentations nécessaires :</strong> annuaires de contacts d’urgence, procédures de coordination, comptes rendus de réunions de crise, accords de collaboration avec tiers.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1421,7 +1421,7 @@
           en:
             "Is information on incidents voluntarily shared with partners (ISAC/ISSO, authorities, etc.)?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie que l’organisation partage volontairement des informations sur les incidents avec des partenaires (ISAC/ISSO, autorités, communautés), en respectant les règles de confidentialité et de partage. Informations complémentaires : inclure les protocoles TLP.<br /><br /><strong>Exemples d’implémentation :</strong> soumission d’indicateurs aux ISAC, rapports anonymisés aux communautés, partage selon TLP.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de partage d’informations, preuves de soumissions ISAC, accords de confidentialité, historiques de communications externes.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1432,7 +1432,7 @@
           fr: "Les incidents sont-ils contenus pour limiter leur propagation ?",
           en: "Are incidents contained to limit their spread?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question confirme que les incidents sont contenus rapidement pour limiter leur propagation et protéger les actifs non touchés. Informations complémentaires : vérifier l’activation des procédures d’isolement.<br /><br /><strong>Exemples d’implémentation :</strong> isolement d’hôtes via EDR, segmentation réseau temporaire, désactivation d’identifiants compromis.<br /><br /><strong>Exemples de documentations nécessaires :</strong> playbooks de confinement, journaux d’actions de containment, procédures d’isolement réseau, autorisations d’exception.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1444,7 +1444,7 @@
             "Les incidents sont-ils atténués pour réduire leur impact sur l’organisation ?",
           en: "Are incidents mitigated to reduce their impact on the organization?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle s’assure que des actions sont menées pour réduire l’impact d’un incident (correctifs, configuration, mesures compensatoires). Informations complémentaires : vérifier la priorisation en fonction de la criticité.<br /><br /><strong>Exemples d’implémentation :</strong> application de correctifs d’urgence, mise en place de règles de filtrage temporaires, déploiement de contrôles compensatoires.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de mitigation, enregistrements de changements, rapports d’atténuation, preuves de validation post-mesure.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1457,7 +1457,7 @@
           en:
             "Are newly identified vulnerabilities mitigated or documented?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie que les vulnérabilités nouvellement identifiées sont corrigées dans des délais définis ou documentées avec des mesures compensatoires ou acceptation de risque. Informations complémentaires : vérifier le suivi et la gouvernance.<br /><br /><strong>Exemples d’implémentation :</strong> SLA de correction selon criticité, application de correctifs ou contournements, validation d’acceptations de risque par le management.<br /><br /><strong>Exemples de documentations nécessaires :</strong> registre de vulnérabilités, politiques de remédiation, approbations d’acceptation de risque, rapports de suivi des délais.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1470,7 +1470,7 @@
           en:
             "Are restoration activities performed to ensure operational availability of systems and services affected by cybersecurity incidents?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle confirme que des activités de restauration sont réalisées pour rétablir la disponibilité des systèmes et services touchés après un incident. Informations complémentaires : vérifier la capacité de restauration depuis des sauvegardes fiables.<br /><br /><strong>Exemples d’implémentation :</strong> restauration de données depuis des sauvegardes testées, reconstruction de serveurs compromis, réactivation progressive des services critiques.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de restauration, procédures de sauvegarde et de restauration, journaux de restauration, rapports de tests de sauvegarde.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1483,7 +1483,7 @@
           en:
             "Are recovery plans executed to restore assets and operations to a secure state?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question vérifie que les plans de reprise sont exécutés pour revenir à un état sécurisé, avec des contrôles renforcés et des validations avant remise en production. Informations complémentaires : inclure la réinitialisation des secrets.<br /><br /><strong>Exemples d’implémentation :</strong> reconstruction en environnement propre, réinitialisation des mots de passe/clefs, application de configurations durcies avant remise en service.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de reprise, check-lists de durcissement, historiques d’exécution de reprise, preuves de validation de sécurité.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1496,7 +1496,7 @@
           en:
             "Are restoration activities validated to confirm return to expected operations?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle s’assure que les activités de restauration sont validées (tests fonctionnels, contrôles de sécurité) pour confirmer le retour à un fonctionnement attendu. Informations complémentaires : vérifier l’implication des métiers.<br /><br /><strong>Exemples d’implémentation :</strong> tests de fonctionnement des applications restaurées, contrôles de sécurité post-restauration, validation par les utilisateurs métiers.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans et résultats de tests de restauration, procès-verbaux de validation, check-lists de remise en service, rapports de conformité post-reprise.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1509,7 +1509,7 @@
           en:
             "Are restoration activities coordinated with relevant internal and external parties?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> La question confirme que la restauration est coordonnée avec les parties internes et externes concernées (équipes métier, fournisseurs, autorités si nécessaire). Informations complémentaires : s’assurer de la synchronisation des actions.<br /><br /><strong>Exemples d’implémentation :</strong> cellule de coordination de reprise, ponts de communication avec fournisseurs critiques, planification conjointe des fenêtres de remise en service.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de coordination de reprise, annuaires de contacts, comptes rendus de coordination, accords de service avec tiers.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1522,7 +1522,7 @@
           en:
             "Is recovery status communicated to relevant stakeholders?",
           detailFr:
-            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+            "<strong>Description détaillée :</strong> Ce contrôle vérifie que l’état d’avancement de la reprise est communiqué aux parties prenantes avec un rythme défini et des messages cohérents. Informations complémentaires : vérifier la traçabilité des communications.<br /><br /><strong>Exemples d’implémentation :</strong> rapports de statut réguliers, tableaux de bord de reprise, messages ciblés selon les audiences (direction, IT, clients).<br /><br /><strong>Exemples de documentations nécessaires :</strong> plan de communication de reprise, historiques de communications, modèles de rapports de statut, listes de diffusion validées.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
