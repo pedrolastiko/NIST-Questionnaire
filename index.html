@@ -1120,15 +1120,69 @@
             "<strong>Detailed description:</strong> Confirms capacity (compute, storage, network, licenses) is monitored and planned to prevent saturation that would degrade availability. Additional guidance: check threshold alerts, capacity forecasts, surge agreements, and automation (scaling) where appropriate.<br /><br /><strong>Implementation examples:</strong> CPU/memory/IO alert thresholds, cloud reservations or capacity plans, redundant network bandwidth, configured autoscaling for critical web services, and periodic trend reviews of license or quota usage.",
         },
         {
-          id: "DE-01",
+          id: "DE.CM-01",
           fn: "DETECT",
           category: "DE.CM",
-          fr: "Un SOC ou une capacité de surveillance des journaux est-il en place ?",
-          en: "Is a SOC or log monitoring capability in place?",
+          fr:
+            "Les réseaux et services réseau sont-ils surveillés pour identifier des événements potentiellement indésirables ?",
+          en:
+            "Are networks and network services monitored to find potentially adverse events?",
           detailFr:
-            "<strong>Description détaillée :</strong> Le contrôle valide l’existence d’une surveillance continue (SOC interne/externe) capable de détecter rapidement des comportements anormaux. Informations complémentaires : vérifier la couverture des journaux, les capacités d’investigation et les engagements de service associés.<br /><br /><strong>Exemples d’implémentation :</strong> SOC interne 24/7 ou service MSSP, corrélation automatisée via SIEM, procédures d’escalade définies pour les alertes critiques.<br /><br /><strong>Exemples de documentations nécessaires :</strong> charte ou contrat SOC/MSSP, plan de surveillance des journaux, tableaux de bord SIEM, rapports de détection et d’escalade, procédures opérationnelles standard (SOP) du SOC.",
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
           detailEn:
-            "<strong>Detailed description:</strong> This item confirms continuous monitoring is in place—internal or outsourced SOC—to rapidly detect anomalous behaviors. Additional guidance: validate log coverage, investigation capabilities, and related service commitments.<br /><br /><strong>Implementation examples:</strong> 24/7 internal SOC or MSSP service, automated SIEM correlation, and defined escalation procedures for critical alerts.<br /><br /><strong>Supporting documentation examples:</strong> SOC/MSSP charter or contract, log monitoring plan, SIEM dashboards, detection and escalation reports, and SOC standard operating procedures.",
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "DE.CM-02",
+          fn: "DETECT",
+          category: "DE.CM",
+          fr:
+            "L’environnement physique est-il surveillé pour identifier des événements potentiellement indésirables ?",
+          en:
+            "Is the physical environment monitored to find potentially adverse events?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "DE.CM-03",
+          fn: "DETECT",
+          category: "DE.CM",
+          fr:
+            "Les activités du personnel et l’usage des technologies sont-ils surveillés pour identifier des événements potentiellement indésirables ?",
+          en:
+            "Are personnel activity and technology usage monitored to find potentially adverse events?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "DE.CM-06",
+          fn: "DETECT",
+          category: "DE.CM",
+          fr:
+            "Les activités et services des prestataires externes sont-ils surveillés pour identifier des événements potentiellement indésirables ?",
+          en:
+            "Are external service provider activities and services monitored to find potentially adverse events?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+        },
+        {
+          id: "DE.CM-09",
+          fn: "DETECT",
+          category: "DE.CM",
+          fr:
+            "Le matériel et les logiciels informatiques, les environnements d’exécution et leurs données sont-ils surveillés pour identifier des événements potentiellement indésirables ?",
+          en:
+            "Are computing hardware and software, runtime environments, and their data monitored to find potentially adverse events?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Note csf.tools : les sous-catégories ne disposent pas de descriptions détaillées.",
+          detailEn:
+            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
           id: "RS-01",
