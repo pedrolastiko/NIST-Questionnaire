@@ -249,7 +249,6 @@
           "CLOUD_ENGINEER",
           "DATABASE_ADMINISTRATOR",
         ],
-        "ID.BE": ["CEO", "COO", "BUSINESS_CONTINUITY_MANAGER"],
         "ID.IM": [
           "ENTERPRISE_ARCHITECT",
           "CIO",
@@ -260,8 +259,6 @@
           "RISK_MANAGER",
           "CYBERSECURITY_ANALYST",
         ],
-        "ID.RM": ["CHIEF_RISK_OFFICER", "RISK_MANAGER", "CEO"],
-        "ID.SC": ["VENDOR_MANAGER", "LEGAL_COUNSEL", "CYBERSECURITY_ANALYST"],
         "PR.AA": ["IAM_MANAGER", "IAM_ANALYST", "SECURITY_ARCHITECT"],
         "PR.AT": [
           "HR_MANAGER",
@@ -713,17 +710,6 @@
             "<strong>Detailed description:</strong> Confirms a criticality scheme ranks assets to direct security investments. Additional guidance: check for classification policies, business impact criteria, and links to continuity or risk management plans.<br /><br /><strong>Implementation examples:</strong> prioritization matrices aligned with business objectives, expected protection levels per asset, and budget decisions referencing those tiers.<br /><br /><strong>Supporting documentation examples:</strong> classification/criticality policies, asset registers with assigned tiers, prioritization committee reports, and treatment or continuity plans tied to critical assets.",
         },
         {
-          id: "ID.AM-06",
-          fn: "IDENTIFY",
-          category: "ID.AM",
-          fr: "Les inventaires des données et métadonnées associées pour les types de données désignés sont-ils maintenus ?",
-          en: "Are inventories of data and corresponding metadata for designated data types maintained?",
-          detailFr:
-            "<strong>Description détaillée :</strong> Le contrôle exige une visibilité sur les jeux de données sensibles (PII, IP, données industrielles) avec localisation, propriétaires, exigences réglementaires et métadonnées (format, volume, cycle de vie). Informations complémentaires : vérifier l’existence d’un registre de données, d’un catalogue ou d’un outil de data governance reliant les exigences de protection.<br /><br /><strong>Exemples d’implémentation :</strong> catalogue de données relié à un outil de gouvernance, fiches de données critiques mentionnant propriétaire, classification et obligations, découverte automatique des données sensibles dans les environnements cloud.<br /><br /><strong>Exemples de documentations nécessaires :</strong> data catalog, registre de PII, fiches de data stewardship, rapports de data discovery, politiques de conservation des données.",
-          detailEn:
-            "<strong>Detailed description:</strong> Requires visibility over sensitive datasets (PII, IP, industrial data) capturing location, owners, regulatory needs, and metadata (format, volume, lifecycle). Additional guidance: look for a data register, catalog, or governance platform linking required protections.<br /><br /><strong>Implementation examples:</strong> governance-backed data catalogs, critical data fact sheets referencing owners, classification and obligations, and automated sensitive-data discovery in cloud environments.<br /><br /><strong>Supporting documentation examples:</strong> data catalog exports, PII registers, data stewardship records, sensitive-data discovery reports, and data retention policies.",
-        },
-        {
           id: "ID.AM-07",
           fn: "IDENTIFY",
           category: "ID.AM",
@@ -895,7 +881,7 @@
             "<strong>Detailed description:</strong> Ensures authenticity and integrity checks (provenance, signatures, supply-chain validation) are applied before purchasing or deploying mission-critical components. Additional guidance: review supplier requirements, integrity testing, and acceptance criteria.<br /><br /><strong>Implementation examples:</strong> signature and checksum verification of software, provenance checks for equipment, contractual supply-chain integrity clauses, and secure acceptance testing before production use.<br /><br /><strong>Supporting documentation examples:</strong> secure procurement procedures, integrity verification reports, supply-chain contractual clauses, and acceptance test records.",
         },
         {
-          id: "ID.RA-12",
+          id: "ID.RA-10",
           fn: "IDENTIFY",
           category: "ID.RA",
           fr: "Les fournisseurs critiques sont-ils évalués avant acquisition ?",
@@ -1032,7 +1018,7 @@
             "<strong>Detailed description:</strong> Ensures data flows are protected from interception, tampering, and interruption (encryption, endpoint authentication, network resilience). Additional guidance: check secure protocol usage, certificate lifecycle management, and redundancy for critical paths.<br /><br /><strong>Implementation examples:</strong> TLS/mTLS for APIs and applications, VPN tunnels for remote access, message authentication codes or signatures for integrity, and redundant or SD-WAN paths for critical services.<br /><br /><strong>Supporting documentation examples:</strong> communication security policy, inventory of flows and protocols, certificate management procedures, TLS configuration test reports, and network continuity plans.",
         },
         {
-          id: "PR.DS-03",
+          id: "PR.DS-10",
           fn: "PROTECT",
           category: "PR.DS",
           fr:
@@ -1045,33 +1031,7 @@
             "<strong>Detailed description:</strong> Confirms data handled by applications and users are guarded against leakage, unauthorized changes, and disruption while being processed. Additional guidance: review strong authentication, session management, masking or obfuscation, and DLP/anti-exfiltration controls on endpoints and workspaces.",
         },
         {
-          id: "PR.DS-04",
-          fn: "PROTECT",
-          category: "PR.DS",
-          fr:
-            "La confidentialité, l’intégrité et la disponibilité des données partagées ou distribuées sont-elles protégées pour les destinataires autorisés ?",
-          en:
-            "Are the confidentiality, integrity, and availability of distributed or shared data protected for authorized recipients?",
-          detailFr:
-            "<strong>Description détaillée :</strong> Confirme que les données communiquées en interne ou vers des tiers ne sont accessibles qu’aux destinataires autorisés et restent fiables et disponibles. Informations complémentaires : vérifier l’usage de classifications, de contrôles d’accès basés sur le besoin d’en connaître, de protections contre la retransmission non autorisée et de clauses contractuelles de protection des données lors du partage avec des fournisseurs.",
-          detailEn:
-            "<strong>Detailed description:</strong> Ensures data shared internally or with third parties is limited to authorized recipients while remaining trustworthy and available. Additional guidance: check data classification, need-to-know access controls, protections against unauthorized retransmission, and contractual data protection clauses when sharing with suppliers.",
-        },
-        {
-          id: "PR.DS-05",
-          fn: "PROTECT",
-          category: "PR.DS",
-          fr:
-            "La disponibilité des données est-elle maintenue et les données sont-elles conservées aussi longtemps que nécessaire et pertinent ?",
-          en:
-            "Is data availability maintained and data retained for only as long as needed and relevant?",
-          detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que les données critiques restent disponibles via des objectifs de RPO/RTO appropriés et que la conservation respecte le principe de minimisation (durées légales ou métiers clairement définies). Informations complémentaires : examiner les politiques de rétention, les plans de continuité applicatifs et les contrôles de purge ou d’archivage.",
-          detailEn:
-            "<strong>Detailed description:</strong> Confirms critical data remain available through suitable RPO/RTO targets and that retention follows minimization principles (clear legal or business durations). Additional guidance: review retention policies, application continuity plans, and purge or archiving controls.",
-        },
-        {
-          id: "PR.DS-06",
+          id: "PR.DS-11",
           fn: "PROTECT",
           category: "PR.DS",
           fr:
@@ -1082,6 +1042,84 @@
             "<strong>Description détaillée :</strong> Confirme l’existence de sauvegardes régulières, protégées contre les altérations ou suppressions (isolation, immutabilité, chiffrement) et testées pour restaurer dans les délais requis. Informations complémentaires : vérifier la couverture des systèmes critiques, la rotation et la rétention, ainsi que des exercices de restauration documentés.<br /><br /><strong>Exemples d’implémentation :</strong> sauvegardes immuables hors ligne ou cloud, séparation des comptes et MFA pour l’administration de la sauvegarde, tests de restauration planifiés incluant des scénarios ransomware.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de sauvegarde et rétention, calendrier des sauvegardes, rapports de succès/échec, preuves d’isolement ou d’immutabilité, rapports de tests de restauration.",
           detailEn:
             "<strong>Detailed description:</strong> Confirms backups are taken regularly, safeguarded from tampering or deletion (isolation, immutability, encryption), and tested to meet required recovery timelines. Additional guidance: check coverage of critical systems, rotation and retention, and documented restore exercises.<br /><br /><strong>Implementation examples:</strong> offline or cloud immutable backups, split administration with MFA for backup systems, scheduled restore tests including ransomware scenarios.<br /><br /><strong>Supporting documentation examples:</strong> backup and retention policy, backup schedules, success/failure reports, evidence of isolation or immutability, and restore test reports.",
+        },
+        {
+          id: "PR.PS-01",
+          fn: "PROTECT",
+          category: "PR.PS",
+          fr:
+            "Les plateformes sont-elles configurées et gérées selon des configurations approuvées ?",
+          en:
+            "Are platforms configured and managed according to approved configurations?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que des configurations de référence (baselines) sont définies, approuvées et appliquées aux plateformes (serveurs, postes, cloud, OT). Informations complémentaires : vérifier les modèles durcis et les contrôles de dérive.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures baseline configurations are defined, approved, and applied to platforms (servers, endpoints, cloud, OT). Additional guidance: review hardened templates and configuration drift controls.",
+        },
+        {
+          id: "PR.PS-02",
+          fn: "PROTECT",
+          category: "PR.PS",
+          fr:
+            "Le durcissement des plateformes est-il appliqué pour réduire les vulnérabilités ?",
+          en:
+            "Is platform hardening applied to reduce vulnerabilities?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que les services inutiles, ports et comptes par défaut sont supprimés ou désactivés, et que les paramètres de sécurité sont renforcés. Informations complémentaires : vérifier les guides de durcissement et leur application.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms unnecessary services, ports, and default accounts are removed or disabled, and security settings are strengthened. Additional guidance: review hardening guides and their enforcement.",
+        },
+        {
+          id: "PR.PS-03",
+          fn: "PROTECT",
+          category: "PR.PS",
+          fr:
+            "Les changements de configuration des plateformes sont-ils contrôlés et tracés ?",
+          en:
+            "Are platform configuration changes controlled and tracked?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les changements sont gérés via un processus de gestion de configuration avec approbation, traçabilité et retour arrière. Informations complémentaires : examiner les tickets de changement et les historiques de configuration.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures changes are managed through configuration management with approvals, traceability, and rollback. Additional guidance: review change tickets and configuration histories.",
+        },
+        {
+          id: "PR.PS-04",
+          fn: "PROTECT",
+          category: "PR.PS",
+          fr:
+            "Les plateformes sont-elles maintenues à jour via des correctifs et mises à niveau de sécurité ?",
+          en:
+            "Are platforms maintained through security patches and updates?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que les correctifs de sécurité sont appliqués selon des délais définis, avec tests et validation avant déploiement. Informations complémentaires : vérifier les politiques de patching et les rapports de conformité.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms security patches are applied within defined timelines, with testing and validation before deployment. Additional guidance: review patching policies and compliance reports.",
+        },
+        {
+          id: "PR.PS-05",
+          fn: "PROTECT",
+          category: "PR.PS",
+          fr:
+            "Les environnements sont-ils isolés et protégés pour limiter les mouvements latéraux ?",
+          en:
+            "Are environments isolated and protected to limit lateral movement?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les environnements (dev/test/prod) et segments critiques sont isolés via segmentation, contrôles d’accès et politiques de communication. Informations complémentaires : examiner les règles réseau et la séparation des rôles.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures environments (dev/test/prod) and critical segments are isolated via segmentation, access controls, and communication policies. Additional guidance: review network rules and role separation.",
+        },
+        {
+          id: "PR.PS-06",
+          fn: "PROTECT",
+          category: "PR.PS",
+          fr:
+            "Les plateformes virtualisées ou conteneurisées sont-elles sécurisées et surveillées ?",
+          en:
+            "Are virtualized or containerized platforms secured and monitored?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que les hyperviseurs, clusters de conteneurs et images sont sécurisés, surveillés et contrôlés contre les configurations risquées. Informations complémentaires : vérifier les scans d’images, les politiques d’exécution et la supervision.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms hypervisors, container clusters, and images are secured, monitored, and controlled against risky configurations. Additional guidance: review image scanning, runtime policies, and monitoring.",
         },
         {
           id: "PR.IR-01",
@@ -1317,30 +1355,30 @@
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
-          id: "RS.AN-01",
+          id: "RS.MA-04",
           fn: "RESPOND",
-          category: "RS.AN",
+          category: "RS.MA",
           fr:
-            "Les alertes issues des systèmes de détection sont-elles analysées pour comprendre les événements ?",
+            "Les plans de gestion des incidents sont-ils testés et améliorés régulièrement ?",
           en:
-            "Are alerts from detection systems analyzed to understand events?",
+            "Are incident management plans tested and improved regularly?",
           detailFr:
-            "<strong>Description détaillée :</strong> La question vérifie que les alertes issues des systèmes de détection sont analysées pour confirmer leur pertinence, déterminer la cause et décider des actions. Informations complémentaires : s’assurer que les faux positifs sont documentés.<br /><br /><strong>Exemples d’implémentation :</strong> files d’alertes SOC avec SLA de traitement, triage automatisé par SOAR, validation manuelle par analystes pour les cas critiques.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures de triage, enregistrements de tickets d’alerte, métriques de temps de traitement, registres de faux positifs.",
+            "<strong>Description détaillée :</strong> Vérifie que des exercices et tests récurrents évaluent l’efficacité des plans et alimentent des améliorations continues. Informations complémentaires : vérifier la planification et le suivi des actions correctives.",
           detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+            "<strong>Detailed description:</strong> Ensures recurring exercises and tests assess plan effectiveness and drive continuous improvements. Additional guidance: review exercise planning and corrective action tracking.",
         },
         {
-          id: "RS.AN-02",
+          id: "RS.MA-05",
           fn: "RESPOND",
-          category: "RS.AN",
+          category: "RS.MA",
           fr:
-            "L’impact des incidents est-il compris et évalué pour orienter la réponse ?",
+            "Les ressources nécessaires à la gestion des incidents sont-elles disponibles et coordonnées ?",
           en:
-            "Is the impact of incidents understood and assessed to guide response?",
+            "Are resources needed for incident management available and coordinated?",
           detailFr:
-            "<strong>Description détaillée :</strong> Ce contrôle confirme que l’impact des incidents est évalué (opérationnel, financier, réglementaire) afin de prioriser la réponse et l’escalade. Informations complémentaires : vérifier l’implication des métiers et la cohérence avec la criticité des actifs.<br /><br /><strong>Exemples d’implémentation :</strong> utilisation d’un modèle d’analyse d’impact, consultation des propriétaires d’actifs critiques, estimation des effets sur la continuité de service.<br /><br /><strong>Exemples de documentations nécessaires :</strong> modèles d’évaluation d’impact, rapports d’analyse d’incident, cartographies de criticité, décisions d’escalade basées sur l’impact.",
+            "<strong>Description détaillée :</strong> Confirme que les équipes, outils et partenaires requis pour la gestion des incidents sont identifiés et mobilisables. Informations complémentaires : vérifier les contrats, astreintes et capacités outillées.",
           detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+            "<strong>Detailed description:</strong> Confirms teams, tools, and partners required for incident management are identified and available. Additional guidance: review contracts, on-call coverage, and tooling capacity.",
         },
         {
           id: "RS.AN-03",
@@ -1356,41 +1394,43 @@
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
-          id: "RS.AN-04",
-          fn: "RESPOND",
-          category: "RS.AN",
-          fr: "Les incidents sont-ils catégorisés de manière cohérente ?",
-          en: "Are incidents categorized consistently?",
-          detailFr:
-            "<strong>Description détaillée :</strong> Ce contrôle confirme que les incidents sont classifiés selon une taxonomie commune (type, gravité, impact) afin d’assurer une réponse cohérente et comparable. Informations complémentaires : vérifier l’application uniforme de la classification.<br /><br /><strong>Exemples d’implémentation :</strong> matrice de sévérité utilisée dans le ticketing, champs obligatoires de catégorisation, revues périodiques de cohérence des classifications.<br /><br /><strong>Exemples de documentations nécessaires :</strong> référentiel de catégorisation, guide de classification, rapports de cohérence, exports de tickets avec catégories.",
-          detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
-        },
-        {
-          id: "RS.AN-05",
+          id: "RS.AN-06",
           fn: "RESPOND",
           category: "RS.AN",
           fr:
-            "Des processus existent-ils pour recevoir, analyser et répondre aux vulnérabilités signalées par des sources internes ou externes ?",
+            "Les informations pertinentes sont-elles analysées pour soutenir les décisions de réponse ?",
           en:
-            "Are processes in place to receive, analyze, and respond to vulnerabilities disclosed by internal or external sources?",
+            "Is relevant information analyzed to support response decisions?",
           detailFr:
-            "<strong>Description détaillée :</strong> La question vérifie l’existence de processus pour recevoir, analyser et traiter les vulnérabilités signalées par des sources internes ou externes. Informations complémentaires : inclure les engagements de délai et les canaux de contact.<br /><br /><strong>Exemples d’implémentation :</strong> boîte de contact sécurité ou VDP, workflow de triage des signalements, intégration des tickets dans la remédiation.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de divulgation, procédures de traitement des vulnérabilités, registres de signalements, métriques de délais de réponse.",
+            "<strong>Description détaillée :</strong> Vérifie que les données techniques et métier sont analysées pour guider les décisions de réponse et d’escalade. Informations complémentaires : examiner les sources d’information et leur corrélation.",
           detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+            "<strong>Detailed description:</strong> Ensures technical and business information is analyzed to guide response and escalation decisions. Additional guidance: review information sources and correlation.",
         },
         {
-          id: "RS.CO-01",
+          id: "RS.AN-07",
           fn: "RESPOND",
-          category: "RS.CO",
+          category: "RS.AN",
           fr:
-            "Le personnel connaît-il ses rôles, responsabilités et l’ordre des opérations lorsque la réponse aux incidents est nécessaire ?",
+            "Les incidents sont-ils analysés pour déterminer les exigences de notification ?",
           en:
-            "Do personnel know their roles, responsibilities, and order of operations when incident response is required?",
+            "Are incidents analyzed to determine notification requirements?",
           detailFr:
-            "<strong>Description détaillée :</strong> Ce contrôle s’assure que le personnel connaît ses rôles, responsabilités et l’ordre des opérations en cas d’incident, afin d’éviter les blocages et doublons. Informations complémentaires : vérifier la formation et les exercices.<br /><br /><strong>Exemples d’implémentation :</strong> matrice RACI pour la réponse, fiches de rôle distribuées, exercices réguliers impliquant toutes les parties.<br /><br /><strong>Exemples de documentations nécessaires :</strong> RACI de réponse aux incidents, supports de formation, comptes rendus d’exercices, listes de contact d’astreinte.",
+            "<strong>Description détaillée :</strong> Confirme que l’analyse d’incident inclut l’évaluation des obligations légales, contractuelles ou réglementaires de notification. Informations complémentaires : vérifier les critères de notification et les délais.",
           detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+            "<strong>Detailed description:</strong> Confirms incident analysis includes assessing legal, contractual, or regulatory notification obligations. Additional guidance: review notification criteria and timelines.",
+        },
+        {
+          id: "RS.AN-08",
+          fn: "RESPOND",
+          category: "RS.AN",
+          fr:
+            "Les causes racines des incidents sont-elles analysées pour éviter leur récurrence ?",
+          en:
+            "Are incident root causes analyzed to prevent recurrence?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les causes racines sont identifiées et documentées pour définir des mesures correctives. Informations complémentaires : examiner les rapports post-incident et le suivi des actions.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures root causes are identified and documented to define corrective actions. Additional guidance: review post-incident reports and action tracking.",
         },
         {
           id: "RS.CO-02",
@@ -1419,32 +1459,6 @@
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
-          id: "RS.CO-04",
-          fn: "RESPOND",
-          category: "RS.CO",
-          fr:
-            "La coordination avec les parties prenantes internes et externes est-elle assurée conformément aux plans de réponse ?",
-          en:
-            "Is coordination with internal and external stakeholders ensured consistent with response plans?",
-          detailFr:
-            "<strong>Description détaillée :</strong> La question confirme que la coordination avec les parties internes et externes est organisée conformément aux plans de réponse (métiers, fournisseurs, autorités). Informations complémentaires : vérifier la disponibilité des contacts et procédures d’escalade.<br /><br /><strong>Exemples d’implémentation :</strong> ponts de coordination multi-acteurs, procédures d’escalade vers les fournisseurs, synchronisation avec la communication externe.<br /><br /><strong>Exemples de documentations nécessaires :</strong> annuaires de contacts d’urgence, procédures de coordination, comptes rendus de réunions de crise, accords de collaboration avec tiers.",
-          detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
-        },
-        {
-          id: "RS.CO-05",
-          fn: "RESPOND",
-          category: "RS.CO",
-          fr:
-            "Les informations sur les incidents sont-elles partagées volontairement avec des partenaires (ISAC/ISSO, autorités, etc.) ?",
-          en:
-            "Is information on incidents voluntarily shared with partners (ISAC/ISSO, authorities, etc.)?",
-          detailFr:
-            "<strong>Description détaillée :</strong> Ce contrôle vérifie que l’organisation partage volontairement des informations sur les incidents avec des partenaires (ISAC/ISSO, autorités, communautés), en respectant les règles de confidentialité et de partage. Informations complémentaires : inclure les protocoles TLP.<br /><br /><strong>Exemples d’implémentation :</strong> soumission d’indicateurs aux ISAC, rapports anonymisés aux communautés, partage selon TLP.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de partage d’informations, preuves de soumissions ISAC, accords de confidentialité, historiques de communications externes.",
-          detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
-        },
-        {
           id: "RS.MI-01",
           fn: "RESPOND",
           category: "RS.MI",
@@ -1464,19 +1478,6 @@
           en: "Are incidents mitigated to reduce their impact on the organization?",
           detailFr:
             "<strong>Description détaillée :</strong> Ce contrôle s’assure que des actions sont menées pour réduire l’impact d’un incident (correctifs, configuration, mesures compensatoires). Informations complémentaires : vérifier la priorisation en fonction de la criticité.<br /><br /><strong>Exemples d’implémentation :</strong> application de correctifs d’urgence, mise en place de règles de filtrage temporaires, déploiement de contrôles compensatoires.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de mitigation, enregistrements de changements, rapports d’atténuation, preuves de validation post-mesure.",
-          detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
-        },
-        {
-          id: "RS.MI-03",
-          fn: "RESPOND",
-          category: "RS.MI",
-          fr:
-            "Les vulnérabilités nouvellement identifiées sont-elles corrigées ou documentées ?",
-          en:
-            "Are newly identified vulnerabilities mitigated or documented?",
-          detailFr:
-            "<strong>Description détaillée :</strong> La question vérifie que les vulnérabilités nouvellement identifiées sont corrigées dans des délais définis ou documentées avec des mesures compensatoires ou acceptation de risque. Informations complémentaires : vérifier le suivi et la gouvernance.<br /><br /><strong>Exemples d’implémentation :</strong> SLA de correction selon criticité, application de correctifs ou contournements, validation d’acceptations de risque par le management.<br /><br /><strong>Exemples de documentations nécessaires :</strong> registre de vulnérabilités, politiques de remédiation, approbations d’acceptation de risque, rapports de suivi des délais.",
           detailEn:
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
@@ -1520,30 +1521,69 @@
             "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
         },
         {
-          id: "RC.CO-01",
+          id: "RC.RP-04",
           fn: "RECOVER",
-          category: "RC.CO",
+          category: "RC.RP",
           fr:
-            "Les activités de restauration sont-elles coordonnées avec les parties internes et externes concernées ?",
+            "Les plans de reprise sont-ils testés et améliorés régulièrement ?",
           en:
-            "Are restoration activities coordinated with relevant internal and external parties?",
+            "Are recovery plans tested and improved regularly?",
           detailFr:
-            "<strong>Description détaillée :</strong> La question confirme que la restauration est coordonnée avec les parties internes et externes concernées (équipes métier, fournisseurs, autorités si nécessaire). Informations complémentaires : s’assurer de la synchronisation des actions.<br /><br /><strong>Exemples d’implémentation :</strong> cellule de coordination de reprise, ponts de communication avec fournisseurs critiques, planification conjointe des fenêtres de remise en service.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de coordination de reprise, annuaires de contacts, comptes rendus de coordination, accords de service avec tiers.",
+            "<strong>Description détaillée :</strong> Confirme que des tests et exercices évaluent l’efficacité des plans de reprise et génèrent des améliorations. Informations complémentaires : vérifier le calendrier des tests et le suivi des actions.",
           detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+            "<strong>Detailed description:</strong> Confirms tests and exercises assess recovery plan effectiveness and drive improvements. Additional guidance: review test schedules and action tracking.",
         },
         {
-          id: "RC.CO-02",
+          id: "RC.RP-05",
+          fn: "RECOVER",
+          category: "RC.RP",
+          fr:
+            "Les capacités de restauration sont-elles adaptées aux objectifs de reprise définis ?",
+          en:
+            "Are restoration capabilities aligned with defined recovery objectives?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Vérifie que les capacités techniques et organisationnelles permettent d’atteindre les objectifs RTO/RPO. Informations complémentaires : examiner les moyens de restauration et les ressources disponibles.",
+          detailEn:
+            "<strong>Detailed description:</strong> Ensures technical and organizational capabilities meet defined RTO/RPO objectives. Additional guidance: review restoration resources and capacity.",
+        },
+        {
+          id: "RC.RP-06",
+          fn: "RECOVER",
+          category: "RC.RP",
+          fr:
+            "Les activités de reprise sont-elles coordonnées avec les dépendances critiques ?",
+          en:
+            "Are recovery activities coordinated with critical dependencies?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que la reprise intègre les dépendances internes et externes (fournisseurs, partenaires, services partagés). Informations complémentaires : vérifier les plans de coordination et les contacts.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms recovery integrates internal and external dependencies (suppliers, partners, shared services). Additional guidance: review coordination plans and contacts.",
+        },
+        {
+          id: "RC.CO-03",
           fn: "RECOVER",
           category: "RC.CO",
           fr:
-            "L’état d’avancement de la reprise est-il communiqué aux parties prenantes concernées ?",
+            "Les communications de reprise sont-elles adaptées aux parties prenantes et à leurs besoins ?",
           en:
-            "Is recovery status communicated to relevant stakeholders?",
+            "Are recovery communications tailored to stakeholders and their needs?",
           detailFr:
-            "<strong>Description détaillée :</strong> Ce contrôle vérifie que l’état d’avancement de la reprise est communiqué aux parties prenantes avec un rythme défini et des messages cohérents. Informations complémentaires : vérifier la traçabilité des communications.<br /><br /><strong>Exemples d’implémentation :</strong> rapports de statut réguliers, tableaux de bord de reprise, messages ciblés selon les audiences (direction, IT, clients).<br /><br /><strong>Exemples de documentations nécessaires :</strong> plan de communication de reprise, historiques de communications, modèles de rapports de statut, listes de diffusion validées.",
+            "<strong>Description détaillée :</strong> Vérifie que les messages de reprise sont adaptés aux audiences (direction, métiers, clients) et alignés sur les attentes. Informations complémentaires : vérifier les modèles de communication.",
           detailEn:
-            "<strong>Detailed description:</strong> csf.tools Note: Subcategories do not have detailed descriptions.",
+            "<strong>Detailed description:</strong> Ensures recovery messaging is tailored to audiences (leadership, business units, customers) and aligns with expectations. Additional guidance: review communication templates.",
+        },
+        {
+          id: "RC.CO-04",
+          fn: "RECOVER",
+          category: "RC.CO",
+          fr:
+            "Les informations de reprise sont-elles partagées avec les parties externes selon les exigences applicables ?",
+          en:
+            "Is recovery information shared with external parties according to applicable requirements?",
+          detailFr:
+            "<strong>Description détaillée :</strong> Confirme que les communications externes respectent les exigences légales, contractuelles et réglementaires. Informations complémentaires : vérifier les processus de validation.",
+          detailEn:
+            "<strong>Detailed description:</strong> Confirms external communications comply with legal, contractual, and regulatory requirements. Additional guidance: review approval processes.",
         },
       ];
 
@@ -1555,7 +1595,7 @@
 
       const BASE_FUNCTION_CATEGORIES = {
         GOVERN: ["GV.OC", "GV.RM", "GV.RR", "GV.PO", "GV.OV", "GV.SC"],
-        IDENTIFY: ["ID.AM", "ID.BE", "ID.IM", "ID.RA", "ID.RM", "ID.SC"],
+        IDENTIFY: ["ID.AM", "ID.IM", "ID.RA"],
         PROTECT: ["PR.AA", "PR.AT", "PR.DS", "PR.PS", "PR.IR"],
         DETECT: ["DE.AE", "DE.CM"],
         RESPOND: ["RS.MA", "RS.AN", "RS.CO", "RS.MI"],
