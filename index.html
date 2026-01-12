@@ -1052,9 +1052,9 @@
           en:
             "Are platforms configured and managed according to approved configurations?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que des configurations de référence (baselines) sont définies, approuvées et appliquées aux plateformes (serveurs, postes, cloud, OT). Informations complémentaires : vérifier les modèles durcis et les contrôles de dérive.",
+            "<strong>Description détaillée :</strong> Vérifie que des configurations de référence (baselines) sont définies, approuvées et appliquées aux plateformes (serveurs, postes, cloud, OT). Informations complémentaires : vérifier les modèles durcis et les contrôles de dérive.<br /><br /><strong>Exemples d’implémentation :</strong> catalogues de configurations approuvées, modèles d’images ou de gabarits durcis, contrôles automatisés de conformité des configurations.<br /><br /><strong>Exemples de documentations nécessaires :</strong> référentiel de baselines, procès-verbaux d’approbation, rapports de conformité de configuration, exceptions et dérogations documentées.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures baseline configurations are defined, approved, and applied to platforms (servers, endpoints, cloud, OT). Additional guidance: review hardened templates and configuration drift controls.",
+            "<strong>Detailed description:</strong> Ensures baseline configurations are defined, approved, and applied to platforms (servers, endpoints, cloud, OT). Additional guidance: review hardened templates and configuration drift controls.<br /><br /><strong>Implementation examples:</strong> approved configuration catalogs, hardened image or template baselines, automated configuration compliance checks.<br /><br /><strong>Supporting documentation examples:</strong> baseline repository, approval records, configuration compliance reports, documented exceptions and waivers.",
         },
         {
           id: "PR.PS-02",
@@ -1065,9 +1065,9 @@
           en:
             "Is platform hardening applied to reduce vulnerabilities?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que les services inutiles, ports et comptes par défaut sont supprimés ou désactivés, et que les paramètres de sécurité sont renforcés. Informations complémentaires : vérifier les guides de durcissement et leur application.",
+            "<strong>Description détaillée :</strong> Confirme que les services inutiles, ports et comptes par défaut sont supprimés ou désactivés, et que les paramètres de sécurité sont renforcés. Informations complémentaires : vérifier les guides de durcissement et leur application.<br /><br /><strong>Exemples d’implémentation :</strong> désactivation des services non requis, suppression des comptes par défaut, application de CIS benchmarks ou guides éditeurs, scans de conformité de durcissement.<br /><br /><strong>Exemples de documentations nécessaires :</strong> guides de durcissement, rapports de conformité ou audits, tickets de changement appliqués, listes de services et comptes autorisés.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms unnecessary services, ports, and default accounts are removed or disabled, and security settings are strengthened. Additional guidance: review hardening guides and their enforcement.",
+            "<strong>Detailed description:</strong> Confirms unnecessary services, ports, and default accounts are removed or disabled, and security settings are strengthened. Additional guidance: review hardening guides and their enforcement.<br /><br /><strong>Implementation examples:</strong> disable non-required services, remove default accounts, apply CIS benchmarks or vendor hardening guides, hardening compliance scans.<br /><br /><strong>Supporting documentation examples:</strong> hardening guides, compliance or audit reports, change tickets applied, approved service/account lists.",
         },
         {
           id: "PR.PS-03",
@@ -1078,9 +1078,9 @@
           en:
             "Are platform configuration changes controlled and tracked?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que les changements sont gérés via un processus de gestion de configuration avec approbation, traçabilité et retour arrière. Informations complémentaires : examiner les tickets de changement et les historiques de configuration.",
+            "<strong>Description détaillée :</strong> Vérifie que les changements sont gérés via un processus de gestion de configuration avec approbation, traçabilité et retour arrière. Informations complémentaires : examiner les tickets de changement et les historiques de configuration.<br /><br /><strong>Exemples d’implémentation :</strong> workflows ITSM pour modifications de configuration, pipelines d’infrastructure as code avec approbation, contrôles de dérive et mécanismes de rollback.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures de gestion de configuration, tickets de changement approuvés, historiques de versions, plans de retour arrière.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures changes are managed through configuration management with approvals, traceability, and rollback. Additional guidance: review change tickets and configuration histories.",
+            "<strong>Detailed description:</strong> Ensures changes are managed through configuration management with approvals, traceability, and rollback. Additional guidance: review change tickets and configuration histories.<br /><br /><strong>Implementation examples:</strong> ITSM workflows for configuration changes, infrastructure-as-code pipelines with approvals, drift detection and rollback mechanisms.<br /><br /><strong>Supporting documentation examples:</strong> configuration management procedures, approved change tickets, version histories, rollback plans.",
         },
         {
           id: "PR.PS-04",
@@ -1091,9 +1091,9 @@
           en:
             "Are platforms maintained through security patches and updates?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que les correctifs de sécurité sont appliqués selon des délais définis, avec tests et validation avant déploiement. Informations complémentaires : vérifier les politiques de patching et les rapports de conformité.",
+            "<strong>Description détaillée :</strong> Confirme que les correctifs de sécurité sont appliqués selon des délais définis, avec tests et validation avant déploiement. Informations complémentaires : vérifier les politiques de patching et les rapports de conformité.<br /><br /><strong>Exemples d’implémentation :</strong> calendriers de patching, environnements de test pré-déploiement, scans de vulnérabilités vérifiant la remédiation, déploiements automatisés de correctifs.<br /><br /><strong>Exemples de documentations nécessaires :</strong> politique de patch management, calendrier des correctifs, rapports de conformité/coverage, résultats de tests de validation.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms security patches are applied within defined timelines, with testing and validation before deployment. Additional guidance: review patching policies and compliance reports.",
+            "<strong>Detailed description:</strong> Confirms security patches are applied within defined timelines, with testing and validation before deployment. Additional guidance: review patching policies and compliance reports.<br /><br /><strong>Implementation examples:</strong> patching schedules, pre-deployment test environments, vulnerability scans confirming remediation, automated patch deployments.<br /><br /><strong>Supporting documentation examples:</strong> patch management policy, patch calendars, compliance/coverage reports, validation test results.",
         },
         {
           id: "PR.PS-05",
@@ -1104,9 +1104,9 @@
           en:
             "Are environments isolated and protected to limit lateral movement?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que les environnements (dev/test/prod) et segments critiques sont isolés via segmentation, contrôles d’accès et politiques de communication. Informations complémentaires : examiner les règles réseau et la séparation des rôles.",
+            "<strong>Description détaillée :</strong> Vérifie que les environnements (dev/test/prod) et segments critiques sont isolés via segmentation, contrôles d’accès et politiques de communication. Informations complémentaires : examiner les règles réseau et la séparation des rôles.<br /><br /><strong>Exemples d’implémentation :</strong> VLAN ou micro-segmentation, pare-feu inter-segments, comptes dédiés par environnement, politiques d’accès conditionnel.<br /><br /><strong>Exemples de documentations nécessaires :</strong> schémas de segmentation réseau, règles de pare-feu, matrices de séparation des rôles, revues d’accès.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures environments (dev/test/prod) and critical segments are isolated via segmentation, access controls, and communication policies. Additional guidance: review network rules and role separation.",
+            "<strong>Detailed description:</strong> Ensures environments (dev/test/prod) and critical segments are isolated via segmentation, access controls, and communication policies. Additional guidance: review network rules and role separation.<br /><br /><strong>Implementation examples:</strong> VLAN or micro-segmentation, inter-segment firewalls, environment-dedicated accounts, conditional access policies.<br /><br /><strong>Supporting documentation examples:</strong> network segmentation diagrams, firewall rules, role separation matrices, access reviews.",
         },
         {
           id: "PR.PS-06",
@@ -1117,9 +1117,9 @@
           en:
             "Are virtualized or containerized platforms secured and monitored?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que les hyperviseurs, clusters de conteneurs et images sont sécurisés, surveillés et contrôlés contre les configurations risquées. Informations complémentaires : vérifier les scans d’images, les politiques d’exécution et la supervision.",
+            "<strong>Description détaillée :</strong> Confirme que les hyperviseurs, clusters de conteneurs et images sont sécurisés, surveillés et contrôlés contre les configurations risquées. Informations complémentaires : vérifier les scans d’images, les politiques d’exécution et la supervision.<br /><br /><strong>Exemples d’implémentation :</strong> durcissement des hyperviseurs, policies d’admission Kubernetes, scans d’images conteneurs, monitoring des événements de runtime.<br /><br /><strong>Exemples de documentations nécessaires :</strong> guides de sécurisation virtualisation/conteneurs, rapports de scans d’images, politiques d’admission/runtime, journaux de surveillance.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms hypervisors, container clusters, and images are secured, monitored, and controlled against risky configurations. Additional guidance: review image scanning, runtime policies, and monitoring.",
+            "<strong>Detailed description:</strong> Confirms hypervisors, container clusters, and images are secured, monitored, and controlled against risky configurations. Additional guidance: review image scanning, runtime policies, and monitoring.<br /><br /><strong>Implementation examples:</strong> hypervisor hardening, Kubernetes admission policies, container image scanning, runtime event monitoring.<br /><br /><strong>Supporting documentation examples:</strong> virtualization/container hardening guides, image scan reports, admission/runtime policies, monitoring logs.",
         },
         {
           id: "PR.IR-01",
@@ -1363,9 +1363,9 @@
           en:
             "Are incident management plans tested and improved regularly?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que des exercices et tests récurrents évaluent l’efficacité des plans et alimentent des améliorations continues. Informations complémentaires : vérifier la planification et le suivi des actions correctives.",
+            "<strong>Description détaillée :</strong> Vérifie que des exercices et tests récurrents évaluent l’efficacité des plans et alimentent des améliorations continues. Informations complémentaires : vérifier la planification et le suivi des actions correctives.<br /><br /><strong>Exemples d’implémentation :</strong> exercices de simulation IR, tests de table-top, scénarios d’incident récurrents avec plans d’action, revues post-exercice.<br /><br /><strong>Exemples de documentations nécessaires :</strong> calendriers d’exercices, rapports de tests, plans d’action correctifs, preuves de mise à jour des plans.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures recurring exercises and tests assess plan effectiveness and drive continuous improvements. Additional guidance: review exercise planning and corrective action tracking.",
+            "<strong>Detailed description:</strong> Ensures recurring exercises and tests assess plan effectiveness and drive continuous improvements. Additional guidance: review exercise planning and corrective action tracking.<br /><br /><strong>Implementation examples:</strong> IR simulations, tabletop exercises, recurring incident scenarios with action plans, post-exercise reviews.<br /><br /><strong>Supporting documentation examples:</strong> exercise calendars, test reports, corrective action plans, evidence of plan updates.",
         },
         {
           id: "RS.MA-05",
@@ -1376,9 +1376,9 @@
           en:
             "Are resources needed for incident management available and coordinated?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que les équipes, outils et partenaires requis pour la gestion des incidents sont identifiés et mobilisables. Informations complémentaires : vérifier les contrats, astreintes et capacités outillées.",
+            "<strong>Description détaillée :</strong> Confirme que les équipes, outils et partenaires requis pour la gestion des incidents sont identifiés et mobilisables. Informations complémentaires : vérifier les contrats, astreintes et capacités outillées.<br /><br /><strong>Exemples d’implémentation :</strong> annuaire d’experts et d’astreintes, contrats avec prestataires IR, outils EDR/SIEM prêts à l’emploi, plans de mobilisation des équipes.<br /><br /><strong>Exemples de documentations nécessaires :</strong> listes de contacts et astreintes, contrats et SLA, inventaire des outils IR, procédures d’activation.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms teams, tools, and partners required for incident management are identified and available. Additional guidance: review contracts, on-call coverage, and tooling capacity.",
+            "<strong>Detailed description:</strong> Confirms teams, tools, and partners required for incident management are identified and available. Additional guidance: review contracts, on-call coverage, and tooling capacity.<br /><br /><strong>Implementation examples:</strong> on-call rosters and expert directories, IR vendor contracts, ready-to-use EDR/SIEM tooling, team mobilization plans.<br /><br /><strong>Supporting documentation examples:</strong> contact and on-call lists, contracts and SLAs, IR tooling inventory, activation procedures.",
         },
         {
           id: "RS.AN-03",
@@ -1402,9 +1402,9 @@
           en:
             "Is relevant information analyzed to support response decisions?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que les données techniques et métier sont analysées pour guider les décisions de réponse et d’escalade. Informations complémentaires : examiner les sources d’information et leur corrélation.",
+            "<strong>Description détaillée :</strong> Vérifie que les données techniques et métier sont analysées pour guider les décisions de réponse et d’escalade. Informations complémentaires : examiner les sources d’information et leur corrélation.<br /><br /><strong>Exemples d’implémentation :</strong> corrélation SIEM, analyses de logs applicatifs, analyses d’impact métier, tableaux de bord de priorisation.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures d’analyse, sources de données et mapping, rapports d’analyse d’incident, décisions d’escalade consignées.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures technical and business information is analyzed to guide response and escalation decisions. Additional guidance: review information sources and correlation.",
+            "<strong>Detailed description:</strong> Ensures technical and business information is analyzed to guide response and escalation decisions. Additional guidance: review information sources and correlation.<br /><br /><strong>Implementation examples:</strong> SIEM correlation, application log analysis, business impact analysis, prioritization dashboards.<br /><br /><strong>Supporting documentation examples:</strong> analysis procedures, data source mappings, incident analysis reports, recorded escalation decisions.",
         },
         {
           id: "RS.AN-07",
@@ -1415,9 +1415,9 @@
           en:
             "Are incidents analyzed to determine notification requirements?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que l’analyse d’incident inclut l’évaluation des obligations légales, contractuelles ou réglementaires de notification. Informations complémentaires : vérifier les critères de notification et les délais.",
+            "<strong>Description détaillée :</strong> Confirme que l’analyse d’incident inclut l’évaluation des obligations légales, contractuelles ou réglementaires de notification. Informations complémentaires : vérifier les critères de notification et les délais.<br /><br /><strong>Exemples d’implémentation :</strong> grilles de décision de notification, consultations juridiques, matrices d’impact selon les régulateurs, revues des délais de déclaration.<br /><br /><strong>Exemples de documentations nécessaires :</strong> référentiel des obligations de notification, matrices de décision, preuves de validation juridique, registres de notifications.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms incident analysis includes assessing legal, contractual, or regulatory notification obligations. Additional guidance: review notification criteria and timelines.",
+            "<strong>Detailed description:</strong> Confirms incident analysis includes assessing legal, contractual, or regulatory notification obligations. Additional guidance: review notification criteria and timelines.<br /><br /><strong>Implementation examples:</strong> notification decision matrices, legal consultations, regulator impact matrices, notification deadline reviews.<br /><br /><strong>Supporting documentation examples:</strong> notification obligation registry, decision matrices, legal validation evidence, notification logs.",
         },
         {
           id: "RS.AN-08",
@@ -1428,9 +1428,9 @@
           en:
             "Are incident root causes analyzed to prevent recurrence?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que les causes racines sont identifiées et documentées pour définir des mesures correctives. Informations complémentaires : examiner les rapports post-incident et le suivi des actions.",
+            "<strong>Description détaillée :</strong> Vérifie que les causes racines sont identifiées et documentées pour définir des mesures correctives. Informations complémentaires : examiner les rapports post-incident et le suivi des actions.<br /><br /><strong>Exemples d’implémentation :</strong> analyses RCA (5 pourquoi, Ishikawa), comités post-incident, plans d’actions correctives priorisés, suivi en backlog d’amélioration.<br /><br /><strong>Exemples de documentations nécessaires :</strong> rapports RCA, comptes rendus post-incident, plans d’actions et statuts, preuves de mise en œuvre.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures root causes are identified and documented to define corrective actions. Additional guidance: review post-incident reports and action tracking.",
+            "<strong>Detailed description:</strong> Ensures root causes are identified and documented to define corrective actions. Additional guidance: review post-incident reports and action tracking.<br /><br /><strong>Implementation examples:</strong> RCA analyses (5 Whys, fishbone), post-incident committees, prioritized corrective action plans, improvement backlog tracking.<br /><br /><strong>Supporting documentation examples:</strong> RCA reports, post-incident minutes, action plans and status, implementation evidence.",
         },
         {
           id: "RS.CO-02",
@@ -1529,9 +1529,9 @@
           en:
             "Are recovery plans tested and improved regularly?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que des tests et exercices évaluent l’efficacité des plans de reprise et génèrent des améliorations. Informations complémentaires : vérifier le calendrier des tests et le suivi des actions.",
+            "<strong>Description détaillée :</strong> Confirme que des tests et exercices évaluent l’efficacité des plans de reprise et génèrent des améliorations. Informations complémentaires : vérifier le calendrier des tests et le suivi des actions.<br /><br /><strong>Exemples d’implémentation :</strong> tests de basculement, exercices de reprise sur site de secours, simulations de perte de service, revues post-exercice avec actions correctives.<br /><br /><strong>Exemples de documentations nécessaires :</strong> calendrier des tests de reprise, rapports d’exercices, plans d’actions correctives, preuves d’améliorations intégrées.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms tests and exercises assess recovery plan effectiveness and drive improvements. Additional guidance: review test schedules and action tracking.",
+            "<strong>Detailed description:</strong> Confirms tests and exercises assess recovery plan effectiveness and drive improvements. Additional guidance: review test schedules and action tracking.<br /><br /><strong>Implementation examples:</strong> failover tests, recovery exercises at DR sites, service outage simulations, post-exercise reviews with corrective actions.<br /><br /><strong>Supporting documentation examples:</strong> recovery test schedules, exercise reports, corrective action plans, evidence of improvements applied.",
         },
         {
           id: "RC.RP-05",
@@ -1542,9 +1542,9 @@
           en:
             "Are restoration capabilities aligned with defined recovery objectives?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que les capacités techniques et organisationnelles permettent d’atteindre les objectifs RTO/RPO. Informations complémentaires : examiner les moyens de restauration et les ressources disponibles.",
+            "<strong>Description détaillée :</strong> Vérifie que les capacités techniques et organisationnelles permettent d’atteindre les objectifs RTO/RPO. Informations complémentaires : examiner les moyens de restauration et les ressources disponibles.<br /><br /><strong>Exemples d’implémentation :</strong> objectifs RTO/RPO documentés, architecture de sauvegarde adaptée, capacités de restauration mesurées, ressources dédiées à la reprise.<br /><br /><strong>Exemples de documentations nécessaires :</strong> objectifs RTO/RPO approuvés, rapports de capacité de restauration, architecture de reprise, résultats de tests de performance.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures technical and organizational capabilities meet defined RTO/RPO objectives. Additional guidance: review restoration resources and capacity.",
+            "<strong>Detailed description:</strong> Ensures technical and organizational capabilities meet defined RTO/RPO objectives. Additional guidance: review restoration resources and capacity.<br /><br /><strong>Implementation examples:</strong> documented RTO/RPO targets, appropriate backup architecture, measured restoration capacity, dedicated recovery resources.<br /><br /><strong>Supporting documentation examples:</strong> approved RTO/RPO targets, restoration capacity reports, recovery architecture, performance test results.",
         },
         {
           id: "RC.RP-06",
@@ -1555,9 +1555,9 @@
           en:
             "Are recovery activities coordinated with critical dependencies?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que la reprise intègre les dépendances internes et externes (fournisseurs, partenaires, services partagés). Informations complémentaires : vérifier les plans de coordination et les contacts.",
+            "<strong>Description détaillée :</strong> Confirme que la reprise intègre les dépendances internes et externes (fournisseurs, partenaires, services partagés). Informations complémentaires : vérifier les plans de coordination et les contacts.<br /><br /><strong>Exemples d’implémentation :</strong> cartographie des dépendances critiques, plans de reprise intégrant les fournisseurs, tests de coordination inter-organisations, canaux de communication dédiés.<br /><br /><strong>Exemples de documentations nécessaires :</strong> inventaire des dépendances, plans de coordination, contrats/SLA, listes de contacts de crise.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms recovery integrates internal and external dependencies (suppliers, partners, shared services). Additional guidance: review coordination plans and contacts.",
+            "<strong>Detailed description:</strong> Confirms recovery integrates internal and external dependencies (suppliers, partners, shared services). Additional guidance: review coordination plans and contacts.<br /><br /><strong>Implementation examples:</strong> critical dependency mapping, recovery plans integrating vendors, cross-organization coordination tests, dedicated communication channels.<br /><br /><strong>Supporting documentation examples:</strong> dependency inventories, coordination plans, contracts/SLAs, crisis contact lists.",
         },
         {
           id: "RC.CO-03",
@@ -1568,9 +1568,9 @@
           en:
             "Are recovery communications tailored to stakeholders and their needs?",
           detailFr:
-            "<strong>Description détaillée :</strong> Vérifie que les messages de reprise sont adaptés aux audiences (direction, métiers, clients) et alignés sur les attentes. Informations complémentaires : vérifier les modèles de communication.",
+            "<strong>Description détaillée :</strong> Vérifie que les messages de reprise sont adaptés aux audiences (direction, métiers, clients) et alignés sur les attentes. Informations complémentaires : vérifier les modèles de communication.<br /><br /><strong>Exemples d’implémentation :</strong> modèles de messages par audience, validations par la direction, messages adaptés aux clients, points d’avancement réguliers.<br /><br /><strong>Exemples de documentations nécessaires :</strong> plans de communication de reprise, modèles de messages, historique des communications, validations approuvées.",
           detailEn:
-            "<strong>Detailed description:</strong> Ensures recovery messaging is tailored to audiences (leadership, business units, customers) and aligns with expectations. Additional guidance: review communication templates.",
+            "<strong>Detailed description:</strong> Ensures recovery messaging is tailored to audiences (leadership, business units, customers) and aligns with expectations. Additional guidance: review communication templates.<br /><br /><strong>Implementation examples:</strong> audience-specific message templates, leadership approvals, customer-tailored messaging, regular status updates.<br /><br /><strong>Supporting documentation examples:</strong> recovery communication plans, message templates, communication history, approved validations.",
         },
         {
           id: "RC.CO-04",
@@ -1581,9 +1581,9 @@
           en:
             "Is recovery information shared with external parties according to applicable requirements?",
           detailFr:
-            "<strong>Description détaillée :</strong> Confirme que les communications externes respectent les exigences légales, contractuelles et réglementaires. Informations complémentaires : vérifier les processus de validation.",
+            "<strong>Description détaillée :</strong> Confirme que les communications externes respectent les exigences légales, contractuelles et réglementaires. Informations complémentaires : vérifier les processus de validation.<br /><br /><strong>Exemples d’implémentation :</strong> processus de validation juridique, messages conformes aux exigences des autorités, coordination avec les partenaires, suivi des délais de communication.<br /><br /><strong>Exemples de documentations nécessaires :</strong> procédures de validation externe, modèles de communication réglementaire, preuves de conformité, registres des communications externes.",
           detailEn:
-            "<strong>Detailed description:</strong> Confirms external communications comply with legal, contractual, and regulatory requirements. Additional guidance: review approval processes.",
+            "<strong>Detailed description:</strong> Confirms external communications comply with legal, contractual, and regulatory requirements. Additional guidance: review approval processes.<br /><br /><strong>Implementation examples:</strong> legal approval workflows, regulator-compliant messaging, partner coordination, communication deadline tracking.<br /><br /><strong>Supporting documentation examples:</strong> external validation procedures, regulatory communication templates, compliance evidence, external communication logs.",
         },
       ];
 
