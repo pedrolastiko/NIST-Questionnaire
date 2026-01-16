@@ -9,6 +9,15 @@ This project delivers an interactive questionnaire that helps teams evaluate the
 * **Autosave and portability** – responses persist in the browser via `localStorage`, and can be exported/imported as JSON or CSV for collaboration and archiving.
 * **Bilingual experience** – toggle between French and English labels, prompts, and helper texts at any time during the assessment.
 
+## Security
+
+The questionnaire is designed to stay entirely local and avoid any automatic network interaction:
+
+* **Local execution** – the application is a static HTML file that opens directly in the browser, with no application server or remote processing.
+* **No collection** – there are no accounts, authentication, or automatic transmission of responses.
+* **Local storage** – responses are saved in the browser via `localStorage` and can be exported/imported manually (JSON/CSV) as needed for archiving.
+* **Data ownership** – users retain full control of exported files and can store them on their own systems or secure media.
+
 ## Installation
 
 Although the app requires no build tooling, the repository includes helper workflows for easy hosting.
