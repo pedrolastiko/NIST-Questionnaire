@@ -11,7 +11,7 @@ This project delivers an interactive questionnaire that helps teams evaluate the
 
 ## Security
 
-The questionnaire is designed to stay entirely local and avoid any automatic network interaction:
+For privacy and confidentiality reasons, the questionnaire is designed to operate entirely locally and does not perform any network interactions:
 
 * **Local execution** – the application is a static HTML file that opens directly in the browser, with no application server or remote processing.
 * **No collection** – there are no accounts, authentication, or automatic transmission of responses.
