@@ -1839,16 +1839,43 @@
 
       // ------------------ Composants UI ------------------
 
-      function Card({ title, children }) {
+      function Card({ title, children, defaultOpen = true }) {
+        const [isOpen, setIsOpen] = useState(defaultOpen);
         return html`
           <section className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-4 md:p-6 mb-4">
             ${title &&
-            html`<h2
-              className="text-lg font-semibold text-neutral-900 mb-3 flex items-center gap-2"
-            >
-              ${title}
-            </h2>`}
-            ${children}
+            html`<div className="mb-3 flex items-center justify-between gap-2">
+              <h2
+                className="text-lg font-semibold text-neutral-900 flex items-center gap-2"
+              >
+                ${title}
+              </h2>
+              <button
+                className="inline-flex items-center justify-center rounded-full border border-transparent p-1 text-neutral-500 transition hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                type="button"
+                aria-expanded=${isOpen}
+                aria-label=${isOpen
+                  ? "Réduire la section"
+                  : "Déployer la section"}
+                onClick=${() => setIsOpen((prev) => !prev)}
+              >
+                <svg
+                  className=${`h-5 w-5 transition-transform ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="6 8 10 12 14 8"></polyline>
+                </svg>
+              </button>
+            </div>`}
+            ${isOpen ? children : null}
           </section>
         `;
       }
