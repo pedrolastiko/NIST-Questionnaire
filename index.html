@@ -1630,7 +1630,7 @@
       }, []);
 
       const DEFAULT_ANSWERS = QUESTIONS.reduce((acc, q) => {
-        acc[q.id] = { target: 4 };
+        acc[q.id] = { target: null };
         return acc;
       }, {});
 
@@ -1672,6 +1672,13 @@
           date: "Date",
           globalLang: "Langue",
           dashboard: "Dashboard",
+          progressTitle: "Progression",
+          progressOverall: "Avancement global",
+          progressByFunction: "Progression par fonction",
+          progressBasedOn:
+            "Basé sur les scores, cibles et commentaires renseignés.",
+          progressItems: (filled, total) =>
+            `${filled} / ${total} éléments renseignés`,
           maturityScore: "Score de maturité",
           maturityCurrent: "Maturité actuelle",
           maturityTargetLabel: "Cible",
@@ -1720,6 +1727,13 @@
           date: "Date",
           globalLang: "Language",
           dashboard: "Dashboard",
+          progressTitle: "Progress",
+          progressOverall: "Overall progress",
+          progressByFunction: "Progress by function",
+          progressBasedOn:
+            "Based on scores, targets, and comments filled in.",
+          progressItems: (filled, total) =>
+            `${filled} / ${total} items completed`,
           maturityScore: "Maturity score",
           maturityCurrent: "Current maturity",
           maturityTargetLabel: "Target maturity",
@@ -1994,6 +2008,52 @@
 
           return { byFn, radarData, global, targetGlobal };
         }, [answers, lang]);
+
+        const completionStats = useMemo(() => {
+          const byFn = {};
+          FUNCTIONS.forEach((fn) => {
+            byFn[fn.id] = { filled: 0, total: 0, percentage: 0 };
+          });
+
+          const totalItems = QUESTIONS.length * 3;
+          let filledItems = 0;
+
+          QUESTIONS.forEach((q) => {
+            const a = answers[q.id] || {};
+            const scoreFilled = typeof a.score === "number";
+            const targetFilled = typeof a.target === "number";
+            const commentsFilled =
+              typeof a.comments === "string" && a.comments.trim() !== "";
+            const filledCount =
+              (scoreFilled ? 1 : 0) +
+              (targetFilled ? 1 : 0) +
+              (commentsFilled ? 1 : 0);
+
+            filledItems += filledCount;
+            if (!byFn[q.fn]) {
+              byFn[q.fn] = { filled: 0, total: 0, percentage: 0 };
+            }
+            byFn[q.fn].filled += filledCount;
+            byFn[q.fn].total += 3;
+          });
+
+          Object.values(byFn).forEach((entry) => {
+            entry.percentage = entry.total
+              ? Math.round((entry.filled / entry.total) * 100)
+              : 0;
+          });
+
+          const overallPercentage = totalItems
+            ? Math.round((filledItems / totalItems) * 100)
+            : 0;
+
+          return {
+            overallPercentage,
+            overallFilled: filledItems,
+            overallTotal: totalItems,
+            byFn,
+          };
+        }, [answers]);
 
         const maturityByFunctionData = useMemo(
           () =>
@@ -2605,6 +2665,84 @@
                         ${t.noDataYet}
                       </p>
                     `}
+              <//>
+
+              <!-- Progression -->
+              <${Card} title=${t.progressTitle}>
+                <div className="space-y-5">
+                  <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-semibold text-neutral-700">
+                        ${t.progressOverall}
+                      </div>
+                      <div className="text-sm font-semibold text-neutral-900">
+                        ${completionStats.overallPercentage}%
+                      </div>
+                    </div>
+                    <div className="mt-3 h-3 w-full rounded-full bg-neutral-200 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-blue-600 transition-all"
+                        style=${{
+                          width: `${completionStats.overallPercentage}%`,
+                        }}
+                      ></div>
+                    </div>
+                    <div className="mt-2 text-xs text-neutral-500">
+                      ${t.progressItems(
+                        completionStats.overallFilled,
+                        completionStats.overallTotal
+                      )}
+                      • ${t.progressBasedOn}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-neutral-500 tracking-wide mb-3">
+                      ${t.progressByFunction}
+                    </div>
+                    <div className="space-y-3">
+                      ${FUNCTIONS.map((fn) => {
+                        const entry = completionStats.byFn[fn.id] || {
+                          filled: 0,
+                          total: 0,
+                          percentage: 0,
+                        };
+                        return html`
+                          <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2">
+                            <div className="flex items-center justify-between text-xs font-semibold text-neutral-600">
+                              <span
+                                className="inline-flex items-center gap-2"
+                              >
+                                <span
+                                  className="h-2 w-2 rounded-full"
+                                  style=${{
+                                    backgroundColor: FUNCTION_COLORS[fn.id],
+                                  }}
+                                ></span>
+                                ${fn[lang]}
+                              </span>
+                              <span className="text-neutral-900">
+                                ${entry.percentage}%
+                              </span>
+                            </div>
+                            <div className="mt-2 h-2 w-full rounded-full bg-neutral-200 overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all"
+                                style=${{
+                                  width: `${entry.percentage}%`,
+                                  backgroundColor: FUNCTION_COLORS[fn.id],
+                                }}
+                              ></div>
+                            </div>
+                            <div className="mt-1 text-[11px] text-neutral-500">
+                              ${t.progressItems(entry.filled, entry.total)}
+                            </div>
+                          </div>
+                        `;
+                      })}
+                    </div>
+                  </div>
+                </div>
               <//>
 
               <!-- Questions -->
