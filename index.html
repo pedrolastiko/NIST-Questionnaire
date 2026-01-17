@@ -1675,6 +1675,8 @@
           progressTitle: "Progression",
           progressOverall: "Avancement global",
           progressByFunction: "Progression par fonction",
+          progressFilterUnanswered:
+            "Questions non renseignées / Unanswered questions",
           progressBasedOn:
             "Basé sur les scores, cibles et commentaires renseignés.",
           progressItems: (filled, total) =>
@@ -1730,6 +1732,8 @@
           progressTitle: "Progress",
           progressOverall: "Overall progress",
           progressByFunction: "Progress by function",
+          progressFilterUnanswered:
+            "Questions non renseignées / Unanswered questions",
           progressBasedOn:
             "Based on scores, targets, and comments filled in.",
           progressItems: (filled, total) =>
@@ -1928,6 +1932,7 @@
           () => [...ALL_CATEGORIES]
         );
         const [selectedDepartments, setSelectedDepartments] = useState(() => []);
+        const [showUnansweredOnly, setShowUnansweredOnly] = useState(false);
         const [infoExpanded, setInfoExpanded] = useState({});
         const fileInputRef = useRef(null);
 
@@ -1983,6 +1988,16 @@
               );
             if (!matchesDepartment) return false;
 
+            if (showUnansweredOnly) {
+              const a = answers[q.id] || {};
+              const scoreFilled = typeof a.score === "number";
+              const targetFilled = typeof a.target === "number";
+              const commentsFilled =
+                typeof a.comments === "string" && a.comments.trim() !== "";
+              const isAnswered = scoreFilled || targetFilled || commentsFilled;
+              if (isAnswered) return false;
+            }
+
             if (!s) return true;
 
             const text = (q[lang] || "").toLowerCase();
@@ -2005,6 +2020,8 @@
           functionFilter,
           selectedCategories,
           selectedDepartments,
+          showUnansweredOnly,
+          answers,
         ]);
 
         const stats = useMemo(() => {
@@ -2120,6 +2137,7 @@
           setFunctionFilter("ALL");
           setSelectedCategories([...ALL_CATEGORIES]);
           setSelectedDepartments([]);
+          setShowUnansweredOnly(false);
           setInfoExpanded({});
         }, [t]);
 
@@ -2768,6 +2786,23 @@
                         `;
                       })}
                     </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      className="shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500"
+                      style=${{
+                        backgroundColor: showUnansweredOnly ? "#1F2937" : "white",
+                        color: showUnansweredOnly ? "white" : "#374151",
+                        borderColor: showUnansweredOnly ? "#1F2937" : "#D1D5DB",
+                      }}
+                      onClick=${() =>
+                        setShowUnansweredOnly((prev) => !prev)
+                      }
+                      type="button"
+                    >
+                      ${t.progressFilterUnanswered}
+                    </button>
                   </div>
                 </div>
               <//>
