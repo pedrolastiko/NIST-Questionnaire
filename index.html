@@ -1704,6 +1704,9 @@
           tips1: "💾 Sauvegarde automatique (localStorage du navigateur).",
           tips2:
             "📤 Exportez vos données (CSV, PDF ou JSON) ou 📥 importez une évaluation au format JSON.",
+          footerNote:
+            "Projet open source sous licence <Insérer ici la licence> made with ❤️ in Canada.",
+          footerGithub: "GitHub",
           cmmiInfo:
             "Notation suggérée : 0–5 (inexistant à optimisé) selon CMMI / NIST.",
           targetInfo: "Objectif moyen saisi (0–5).",
@@ -1760,6 +1763,9 @@
           tips1: "💾 Autosave enabled (browser localStorage).",
           tips2:
             "📤 Export your data (CSV, PDF, or JSON) or 📥 import an assessment from JSON.",
+          footerNote:
+            "Open source project under the <Insert license here> license, made with ❤️ in Canada.",
+          footerGithub: "GitHub",
           cmmiInfo:
             "Suggested rating: 0–5 (non-existent to optimized) based on CMMI / NIST.",
           targetInfo: "Average target set (0–5).",
@@ -3096,6 +3102,19 @@
               <p className="mt-4 text-xs text-neutral-400">
                 ${t.tips1}
               </p>
+              <footer
+                className="mt-6 flex flex-col gap-2 border-t border-neutral-200 pt-4 text-xs text-neutral-500 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <span>${t.footerNote}</span>
+                <a
+                  className="text-blue-600 underline transition hover:text-blue-700"
+                  href="https://github.com/your-org/NIST-Questionnaire"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  ${t.footerGithub}
+                </a>
+              </footer>
             </div>
           </div>
         `;
