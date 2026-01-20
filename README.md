@@ -46,7 +46,7 @@ Although the app requires no build tooling, the repository includes helper workf
 
 ## License
 
-This project is provided as-is without an explicit license. Please add a license if you intend to redistribute the code.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ## Troubleshooting GitHub Pages
 

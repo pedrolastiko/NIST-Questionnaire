@@ -1,3 +1,5 @@
+// Copyright (c) 2025 NIST CSF 2.0 Questionnaire contributors
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 const fs = require('fs');
 const path = require('path');
 
