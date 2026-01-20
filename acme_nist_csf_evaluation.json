@@ -1,0 +1,541 @@
+{
+  "meta": {
+    "project": "Évaluation NIST CSF 2.0 - ACME",
+    "assessor": "Cabinet Exemple",
+    "org": "ACME Corp",
+    "date": "2024-10-15"
+  },
+  "answers": {
+    "GV.OC-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.OC-02": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.OC-03": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.OC-04": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.OC-05": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RM-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RM-02": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RM-03": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RM-04": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RM-05": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RM-06": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RM-07": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RR-01": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RR-02": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RR-03": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.RR-04": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.PO-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.PO-02": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.OV-01": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.OV-02": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.OV-03": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-02": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-03": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-04": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-05": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-06": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-07": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-08": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-09": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "GV.SC-10": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.AM-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.AM-02": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.AM-03": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.AM-04": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.AM-05": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.AM-07": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.AM-08": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.IM-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.IM-02": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.IM-03": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.IM-04": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-02": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-03": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-04": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-05": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-06": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-07": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-08": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-09": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "ID.RA-10": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AA-01": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AA-02": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AA-03": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AA-04": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AA-05": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AA-06": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AT-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.AT-02": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.DS-01": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.DS-02": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.DS-10": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.DS-11": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.PS-01": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.PS-02": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.PS-03": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.PS-04": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.PS-05": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.PS-06": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.IR-01": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.IR-02": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.IR-03": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "PR.IR-04": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.AE-02": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.AE-03": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.AE-04": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.AE-06": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.AE-07": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.AE-08": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.CM-01": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.CM-02": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.CM-03": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.CM-06": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "DE.CM-09": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.MA-01": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.MA-02": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.MA-03": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.MA-04": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.MA-05": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.AN-03": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.AN-06": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.AN-07": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.AN-08": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.CO-02": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.CO-03": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.MI-01": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RS.MI-02": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.RP-01": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.RP-02": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.RP-03": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.RP-04": {
+      "score": 4,
+      "target": 5,
+      "comments": "Niveau actuel 4/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.RP-05": {
+      "score": 2,
+      "target": 4,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.RP-06": {
+      "score": 3,
+      "target": 5,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 5/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.CO-03": {
+      "score": 3,
+      "target": 4,
+      "comments": "Niveau actuel 3/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 4/5 via standardisation, mesures régulières et preuves documentées."
+    },
+    "RC.CO-04": {
+      "score": 2,
+      "target": 3,
+      "comments": "Niveau actuel 2/5 : processus en place mais partiellement formalisés. Priorité d'amélioration pour atteindre 3/5 via standardisation, mesures régulières et preuves documentées."
+    }
+  },
+  "lang": "fr"
+}
